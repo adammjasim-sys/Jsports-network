@@ -41,6 +41,13 @@
     .player-box .play { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); font-size: 23px; margin: 0 auto 13px; }
     .player-box h3 { margin: 0 0 6px; font-size: 18px; }
     .player-box p { margin: 0; color: #bac5ce; font-size: 13px; line-height: 1.6; }
+    .player-frame { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; border-radius: 12px; background: #000; }
+    .player-actions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; margin-top: 15px; }
+    .player-link { display: inline-block; border: 1px solid #a9c3d8; border-radius: 8px; padding: 9px 13px; color: white; font-size: 13px; font-weight: 700; }
+    .player-link.primary { background: var(--accent); border-color: var(--accent); }
+    .channel-actions { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .channel-action { border: 1px solid var(--line); background: #f8fafc; border-radius: 7px; padding: 6px 8px; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--brand); }
+    .channel-action:disabled { opacity: .45; cursor: not-allowed; }
     .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 17px 0; }
     .search { flex: 1; min-width: 210px; position: relative; }
     .search input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 13px 14px 13px 40px; background: white; font: inherit; outline: none; }
@@ -107,7 +114,7 @@
     <div><h2>লাইভ টিভি প্লেয়ার</h2><p id="nowPlaying">একটি চ্যানেল নির্বাচন করুন</p></div>
   </div>
   <section class="player-box" id="player">
-    <div><div class="play">▶</div><h3>Jsports Network Player</h3><p>চ্যানেল নির্বাচন করলে এখানে প্লেয়ার চালু হবে।<br>এই ডেমোতে এখনো কোনো সম্প্রচার লিংক যুক্ত করা হয়নি।</p></div>
+    <div><div class="play">▶</div><h3>Jsports Network Player</h3><p>চ্যানেল কার্ড থেকে অনুমোদিত Embed Player অথবা Official Site নির্বাচন করুন।<br>যে চ্যানেলের Embed অনুমতি নেই, সেটি অফিসিয়াল ওয়েবসাইটে খুলবে।</p></div>
   </section>
 
   <section id="channels">
@@ -139,29 +146,40 @@
 <footer>
   <div class="container">
     <div class="footer-row"><strong>JSPORTS NETWORK</strong><span>© <span id="year"></span> Jsports Network. All rights reserved.</span><span>যোগাযোগ: আপনার ইমেইল যুক্ত করুন</span></div>
-    <div class="notice">দ্রষ্টব্য: এই ওয়েবসাইটটি প্রাথমিক ডেমো। কোনো চ্যানেলের সম্প্রচার লিংক বা কনটেন্ট এখানে সরবরাহ করা হয়নি। কেবল মালিকের অনুমতি ও বৈধ সম্প্রচার অধিকার থাকা স্ট্রিম ব্যবহার করুন।</div>
+    <div class="notice">দ্রষ্টব্য: চ্যানেলের Official Site লিংক দর্শককে সংশ্লিষ্ট উৎসে নিয়ে যায়। Embed Player চালু করতে চ্যানেলের অনুমোদিত YouTube Embed URL বা লিখিত অনুমোদনপ্রাপ্ত Embed URL যোগ করুন। কোনো চ্যানেলের পুনঃসম্প্রচার অধিকার এই ওয়েবসাইটের মাধ্যমে দেওয়া হচ্ছে না।</div>
   </div>
 </footer>
 
 <script>
-  // এখানে নিজের অনুমোদিত চ্যানেলের তথ্য যোগ/পরিবর্তন করুন।
-  // streamUrl ফাঁকা থাকলে কার্ডে ক্লিক করলে "লিংক যোগ হয়নি" বার্তা দেখাবে।
+  // CHANNEL SETTINGS
+  // embedUrl: শুধু অনুমোদিত YouTube embed URL দিন (Share > Embed থেকে কপি করুন)।
+  // watchUrl: চ্যানেলের অফিসিয়াল ওয়েবসাইট/লাইভ পেজ।
+  // embedUrl ফাঁকা থাকলে দর্শক Official Site বাটনে যেতে পারবেন।
   const channels = [
-    { name: "চ্যানেল আই", short: "CI", category: "Bangladesh", country: "বাংলাদেশ", access: "Free", color: "#16865b", streamUrl: "" },
-    { name: "সময় টিভি", short: "সময়", category: "News", country: "বাংলাদেশ", access: "Free", color: "#d52d32", streamUrl: "" },
-    { name: "যমুনা টিভি", short: "যমুনা", category: "News", country: "বাংলাদেশ", access: "Free", color: "#145a9b", streamUrl: "" },
-    { name: "ইন্ডিপেনডেন্ট", short: "IND", category: "News", country: "বাংলাদেশ", access: "Free", color: "#263b70", streamUrl: "" },
-    { name: "বিটিভি", short: "BTV", category: "Bangladesh", country: "বাংলাদেশ", access: "Free", color: "#176b45", streamUrl: "" },
-    { name: "স্টার স্পোর্টস", short: "STAR", category: "Sports", country: "আন্তর্জাতিক", access: "Premium", color: "#bb252c", streamUrl: "" },
-    { name: "ESPN", short: "ESPN", category: "Sports", country: "আন্তর্জাতিক", access: "Premium", color: "#d83228", streamUrl: "" },
-    { name: "আল জাজিরা", short: "AJ", category: "International", country: "আন্তর্জাতিক", access: "Free", color: "#9b7a32", streamUrl: "" },
-    { name: "DW News", short: "DW", category: "News", country: "আন্তর্জাতিক", access: "Free", color: "#1e426a", streamUrl: "" },
-    { name: "National Geographic", short: "N", category: "International", country: "আন্তর্জাতিক", access: "Premium", color: "#c58b24", streamUrl: "" }
+    { name: "বিটিভি", short: "BTV", category: "Bangladesh", country: "বাংলাদেশ", access: "Free", color: "#176b45", embedUrl: "", watchUrl: "https://btvlive.gov.bd/" },
+    { name: "সময় টিভি", short: "সময়", category: "News", country: "বাংলাদেশ", access: "Free", color: "#d52d32", embedUrl: "", watchUrl: "https://www.youtube.com/@somoytvnetworks" },
+    
+{ name: "আল জাজিরা", short: "AJ", category: "International", country: "আন্তর্জাতিক", access: "Free", color: "#9b7a32", embedUrl: "https://www.youtube.com/embed/gCNeDWCI0vo", watchUrl: "https://www.aljazeera.com/video/live/" },
+
+    { name: "DW News", short: "DW", category: "News", country: "আন্তর্জাতিক", access: "Free", color: "#1e426a", embedUrl: "", watchUrl: "https://www.dw.com/" },
+    { name: "France 24", short: "F24", category: "News", country: "আন্তর্জাতিক", access: "Free", color: "#254d83", embedUrl: "", watchUrl: "https://www.france24.com/en/live" },
+    { name: "NHK World", short: "NHK", category: "International", country: "আন্তর্জাতিক", access: "Free", color: "#176b9b", embedUrl: "", watchUrl: "https://www3.nhk.or.jp/nhkworld/en/live_tv/" },
+    { name: "Sports Channel 1", short: "SP1", category: "Sports", country: "আন্তর্জাতিক", access: "Premium", color: "#bb252c", embedUrl: "", watchUrl: "" },
+    { name: "Sports Channel 2", short: "SP2", category: "Sports", country: "আন্তর্জাতিক", access: "Premium", color: "#d83228", embedUrl: "", watchUrl: "" }
   ];
 
   let activeFilter = "All";
   const grid = document.getElementById("channelGrid");
   const searchInput = document.getElementById("searchInput");
+
+  function safeEmbedUrl(url) {
+    try {
+      const parsed = new URL(url);
+      return (parsed.protocol === "https:" &&
+        ["www.youtube.com", "youtube.com", "www.youtube-nocookie.com"].includes(parsed.hostname) &&
+        parsed.pathname.startsWith("/embed/")) ? parsed.href : "";
+    } catch { return ""; }
+  }
 
   function renderChannels() {
     const query = searchInput.value.trim().toLowerCase();
@@ -176,35 +194,45 @@
       return;
     }
     filtered.forEach(ch => {
-      const card = document.createElement("button");
+      const card = document.createElement("article");
       card.className = "channel";
-      card.type = "button";
+      const hasEmbed = Boolean(safeEmbedUrl(ch.embedUrl));
+      const hasOfficial = Boolean(ch.watchUrl);
       card.innerHTML = `<span class="channel-logo" style="background:${ch.color}">${ch.short}</span>
         <strong>${ch.name}</strong><small>${ch.country}</small>
-        <span class="tag ${ch.access === "Premium" ? "premium" : ""}">${ch.access === "Premium" ? "PREMIUM" : "FREE"}</span>`;
-      card.addEventListener("click", () => selectChannel(ch));
+        <span class="tag ${ch.access === "Premium" ? "premium" : ""}">${ch.access === "Premium" ? "PREMIUM" : "FREE"}</span>
+        <div class="channel-actions">
+          <button class="channel-action" type="button" data-play ${hasEmbed ? "" : "disabled"}>প্লেয়ারে চালান</button>
+          <button class="channel-action" type="button" data-official ${hasOfficial ? "" : "disabled"}>Official Site ↗</button>
+        </div>`;
+      card.querySelector("[data-play]").addEventListener("click", () => selectChannel(ch, "embed"));
+      card.querySelector("[data-official]").addEventListener("click", () => {
+        if (ch.watchUrl) window.open(ch.watchUrl, "_blank", "noopener,noreferrer");
+      });
       grid.appendChild(card);
     });
   }
 
-  function selectChannel(channel) {
+  function selectChannel(channel, mode) {
     document.getElementById("nowPlaying").textContent = "নির্বাচিত চ্যানেল: " + channel.name;
     const player = document.getElementById("player");
-    if (!channel.streamUrl) {
-      player.innerHTML = `<div><div class="play">!</div><h3>${channel.name}</h3><p>এই চ্যানেলের অনুমোদিত স্ট্রিমিং লিংক এখনো যোগ করা হয়নি।<br>Admin Panel তৈরি হলে সেখান থেকে লিংক যুক্ত করা যাবে।</p></div>`;
+    const embedUrl = safeEmbedUrl(channel.embedUrl);
+    const officialUrl = channel.watchUrl;
+
+    if (mode === "embed" && embedUrl) {
+      player.innerHTML = `<iframe class="player-frame" src="${embedUrl}" title="${channel.name} Player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
       return;
     }
-    player.innerHTML = '<video id="videoPlayer" controls autoplay playsinline style="width:100%;max-height:480px"></video>';
-    const video = document.getElementById("videoPlayer");
-    if (window.Hls && Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(channel.streamUrl);
-      hls.attachMedia(video);
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = channel.streamUrl;
-    } else {
-      player.innerHTML = '<p>এই ব্রাউজারে HLS প্লেব্যাক সমর্থিত নয়।</p>';
-    }
+
+    const officialButton = officialUrl
+      ? `<a class="player-link primary" href="${officialUrl}" target="_blank" rel="noopener noreferrer">Official Website / Live খুলুন ↗</a>`
+      : "";
+    player.innerHTML = `<div><div class="play">▶</div><h3>${channel.name}</h3>
+      <p>${embedUrl ? "এই চ্যানেলটি প্লেয়ারে চালাতে ‘প্লেয়ারে চালান’ নির্বাচন করুন।" : "এই চ্যানেলের অনুমোদিত Embed Player লিংক এখনো যোগ করা হয়নি।"}<br>
+      ${officialUrl ? "আপাতত অফিসিয়াল উৎসে গিয়ে লাইভ দেখতে পারবেন।" : "অফিসিয়াল লাইভ লিংক এখনো যোগ করা হয়নি।"}</p>
+      <div class="player-actions">${officialButton}</div></div>`;
   }
 
   document.getElementById("filters").addEventListener("click", e => {
