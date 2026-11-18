@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Jsports Network - Bangladesh and international live TV directory.">
+  <title>Jsports Network | Live TV</title>
+  <style>
+    :root {
+      --bg: #f5f7fa; --surface: #ffffff; --ink: #17212b; --muted: #687582;
+      --brand: #123b65; --accent: #e53935; --line: #e5eaf0; --soft: #edf3f8;
+      --shadow: 0 8px 24px rgba(20, 42, 66, .07);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, calc(100% - 32px)); margin: auto; }
+    header { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+    .nav { min-height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 850; font-size: 21px; color: var(--brand); letter-spacing: -.5px; white-space: nowrap; }
+    .brand-mark { width: 38px; height: 38px; border-radius: 11px; background: var(--brand); color: white; display: grid; place-items: center; font-size: 18px; }
+    .brand span em { color: var(--accent); font-style: normal; }
+    nav { display: flex; align-items: center; gap: 23px; color: #475563; font-size: 14px; font-weight: 650; }
+    nav a:hover { color: var(--accent); }
+    .nav-cta, .primary-btn { border: 0; border-radius: 9px; padding: 11px 16px; color: white; background: var(--accent); font-weight: 750; cursor: pointer; }
+    .menu-btn { display: none; border: 1px solid var(--line); background: white; border-radius: 8px; padding: 8px 11px; font-size: 18px; }
+    .hero { margin: 26px auto 22px; border-radius: 18px; overflow: hidden; color: white; background: linear-gradient(115deg, #0d2f50, #174e79 65%, #24648a); padding: 34px; display: grid; grid-template-columns: 1.35fr .65fr; align-items: center; gap: 24px; }
+    .eyebrow { color: #b9d8f0; font-size: 12px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
+    .hero h1 { margin: 10px 0; font-size: clamp(28px, 4vw, 42px); line-height: 1.15; }
+    .hero p { margin: 0; max-width: 590px; color: #d8e6f1; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 21px; }
+    .hero .primary-btn { background: var(--accent); }
+    .secondary-btn { border: 1px solid rgba(255,255,255,.45); background: transparent; color: white; border-radius: 9px; padding: 10px 15px; font-weight: 700; cursor: pointer; }
+    .hero-art { min-height: 155px; display: grid; place-items: center; }
+    .tv-icon { width: 150px; height: 105px; border: 7px solid rgba(255,255,255,.85); border-radius: 13px; display: grid; place-items: center; font-size: 46px; position: relative; background: rgba(255,255,255,.08); }
+    .tv-icon:after { content: ""; position: absolute; width: 58px; height: 6px; border-radius: 8px; background: rgba(255,255,255,.8); bottom: -17px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin: 28px 0 14px; }
+    .section-head h2 { margin: 0; font-size: 21px; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .player-box { background: #101820; color: white; border-radius: 15px; min-height: 245px; display: grid; place-items: center; text-align: center; padding: 25px; box-shadow: var(--shadow); }
+    .player-box .play { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); font-size: 23px; margin: 0 auto 13px; }
+    .player-box h3 { margin: 0 0 6px; font-size: 18px; }
+    .player-box p { margin: 0; color: #bac5ce; font-size: 13px; line-height: 1.6; }
+    .player-frame { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; border-radius: 12px; background: #000; }
+    .player-actions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; margin-top: 15px; }
+    .player-link { display: inline-block; border: 1px solid #a9c3d8; border-radius: 8px; padding: 9px 13px; color: white; font-size: 13px; font-weight: 700; }
+    .player-link.primary { background: var(--accent); border-color: var(--accent); }
+    .channel-actions { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .channel-action { border: 1px solid var(--line); background: #f8fafc; border-radius: 7px; padding: 6px 8px; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--brand); }
+    .channel-action:disabled { opacity: .45; cursor: not-allowed; }
+    .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 17px 0; }
+    .search { flex: 1; min-width: 210px; position: relative; }
+    .search input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 13px 14px 13px 40px; background: white; font: inherit; outline: none; }
+    .search input:focus { border-color: #8ba9c4; box-shadow: 0 0 0 3px #dce9f4; }
+    .search:before { content: "⌕"; position: absolute; left: 14px; top: 6px; color: #7c8995; font-size: 25px; }
+    .filters { display: flex; gap: 7px; flex-wrap: wrap; }
+    .filter { border: 1px solid var(--line); background: white; color: #52606d; border-radius: 20px; padding: 9px 13px; cursor: pointer; font-weight: 650; font-size: 13px; }
+    .filter.active { background: var(--brand); color: white; border-color: var(--brand); }
+    .channel-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 13px; }
+    .channel { border: 1px solid var(--line); background: white; border-radius: 13px; padding: 15px 12px; text-align: center; cursor: pointer; transition: .18s ease; min-width: 0; }
+    .channel:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: #c7d5e2; }
+    .channel-logo { width: 57px; height: 57px; border-radius: 15px; margin: 0 auto 10px; display: grid; place-items: center; color: white; font-weight: 850; font-size: 16px; letter-spacing: -.5px; }
+    .channel strong { display: block; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .channel small { display: block; color: var(--muted); margin-top: 4px; font-size: 11px; }
+    .tag { display: inline-block; margin-top: 8px; font-size: 10px; border-radius: 20px; padding: 3px 8px; background: #eaf5ee; color: #267243; font-weight: 800; }
+    .tag.premium { background: #fff2df; color: #a65a00; }
+    .tag.region { background: #eaf0ff; color: #3455a5; }
+    .empty { grid-column: 1/-1; text-align: center; padding: 28px; color: var(--muted); background: white; border: 1px dashed var(--line); border-radius: 12px; }
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 32px; }
+    .plan { background: white; border: 1px solid var(--line); border-radius: 13px; padding: 19px; }
+    .plan h3 { margin: 0 0 6px; }
+    .plan p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .plan b { display: inline-block; margin-top: 12px; color: var(--brand); }
+    footer { background: #102d49; color: #d6e2ec; padding: 25px 0; margin-top: 35px; }
+    .footer-row { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; font-size: 13px; }
+    .notice { font-size: 11px; color: #aebfce; margin-top: 12px; line-height: 1.6; }
+    @media (max-width: 850px) { .channel-grid { grid-template-columns: repeat(4, 1fr); } nav { gap: 13px; } }
+    @media (max-width: 650px) {
+      .nav { min-height: 62px; } .menu-btn { display: block; } nav { display: none; position: absolute; top: 62px; left: 0; right: 0; background: white; padding: 15px 20px; border-bottom: 1px solid var(--line); flex-direction: column; align-items: stretch; }
+      nav.open { display: flex; } .nav-cta { display: none; } .hero { padding: 25px 21px; grid-template-columns: 1fr; } .hero-art { display: none; }
+      .channel-grid { grid-template-columns: repeat(3, 1fr); gap: 9px; } .channel { padding: 12px 6px; } .channel-logo { width: 49px; height: 49px; }
+      .plans { grid-template-columns: 1fr; } .section-head h2 { font-size: 19px; }
+    }
+    @media (max-width: 380px) { .channel-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <a class="brand" href="#"><span class="brand-mark">▶</span><span>JSPORTS <em>NETWORK</em></span></a>
+    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">☰</button>
+    <nav id="mainNav">
+      <a href="#">হোম</a><a href="#channels">লাইভ টিভি</a><a href="#channels" data-nav-filter="Sports">স্পোর্টস</a>
+      <a href="#channels" data-nav-filter="International News">নিউজ</a><a href="#packages">প্যাকেজ</a>
+    </nav>
+    <a class="nav-cta" href="#channels">চ্যানেল দেখুন</a>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">YOUR ENTERTAINMENT, ONE PLACE</div>
+      <h1>দেশ-বিদেশের টিভি<br>এক জায়গায়</h1>
+      <p>Jsports Network-এ স্বাগতম। আপনার পছন্দের টিভি চ্যানেল খুঁজুন সহজেই। বাংলাদেশি ও আন্তর্জাতিক চ্যানেলের একটি সাজানো ডিরেক্টরি।</p>
+      <div class="hero-actions">
+        <a class="primary-btn" href="#channels">লাইভ চ্যানেল দেখুন</a>
+        <a class="secondary-btn" href="#packages">প্যাকেজ সম্পর্কে জানুন</a>
+      </div>
+    </div>
+    <div class="hero-art"><div class="tv-icon">▶</div></div>
+  </section>
+
+  <div class="section-head">
+    <div><h2>লাইভ টিভি প্লেয়ার</h2><p id="nowPlaying">একটি চ্যানেল নির্বাচন করুন</p></div>
+  </div>
+  <section class="player-box" id="player">
+    <div><div class="play">▶</div><h3>Jsports Network Player</h3><p>চ্যানেল কার্ড থেকে অনুমোদিত Embed Player অথবা Official Site নির্বাচন করুন।<br>যে চ্যানেলের Embed অনুমতি নেই, সেটি অফিসিয়াল ওয়েবসাইটে খুলবে।</p></div>
+  </section>
+
+  <section id="channels">
+    <div class="section-head">
+      <div><h2>চ্যানেল তালিকা</h2><p>আপনার পছন্দের চ্যানেল খুঁজে নিন</p></div>
+    </div>
+    <div class="toolbar">
+      <div class="search"><input id="searchInput" type="search" placeholder="চ্যানেলের নাম লিখে খুঁজুন..." aria-label="চ্যানেল খুঁজুন"></div>
+      <div class="filters" id="filters">
+        <button class="filter active" data-filter="All">সব</button>
+        <button class="filter" data-filter="Sports">স্পোর্টস</button>
+        <button class="filter" data-filter="International News">আন্তর্জাতিক নিউজ</button>
+        <button class="filter" data-filter="Entertainment & Movies">বিনোদন ও মুভি</button>
+        <button class="filter" data-filter="Kids">শিশুদের চ্যানেল</button>
+        <button class="filter" data-filter="Education & Documentary">শিক্ষামূলক ও ডকুমেন্টারি</button>
+        <button class="filter" data-filter="Cricket">🏏 ক্রিকেট</button>
+        <button class="filter" data-filter="Football">⚽ ফুটবল</button>
+      </div>
+    </div>
+    <div class="channel-grid" id="channelGrid"></div>
+  </section>
+
+  <section id="packages">
+    <div class="section-head"><div><h2>আমাদের প্যাকেজ</h2><p>ফ্রি ও প্রিমিয়াম—দুই ধরনের সেবার পরিকল্পনা</p></div></div>
+    <div class="plans">
+      <article class="plan"><h3>ফ্রি প্যাকেজ</h3><p>অনুমোদিত ফ্রি চ্যানেলগুলো কোনো সাবস্ক্রিপশন ছাড়াই দেখার ব্যবস্থা।</p><b>৳ ০ / মাস</b></article>
+      <article class="plan"><h3>প্রিমিয়াম প্যাকেজ</h3><p>ভবিষ্যতে অনুমোদিত প্রিমিয়াম কনটেন্ট, সাবস্ক্রিপশন ও পেমেন্ট যাচাই যুক্ত করা হবে।</p><b>মূল্য পরে নির্ধারিত হবে</b></article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-row"><strong>JSPORTS NETWORK</strong><span>© <span id="year"></span> Jsports Network. All rights reserved.</span><span>যোগাযোগ: আপনার ইমেইল যুক্ত করুন</span></div>
+    <div class="notice">দ্রষ্টব্য: FREE / PREMIUM / FREE/REGION / REGION RESTRICTED হলো সেবার সাধারণ ধরন; দেশভেদে কনটেন্ট, মূল্য ও প্রবেশাধিকার বদলাতে পারে। Official Site লিংক দর্শককে সংশ্লিষ্ট মালিকানাধীন উৎসে নিয়ে যায়। বর্তমানে শুধু আল জাজিরার আগে পরীক্ষিত YouTube Embed যুক্ত আছে; অন্য চ্যানেলের অনুমোদিত Embed URL নিশ্চিত না হওয়ায় সেগুলোতে Official Site লিংক রাখা হয়েছে। কোনো চ্যানেলের পুনঃসম্প্রচার অধিকার এই ওয়েবসাইটের মাধ্যমে দেওয়া হচ্ছে না।</div>
+  </div>
+</footer>
+
+<script>
+  // CHANNEL SETTINGS
+  // embedUrl: শুধু অনুমোদিত YouTube embed URL দিন (Share > Embed থেকে কপি করুন)।
+  // watchUrl: চ্যানেলের অফিসিয়াল ওয়েবসাইট/লাইভ পেজ।
+  // embedUrl ফাঁকা থাকলে দর্শক Official Site বাটনে যেতে পারবেন।
+  const channels = [
+    // SPORTS
+    { name: "FIFA+", short: "FIFA", category: "Sports", sport: "Football", country: "আন্তর্জাতিক", access: "Free/Region", color: "#176b45", embedUrl: "", watchUrl: "https://www.fifa.com/fifaplus/en" },
+    { name: "Red Bull TV", short: "RB", category: "Sports", country: "আন্তর্জাতিক", access: "Free", color: "#c51f30", embedUrl: "", watchUrl: "https://www.redbull.tv/" },
+    { name: "beIN SPORTS XTRA", short: "beIN", category: "Sports", country: "আন্তর্জাতিক", access: "Free/Region", color: "#3b287d", embedUrl: "", watchUrl: "https://www.beinsportsxtra.com/en" },
+    { name: "UEFA.tv", short: "UEFA", category: "Sports", sport: "Football", country: "ইউরোপ", access: "Free/Region", color: "#173f83", embedUrl: "", watchUrl: "https://www.uefa.tv/" },
+    { name: "DAZN", short: "DAZN", category: "Sports", country: "আন্তর্জাতিক", access: "Premium", color: "#111111", embedUrl: "", watchUrl: "https://www.dazn.com/" },
+    { name: "World Athletics", short: "WA", category: "Sports", country: "আন্তর্জাতিক", access: "Free/Region", color: "#1474a5", embedUrl: "", watchUrl: "https://worldathletics.org/" },
+    { name: "Olympics", short: "OLY", category: "Sports", country: "আন্তর্জাতিক", access: "Free/Region", color: "#1b4f91", embedUrl: "", watchUrl: "https://olympics.com/en/olympic-channel" },
+
+    // CRICKET CHANNELS & OFFICIAL BROADCAST PLATFORMS
+    { name: "T Sports", short: "TS", category: "Sports", sport: "Cricket", country: "বাংলাদেশ", access: "Free/Premium", color: "#176b45", embedUrl: "", watchUrl: "https://tsports.com/" },
+    { name: "GTV (Gazi TV)", short: "GTV", category: "Sports", sport: "Cricket", country: "বাংলাদেশ", access: "Free/Region", color: "#245b83", embedUrl: "", watchUrl: "https://www.gazitv.com/" },
+    { name: "Toffee", short: "TOF", category: "Sports", sport: "Cricket", country: "বাংলাদেশ", access: "Free/Premium", color: "#e85b25", embedUrl: "", watchUrl: "https://toffeelive.com/" },
+    { name: "Rabbithole", short: "RBH", category: "Sports", sport: "Cricket", country: "বাংলাদেশ", access: "Free/Premium", color: "#1c7891", embedUrl: "", watchUrl: "https://www.rabbitholebd.com/" },
+    { name: "ICC.tv", short: "ICC", category: "Sports", sport: "Cricket", country: "নির্বাচিত দেশ", access: "Free/Region", color: "#176b45", embedUrl: "", watchUrl: "https://www.icc.tv/" },
+    { name: "Willow TV", short: "WTV", category: "Sports", sport: "Cricket", country: "যুক্তরাষ্ট্র ও কানাডা", access: "Premium/Region", color: "#315a9a", embedUrl: "", watchUrl: "https://www.willow.tv/" },
+    { name: "Sky Sports Cricket", short: "SKY", category: "Sports", sport: "Cricket", country: "যুক্তরাজ্য", access: "Premium/Region", color: "#24517b", embedUrl: "", watchUrl: "https://www.skysports.com/cricket" },
+    { name: "SuperSport Cricket", short: "SS", category: "Sports", sport: "Cricket", country: "আফ্রিকা", access: "Premium/Region", color: "#1d6b4b", embedUrl: "", watchUrl: "https://www.supersport.com/cricket" },
+    { name: "JioHotstar / Star Sports", short: "JHS", category: "Sports", sport: "Cricket", country: "ভারত ও নির্বাচিত অঞ্চল", access: "Premium/Region", color: "#173b82", embedUrl: "", watchUrl: "https://www.hotstar.com/" },
+    { name: "Sony LIV Sports", short: "SONY", category: "Sports", sport: "Cricket", country: "ভারত ও নির্বাচিত অঞ্চল", access: "Premium/Region", color: "#4b2c91", embedUrl: "", watchUrl: "https://www.sonyliv.com/" },
+
+    // FOOTBALL CHANNELS & OFFICIAL BROADCAST PLATFORMS
+    { name: "FIFA+", short: "FIFA", category: "Sports", sport: "Football", country: "আন্তর্জাতিক", access: "Free/Region", color: "#176b45", embedUrl: "", watchUrl: "https://www.fifa.com/fifaplus/en" },
+    { name: "UEFA.tv", short: "UEFA", category: "Sports", sport: "Football", country: "ইউরোপ", access: "Free/Region", color: "#173f83", embedUrl: "", watchUrl: "https://www.uefa.tv/" },
+    { name: "Premier League+", short: "PL+", category: "Sports", sport: "Football", country: "সিঙ্গাপুর", access: "Premium/Region", color: "#4b276b", embedUrl: "", watchUrl: "https://www.premierleague.com/" },
+    { name: "beIN SPORTS", short: "beIN", category: "Sports", sport: "Football", country: "মধ্যপ্রাচ্য ও নির্বাচিত অঞ্চল", access: "Premium/Region", color: "#3b287d", embedUrl: "", watchUrl: "https://www.beinsports.com/" },
+    { name: "ESPN Football", short: "ESPN", category: "Sports", sport: "Football", country: "নির্বাচিত দেশ", access: "Premium/Region", color: "#d71920", embedUrl: "", watchUrl: "https://www.espn.com/soccer/" },
+    { name: "Sky Sports Football", short: "SKY", category: "Sports", sport: "Football", country: "যুক্তরাজ্য", access: "Premium/Region", color: "#24517b", embedUrl: "", watchUrl: "https://www.skysports.com/football" },
+    { name: "TNT Sports", short: "TNT", category: "Sports", sport: "Football", country: "যুক্তরাজ্য", access: "Premium/Region", color: "#222222", embedUrl: "", watchUrl: "https://www.tntsports.co.uk/" },
+    { name: "OneFootball", short: "1F", category: "Sports", sport: "Football", country: "আন্তর্জাতিক", access: "Free/Region", color: "#171717", embedUrl: "", watchUrl: "https://onefootball.com/" },
+
+    // INTERNATIONAL NEWS (including existing Bangladesh broadcasters)
+    { name: "বিটিভি", short: "BTV", category: "International News", country: "বাংলাদেশ", access: "Free", color: "#176b45", embedUrl: "", watchUrl: "https://btvlive.gov.bd/" },
+    { name: "সময় টিভি", short: "সময়", category: "International News", country: "বাংলাদেশ", access: "Free", color: "#d52d32", embedUrl: "", watchUrl: "https://www.youtube.com/@somoytvnetworks" },
+    { name: "আল জাজিরা", short: "AJ", category: "International News", country: "কাতার", access: "Free", color: "#9b7a32", embedUrl: "https://www.youtube.com/embed/gCNeDWCI0vo", watchUrl: "https://www.aljazeera.com/video/live/" },
+    { name: "DW News", short: "DW", category: "International News", country: "জার্মানি", access: "Free", color: "#1e426a", embedUrl: "", watchUrl: "https://www.dw.com/" },
+    { name: "France 24", short: "F24", category: "International News", country: "ফ্রান্স", access: "Free", color: "#254d83", embedUrl: "", watchUrl: "https://www.france24.com/en/live" },
+    { name: "NHK World", short: "NHK", category: "International News", country: "জাপান", access: "Free", color: "#176b9b", embedUrl: "", watchUrl: "https://www3.nhk.or.jp/nhkworld/en/live_tv/" },
+    { name: "Sky News", short: "SKY", category: "International News", country: "যুক্তরাজ্য", access: "Free/Region", color: "#24517b", embedUrl: "", watchUrl: "https://news.sky.com/watch-live" },
+    { name: "TRT World", short: "TRT", category: "International News", country: "তুরস্ক", access: "Free/Region", color: "#147b70", embedUrl: "", watchUrl: "https://www.trtworld.com/" },
+    { name: "CNA", short: "CNA", category: "International News", country: "সিঙ্গাপুর", access: "Free/Region", color: "#bd2026", embedUrl: "", watchUrl: "https://www.channelnewsasia.com/watch" },
+    { name: "Euronews", short: "EU", category: "International News", country: "ইউরোপ", access: "Free/Region", color: "#243f73", embedUrl: "", watchUrl: "https://www.euronews.com/live" },
+
+    // ENTERTAINMENT & MOVIES
+    { name: "Netflix", short: "N", category: "Entertainment & Movies", country: "আন্তর্জাতিক", access: "Premium", color: "#e50914", embedUrl: "", watchUrl: "https://www.netflix.com/" },
+    { name: "Prime Video", short: "PV", category: "Entertainment & Movies", country: "আন্তর্জাতিক", access: "Premium", color: "#176b9b", embedUrl: "", watchUrl: "https://www.primevideo.com/" },
+    { name: "Disney+", short: "D+", category: "Entertainment & Movies", country: "আন্তর্জাতিক", access: "Premium", color: "#153b82", embedUrl: "", watchUrl: "https://www.disneyplus.com/" },
+    { name: "Tubi", short: "T", category: "Entertainment & Movies", country: "যুক্তরাষ্ট্রসহ নির্বাচিত দেশ", access: "Free/Region", color: "#5a2b91", embedUrl: "", watchUrl: "https://tubitv.com/" },
+    { name: "Pluto TV", short: "P", category: "Entertainment & Movies", country: "নির্বাচিত দেশ", access: "Free/Region", color: "#4b2c91", embedUrl: "", watchUrl: "https://pluto.tv/" },
+    { name: "Plex", short: "PLEX", category: "Entertainment & Movies", country: "আন্তর্জাতিক", access: "Free/Region", color: "#c58a19", embedUrl: "", watchUrl: "https://www.plex.tv/" },
+
+    // KIDS
+    { name: "PBS KIDS", short: "PBS", category: "Kids", country: "যুক্তরাষ্ট্র", access: "Free/Region", color: "#1687c9", embedUrl: "", watchUrl: "https://pbskids.org/" },
+    { name: "CBeebies", short: "CBe", category: "Kids", country: "যুক্তরাজ্যসহ নির্বাচিত দেশ", access: "Free/Region", color: "#e85a9b", embedUrl: "", watchUrl: "https://www.cbeebies.com/" },
+    { name: "Cartoon Network", short: "CN", category: "Kids", country: "আন্তর্জাতিক", access: "Region Restricted", color: "#242424", embedUrl: "", watchUrl: "https://www.cartoonnetwork.com/" },
+    { name: "Nickelodeon", short: "NICK", category: "Kids", country: "আন্তর্জাতিক", access: "Region Restricted", color: "#f47b20", embedUrl: "", watchUrl: "https://www.nick.com/" },
+    { name: "National Geographic Kids", short: "NGK", category: "Kids", country: "আন্তর্জাতিক", access: "Free/Region", color: "#d6a900", embedUrl: "", watchUrl: "https://kids.nationalgeographic.com/" },
+
+    // EDUCATION & DOCUMENTARY
+    { name: "NASA+", short: "NASA", category: "Education & Documentary", country: "যুক্তরাষ্ট্র", access: "Free/Region", color: "#174b8b", embedUrl: "", watchUrl: "https://plus.nasa.gov/" },
+    { name: "TED", short: "TED", category: "Education & Documentary", country: "আন্তর্জাতিক", access: "Free", color: "#e62b1e", embedUrl: "", watchUrl: "https://www.ted.com/" },
+    { name: "PBS", short: "PBS", category: "Education & Documentary", country: "যুক্তরাষ্ট্র", access: "Free/Region", color: "#1675a9", embedUrl: "", watchUrl: "https://www.pbs.org/" },
+    { name: "Smithsonian", short: "SM", category: "Education & Documentary", country: "যুক্তরাষ্ট্র", access: "Free/Region", color: "#4c397b", embedUrl: "", watchUrl: "https://www.smithsonianchannel.com/" },
+    { name: "National Geographic", short: "NG", category: "Education & Documentary", country: "আন্তর্জাতিক", access: "Premium/Region", color: "#d6a900", embedUrl: "", watchUrl: "https://www.nationalgeographic.com/" },
+    { name: "Curiosity Stream", short: "CS", category: "Education & Documentary", country: "আন্তর্জাতিক", access: "Premium", color: "#1c7891", embedUrl: "", watchUrl: "https://curiositystream.com/" }
+  ];
+
+  let activeFilter = "All";
+  const grid = document.getElementById("channelGrid");
+  const searchInput = document.getElementById("searchInput");
+
+  function safeEmbedUrl(url) {
+    try {
+      const parsed = new URL(url);
+      return (parsed.protocol === "https:" &&
+        ["www.youtube.com", "youtube.com", "www.youtube-nocookie.com"].includes(parsed.hostname) &&
+        parsed.pathname.startsWith("/embed/")) ? parsed.href : "";
+    } catch { return ""; }
+  }
+
+  function renderChannels() {
+    const query = searchInput.value.trim().toLowerCase();
+    const filtered = channels.filter(ch => {
+      const matchesCategory = activeFilter === "All" ||
+        (activeFilter === "Cricket" ? ch.category === "Sports" && ch.sport === "Cricket" :
+        activeFilter === "Football" ? ch.category === "Sports" && ch.sport === "Football" :
+        ch.category === activeFilter);
+      return matchesCategory && (ch.name.toLowerCase().includes(query) || ch.country.toLowerCase().includes(query));
+    });
+    grid.innerHTML = "";
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty">কোনো চ্যানেল পাওয়া যায়নি। অন্য নামে খুঁজে দেখুন।</div>';
+      return;
+    }
+    filtered.forEach(ch => {
+      const card = document.createElement("article");
+      card.className = "channel";
+      const hasEmbed = Boolean(safeEmbedUrl(ch.embedUrl));
+      const hasOfficial = Boolean(ch.watchUrl);
+      card.innerHTML = `<span class="channel-logo" style="background:${ch.color}">${ch.short}</span>
+        <strong>${ch.name}</strong><small>${ch.sport ? (ch.sport === "Cricket" ? "🏏 ক্রিকেট" : "⚽ ফুটবল") + " • " : ""}${ch.country}</small>
+        <span class="tag ${ch.access.includes("Premium") ? "premium" : ch.access.includes("Region") ? "region" : ""}">${ch.access === "Free" ? "FREE" : ch.access === "Premium" ? "PREMIUM" : ch.access.toUpperCase()}</span>
+        <div class="channel-actions">
+          <button class="channel-action" type="button" data-play ${hasEmbed ? "" : "disabled"}>প্লেয়ারে চালান</button>
+          <button class="channel-action" type="button" data-official ${hasOfficial ? "" : "disabled"}>Official Site ↗</button>
+        </div>`;
+      card.querySelector("[data-play]").addEventListener("click", () => selectChannel(ch, "embed"));
+      card.querySelector("[data-official]").addEventListener("click", () => {
+        if (ch.watchUrl) window.open(ch.watchUrl, "_blank", "noopener,noreferrer");
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  function selectChannel(channel, mode) {
+    document.getElementById("nowPlaying").textContent = "নির্বাচিত চ্যানেল: " + channel.name;
+    const player = document.getElementById("player");
+    const embedUrl = safeEmbedUrl(channel.embedUrl);
+    const officialUrl = channel.watchUrl;
+
+    if (mode === "embed" && embedUrl) {
+      player.innerHTML = `<iframe class="player-frame" src="${embedUrl}" title="${channel.name} Player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+      return;
+    }
+
+    const officialButton = officialUrl
+      ? `<a class="player-link primary" href="${officialUrl}" target="_blank" rel="noopener noreferrer">Official Website / Live খুলুন ↗</a>`
+      : "";
+    player.innerHTML = `<div><div class="play">▶</div><h3>${channel.name}</h3>
+      <p>${embedUrl ? "এই চ্যানেলটি প্লেয়ারে চালাতে ‘প্লেয়ারে চালান’ নির্বাচন করুন।" : "এই চ্যানেলের অনুমোদিত Embed Player লিংক এখনো যোগ করা হয়নি।"}<br>
+      ${officialUrl ? "আপাতত অফিসিয়াল উৎসে গিয়ে লাইভ দেখতে পারবেন।" : "অফিসিয়াল লাইভ লিংক এখনো যোগ করা হয়নি।"}</p>
+      <div class="player-actions">${officialButton}</div></div>`;
+  }
+
+  document.getElementById("filters").addEventListener("click", e => {
+    const btn = e.target.closest("[data-filter]");
+    if (!btn) return;
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll(".filter").forEach(b => b.classList.toggle("active", b === btn));
+    renderChannels();
+  });
+  searchInput.addEventListener("input", renderChannels);
+  document.querySelectorAll("[data-nav-filter]").forEach(link => link.addEventListener("click", () => {
+    activeFilter = link.dataset.navFilter;
+    document.querySelectorAll(".filter").forEach(b => b.classList.toggle("active", b.dataset.filter === activeFilter));
+    renderChannels();
+  }));
+  document.getElementById("menuBtn").addEventListener("click", () => document.getElementById("mainNav").classList.toggle("open"));
+  document.getElementById("year").textContent = new Date().getFullYear();
+  renderChannels();
+</script>
+</body>
+</html>
