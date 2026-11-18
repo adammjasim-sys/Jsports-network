@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Jsports Network - Cricket and Football TV channels directory">
+<title>Jsports Network | Cricket & Football TV</title>
+<style>
+:root{--bg:#f3f6fa;--card:#fff;--ink:#172433;--muted:#68798a;--navy:#102f50;--red:#e33b3b;--line:#e1e8ef}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+a{text-decoration:none;color:inherit}.wrap{width:min(1100px,calc(100% - 30px));margin:auto}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-size:21px;font-weight:900;color:var(--navy)}.brand span{color:var(--red)}
+.nav a:last-child{background:var(--red);color:#fff;padding:10px 15px;border-radius:9px;font-weight:700}
+.hero{margin:24px 0;background:linear-gradient(115deg,#0d2b49,#1c5881);color:white;border-radius:18px;padding:34px}
+.hero h1{margin:0 0 10px;font-size:clamp(28px,5vw,42px)}.hero p{margin:0;color:#d9e8f4;line-height:1.7;max-width:720px}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.pill{background:#ffffff1c;border:1px solid #ffffff55;border-radius:30px;padding:8px 13px;font-weight:700}
+h2{font-size:22px;margin:26px 0 6px}.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+input{flex:1;min-width:220px;border:1px solid var(--line);border-radius:10px;padding:13px;font:inherit;background:#fff}
+.filters{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;border-radius:22px;padding:9px 14px;font-weight:700;color:#536475;cursor:pointer}
+.filter.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.channel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0;box-shadow:0 5px 18px #142b4208}
+.logo{width:58px;height:58px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;margin-bottom:10px}
+.channel strong{font-size:15px}.meta{font-size:12px;color:var(--muted);margin:5px 0 12px}
+.kind{font-size:10px;font-weight:800;letter-spacing:.3px;background:#edf3f8;color:#3b5872;border-radius:20px;padding:4px 9px;margin-bottom:12px}
+.visit{margin-top:auto;display:inline-block;background:var(--navy);color:#fff;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:750}
+.empty{grid-column:1/-1;padding:25px;text-align:center;background:#fff;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+.note{margin:24px 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;color:#526273;font-size:13px;line-height:1.7}
+footer{margin-top:30px;background:#0d2945;color:#d9e5ef;padding:22px 0;font-size:12px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.hero{padding:24px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{height:60px}.brand{font-size:18px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="#">JSPORTS <span>NETWORK</span></a><a href="#channels">টিভি চ্যানেল</a></div></header>
+<main class="wrap">
+<section class="hero">
+<h1>ক্রিকেট ও ফুটবল লাইভ টিভি</h1>
+<p>Jsports Network-এ ক্রিকেট ও ফুটবলের প্রকৃত টেলিভিশন চ্যানেলগুলো এক জায়গায় সাজানো হয়েছে। চ্যানেলের অফিসিয়াল ওয়েবসাইটে যেতে নিচের বাটনে ক্লিক করুন।</p>
+<div class="pills"><span class="pill">🏏 Cricket TV</span><span class="pill">⚽ Football TV</span></div>
+</section>
+<section id="channels">
+<h2>টিভি চ্যানেল তালিকা</h2>
+<p class="sub">শুধু টেলিভিশন ব্রডকাস্টার। অ্যাপ, নিউজ পোর্টাল বা সাধারণ খেলার খবরের সাইট নয়।</p>
+<div class="toolbar">
+<input id="search" type="search" placeholder="চ্যানেলের নাম লিখে খুঁজুন..." aria-label="চ্যানেল খুঁজুন">
+<div class="filters">
+<button class="filter active" data-filter="All">সব চ্যানেল</button>
+<button class="filter" data-filter="Cricket">🏏 ক্রিকেট</button>
+<button class="filter" data-filter="Football">⚽ ফুটবল</button>
+</div>
+</div>
+<div class="grid" id="grid"></div>
+</section>
+<div class="note"><strong>গুরুত্বপূর্ণ:</strong> এই সাইটটি চ্যানেল ডিরেক্টরি। কোনো চ্যানেলের অনুমোদিত public embed/live stream নিশ্চিত না হওয়ায় এখানে তৃতীয় পক্ষের স্ট্রিম বসানো হয়নি। Official Site বাটনে গেলে সংশ্লিষ্ট ব্রডকাস্টারের নিজস্ব সাইট খুলবে; সেখানে লাইভ দেখা, লগইন বা সাবস্ক্রিপশন লাগতে পারে। কোন ম্যাচ কোন চ্যানেলে দেখাবে তা টুর্নামেন্ট ও দেশের সম্প্রচার-স্বত্ব অনুযায়ী বদলায়।</div>
+</main>
+<footer><div class="wrap">© <span id="year"></span> Jsports Network. All rights reserved. <br>সব সম্প্রচার সংশ্লিষ্ট অধিকারধারী ব্রডকাস্টারের নিয়ন্ত্রণাধীন।</div></footer>
+<script>
+const channels = [
+ {name:"T Sports",short:"TS",sport:"Cricket",country:"বাংলাদেশ",url:"https://tsports.com/",color:"#176b45"},
+ {name:"Nagorik TV",short:"NTV",sport:"Cricket",country:"বাংলাদেশ",url:"https://nagorik.com/",color:"#245b83"},
+ {name:"GTV (Gazi TV)",short:"GTV",sport:"Cricket",country:"বাংলাদেশ",url:"https://www.gazitv.com/",color:"#1d6b8a"},
+ {name:"Star Sports 1",short:"SS1",sport:"Cricket",country:"ভারত / দক্ষিণ এশিয়ার নির্বাচিত সম্প্রচার",url:"https://www.jiohotstar.com/",color:"#253f86"},
+ {name:"Star Sports 2",short:"SS2",sport:"Cricket",country:"ভারত / দক্ষিণ এশিয়ার নির্বাচিত সম্প্রচার",url:"https://www.jiohotstar.com/",color:"#253f86"},
+ {name:"Sky Sports Cricket",short:"SKY",sport:"Cricket",country:"যুক্তরাজ্য",url:"https://www.skysports.com/cricket",color:"#24517b"},
+ {name:"SuperSport Cricket",short:"SS",sport:"Cricket",country:"সাব-সাহারান আফ্রিকা",url:"https://www.supersport.com/cricket",color:"#1d6b4b"},
+ {name:"Willow TV",short:"WTV",sport:"Cricket",country:"যুক্তরাষ্ট্র ও কানাডা",url:"https://www.willow.tv/",color:"#315a9a"},
+ {name:"Fox Cricket",short:"FOX",sport:"Cricket",country:"অস্ট্রেলিয়া",url:"https://www.foxsports.com.au/cricket",color:"#252525"},
+ {name:"PTV Sports",short:"PTV",sport:"Cricket",country:"পাকিস্তান",url:"https://sports.ptv.com.pk/",color:"#176b45"},
+ {name:"Geo Super",short:"GEO",sport:"Cricket",country:"পাকিস্তান",url:"https://www.geosuper.tv/",color:"#26734d"},
+ {name:"CricLife Max",short:"CLM",sport:"Cricket",country:"মধ্যপ্রাচ্য ও উত্তর আফ্রিকা",url:"https://www.starzplay.com/en/sports",color:"#53317f"},
+ {name:"T Sports",short:"TS",sport:"Football",country:"বাংলাদেশ",url:"https://tsports.com/",color:"#176b45"},
+ {name:"BTV",short:"BTV",sport:"Football",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",color:"#16734a"},
+ {name:"Somoy TV",short:"সময়",sport:"Football",country:"বাংলাদেশ",url:"https://www.somoynews.tv/",color:"#c62e35"},
+ {name:"Sky Sports Football",short:"SKY",sport:"Football",country:"যুক্তরাজ্য",url:"https://www.skysports.com/football",color:"#24517b"},
+ {name:"beIN SPORTS",short:"beIN",sport:"Football",country:"মধ্যপ্রাচ্য ও নির্বাচিত অঞ্চল",url:"https://www.beinsports.com/",color:"#3b287d"},
+ {name:"ESPN",short:"ESPN",sport:"Football",country:"যুক্তরাষ্ট্র / নির্বাচিত অঞ্চল",url:"https://www.espn.com/watch/",color:"#d71920"},
+ {name:"TNT Sports",short:"TNT",sport:"Football",country:"যুক্তরাজ্য",url:"https://www.tntsports.co.uk/",color:"#222222"},
+ {name:"SuperSport",short:"SS",sport:"Football",country:"আফ্রিকা",url:"https://www.supersport.com/football",color:"#1d6b4b"},
+ {name:"Sony Sports Network",short:"SONY",sport:"Football",country:"ভারত / নির্বাচিত অঞ্চল",url:"https://www.sonyliv.com/",color:"#4b2c91"},
+ {name:"Star Sports Select",short:"SSS",sport:"Football",country:"ভারত / দক্ষিণ এশিয়ার নির্বাচিত সম্প্রচার",url:"https://www.jiohotstar.com/",color:"#253f86"}
+];
+let active="All";
+const grid=document.getElementById("grid"), search=document.getElementById("search");
+function render(){
+ const q=search.value.trim().toLowerCase();
+ const list=channels.filter(c=>(active==="All"||c.sport===active)&&(c.name.toLowerCase().includes(q)||c.country.toLowerCase().includes(q)));
+ grid.innerHTML="";
+ if(!list.length){grid.innerHTML='<div class="empty">কোনো চ্যানেল পাওয়া যায়নি।</div>';return;}
+ list.forEach(c=>{
+  const el=document.createElement("article");el.className="channel";
+  el.innerHTML=`<div class="logo" style="background:${c.color}">${c.short}</div><strong>${c.name}</strong><div class="meta">${c.sport==="Cricket"?"🏏 ক্রিকেট":"⚽ ফুটবল"} · ${c.country}</div><span class="kind">TV CHANNEL</span><a class="visit" href="${c.url}" target="_blank" rel="noopener noreferrer">Official Site ↗</a>`;
+  grid.appendChild(el);
+ });
+}
+document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{active=b.dataset.filter;document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));render();}));
+search.addEventListener("input",render);
+document.getElementById("year").textContent=new Date().getFullYear();
+render();
+</script>
+</body>
+</html>
