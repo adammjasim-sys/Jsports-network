@@ -752,6 +752,7 @@ const channels = [
     country: "জাপান",
     url: "https://www3.nhk.or.jp/nhkworld/en/live/",
     embedUrl: "https://www.youtube.com/embed/IimtbuqYIE8",
+  access: "live",
     color: "#d71920"
 },
 
@@ -872,7 +873,9 @@ function render() {
         ${categoryNames[c.sport] || "📺 TV"} · ${c.country}
       </div>
 
-      <span class="kind">TV CHANNEL</span>
+      <span class="kind">
+  ${c.access === "live" ? "LIVE TV" : "OFFICIAL WEBSITE ONLY"}
+</span>
 
       <button class="visit play-channel" type="button">
         ▶ Select Channel
@@ -896,7 +899,7 @@ el.querySelector(".play-channel").addEventListener("click", () => {
 
   title.textContent = "Selected Channel: " + c.name;
 
-  if (c.embedUrl) {
+  if (c.access === "live" && c.embedUrl) {
     player.src = c.embedUrl;
     player.style.display = "block";
     placeholder.style.display = "none";
