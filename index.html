@@ -767,7 +767,7 @@ const channels = [
     url: "https://www.euronews.com/live",
     color: "#2365a1"
   }
- 
+ ];
 
 /* =================================
    FILTER ELEMENTS
@@ -824,6 +824,7 @@ function render() {
   "সিঙ্গাপুর",
   "তুরস্ক"
 ].includes(c.country)
+        : c.country === country);
 
     const matchesCategory =
       category === "All" ||
