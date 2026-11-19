@@ -248,11 +248,10 @@ el.querySelector(".play-channel").addEventListener("click", () => {
 }
 
 search.addEventListener("input", render);
-countryFilter.addEventListener("change", render);
-categoryFilter.addEventListener("change", render);
 
-document.getElementById("year").textContent =
-  new Date().getFullYear();
+countryFilter.addEventListener("change", render);
+
+categoryFilter.addEventListener("change", render);
 
 render();
 </script>
