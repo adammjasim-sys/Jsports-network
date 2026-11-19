@@ -84,28 +84,42 @@ footer{margin-top:30px;background:#0d2945;color:#d9e5ef;padding:22px 0;font-size
 <footer><div class="wrap">© <span id="year"></span> Jsports Network. All rights reserved. <br>সব সম্প্রচার সংশ্লিষ্ট অধিকারধারী ব্রডকাস্টারের নিয়ন্ত্রণাধীন।</div></footer>
 <script>
 const channels = [
- {name:"T Sports",short:"TS",sport:"Cricket",country:"বাংলাদেশ",url:"https://tsports.com/",color:"#176b45"},
- {name:"Nagorik TV",short:"NTV",sport:"Cricket",country:"বাংলাদেশ",url:"https://nagorik.com/",color:"#245b83"},
- {name:"GTV (Gazi TV)",short:"GTV",sport:"Cricket",country:"বাংলাদেশ",url:"https://www.gazitv.com/",color:"#1d6b8a"},
- {name:"Star Sports 1",short:"SS1",sport:"Cricket",country:"ভারত / দক্ষিণ এশিয়ার নির্বাচিত সম্প্রচার",url:"https://www.jiohotstar.com/",color:"#253f86"},
- {name:"Star Sports 2",short:"SS2",sport:"Cricket",country:"ভারত / দক্ষিণ এশিয়ার নির্বাচিত সম্প্রচার",url:"https://www.jiohotstar.com/",color:"#253f86"},
- {name:"Sky Sports Cricket",short:"SKY",sport:"Cricket",country:"যুক্তরাজ্য",url:"https://www.skysports.com/cricket",color:"#24517b"},
- {name:"SuperSport Cricket",short:"SS",sport:"Cricket",country:"সাব-সাহারান আফ্রিকা",url:"https://www.supersport.com/cricket",color:"#1d6b4b"},
- {name:"Willow TV",short:"WTV",sport:"Cricket",country:"যুক্তরাষ্ট্র ও কানাডা",url:"https://www.willow.tv/",color:"#315a9a"},
- {name:"Fox Cricket",short:"FOX",sport:"Cricket",country:"অস্ট্রেলিয়া",url:"https://www.foxsports.com.au/cricket",color:"#252525"},
- {name:"PTV Sports",short:"PTV",sport:"Cricket",country:"পাকিস্তান",url:"https://sports.ptv.com.pk/",color:"#176b45"},
- {name:"Geo Super",short:"GEO",sport:"Cricket",country:"পাকিস্তান",url:"https://www.geosuper.tv/",color:"#26734d"},
- {name:"CricLife Max",short:"CLM",sport:"Cricket",country:"মধ্যপ্রাচ্য ও উত্তর আফ্রিকা",url:"https://www.starzplay.com/en/sports",color:"#53317f"},
- {name:"T Sports",short:"TS",sport:"Football",country:"বাংলাদেশ",url:"https://tsports.com/",color:"#176b45"},
- {name:"BTV",short:"BTV",sport:"Football",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",color:"#16734a"},
- {name:"Somoy TV",short:"সময়",sport:"Football",country:"বাংলাদেশ",url:"https://www.somoynews.tv/",color:"#c62e35"},
- {name:"Sky Sports Football",short:"SKY",sport:"Football",country:"যুক্তরাজ্য",url:"https://www.skysports.com/football",color:"#24517b"},
- {name:"beIN SPORTS",short:"beIN",sport:"Football",country:"মধ্যপ্রাচ্য ও নির্বাচিত অঞ্চল",url:"https://www.beinsports.com/",color:"#3b287d"},
- {name:"ESPN",short:"ESPN",sport:"Football",country:"যুক্তরাষ্ট্র / নির্বাচিত অঞ্চল",url:"https://www.espn.com/watch/",color:"#d71920"},
- {name:"TNT Sports",short:"TNT",sport:"Football",country:"যুক্তরাজ্য",url:"https://www.tntsports.co.uk/",color:"#222222"},
- {name:"SuperSport",short:"SS",sport:"Football",country:"আফ্রিকা",url:"https://www.supersport.com/football",color:"#1d6b4b"},
- {name:"Sony Sports Network",short:"SONY",sport:"Football",country:"ভারত / নির্বাচিত অঞ্চল",url:"https://www.sonyliv.com/",color:"#4b2c91"},
- {name:"Star Sports Select",short:"SSS",sport:"Football",country:"ভারত / দক্ষিণ এশিয়ার নির্বাচিত সম্প্রচার",url:"https://www.jiohotstar.com/",color:"#253f86"}
+
+  // 🇧🇩 BANGLADESH
+  {name:"BTV",short:"BTV",sport:"General",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",color:"#176b45"},
+  {name:"BTV News",short:"BTVN",sport:"News",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",color:"#176b45"},
+  {name:"BTV Chattogram",short:"BTV-C",sport:"General",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",color:"#176b45"},
+  {name:"Sangsad Bangladesh TV",short:"S-TV",sport:"General",country:"বাংলাদেশ",url:"https://sangsadtv.gov.bd/",color:"#28734c"},
+  {name:"T Sports",short:"TS",sport:"Cricket",country:"বাংলাদেশ",url:"https://tsports.com/",color:"#176b45"},
+  {name:"Nagorik TV",short:"NTV",sport:"Entertainment",country:"বাংলাদেশ",url:"https://nagorik.com/",color:"#245b83"},
+  {name:"GTV",short:"GTV",sport:"Cricket",country:"বাংলাদেশ",url:"https://www.gazitv.com/",color:"#1d6b8a"},
+
+  // 🇮🇳 INDIA
+  {name:"DD National",short:"DDN",sport:"General",country:"ভারত",url:"https://prasarbharati.gov.in/",color:"#bd3030"},
+  {name:"DD News",short:"DDN",sport:"News",country:"ভারত",url:"https://ddnews.gov.in/",color:"#bd3030"},
+  {name:"DD Sports",short:"DDS",sport:"Cricket",country:"ভারত",url:"https://prasarbharati.gov.in/",color:"#176b9a"},
+  {name:"DD Kisan",short:"DDK",sport:"Education",country:"ভারত",url:"https://prasarbharati.gov.in/",color:"#387b43"},
+  {name:"Sansad TV",short:"STV",sport:"News",country:"ভারত",url:"https://sansadtv.nic.in/",color:"#3c568c"},
+  {name:"DD Bharati",short:"DDB",sport:"Entertainment",country:"ভারত",url:"https://prasarbharati.gov.in/",color:"#8150a0"},
+  {name:"DD Girnar",short:"DDG",sport:"General",country:"ভারত",url:"https://prasarbharati.gov.in/",color:"#b66b27"},
+  {name:"DD Urdu",short:"DDU",sport:"General",country:"ভারত",url:"https://prasarbharati.gov.in/",color:"#176b45"},
+
+  // 🇵🇰 PAKISTAN
+  {name:"PTV Home",short:"PTV",sport:"Entertainment",country:"পাকিস্তান",url:"https://ptv.com.pk/",color:"#176b45"},
+  {name:"PTV News",short:"PTVN",sport:"News",country:"পাকিস্তান",url:"https://ptv.com.pk/",color:"#176b45"},
+  {name:"PTV Sports",short:"PTVS",sport:"Cricket",country:"পাকিস্তান",url:"https://sports.ptv.com.pk/",color:"#176b45"},
+  {name:"PTV National",short:"PTVN",sport:"General",country:"পাকিস্তান",url:"https://ptv.com.pk/",color:"#176b45"},
+  {name:"Geo News",short:"GEO",sport:"News",country:"পাকিস্তান",url:"https://www.geo.tv/",color:"#24734c"},
+  {name:"Geo Super",short:"GEO",sport:"Cricket",country:"পাকিস্তান",url:"https://www.geosuper.tv/",color:"#26734d"},
+
+  // 🌍 INTERNATIONAL
+  {name:"BBC News",short:"BBC",sport:"News",country:"যুক্তরাজ্য",url:"https://www.bbc.com/news",color:"#b51e2b"},
+  {name:"Sky News",short:"SKY",sport:"News",country:"যুক্তরাজ্য",url:"https://news.sky.com/",color:"#24517b"},
+  {name:"Sky Sports",short:"SKY",sport:"Football",country:"যুক্তরাজ্য",url:"https://www.skysports.com/",color:"#24517b"},
+  {name:"Al Jazeera English",short:"AJ",sport:"News",country:"অন্যান্য",url:"https://www.aljazeera.com/live",color:"#9b7a32"},
+  {name:"NASA TV",short:"NASA",sport:"Education",country:"যুক্তরাষ্ট্র",url:"https://www.nasa.gov/nasatv/",color:"#154b85"},
+  {name:"NHK World Japan",short:"NHK",sport:"News",country:"জাপান",url:"https://www3.nhk.or.jp/nhkworld/",color:"#b72d35"}
+
 ];
 let active = "All";
 
