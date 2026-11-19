@@ -107,22 +107,88 @@ const channels = [
  {name:"Sony Sports Network",short:"SONY",sport:"Football",country:"ভারত / নির্বাচিত অঞ্চল",url:"https://www.sonyliv.com/",color:"#4b2c91"},
  {name:"Star Sports Select",short:"SSS",sport:"Football",country:"ভারত / দক্ষিণ এশিয়ার নির্বাচিত সম্প্রচার",url:"https://www.jiohotstar.com/",color:"#253f86"}
 ];
-let active="All";
-const grid=document.getElementById("grid"), search=document.getElementById("search");
-function render(){
- const q=search.value.trim().toLowerCase();
- const list=channels.filter(c=>(active==="All"||c.sport===active)&&(c.name.toLowerCase().includes(q)||c.country.toLowerCase().includes(q)));
- grid.innerHTML="";
- if(!list.length){grid.innerHTML='<div class="empty">কোনো চ্যানেল পাওয়া যায়নি।</div>';return;}
- list.forEach(c=>{
-  const el=document.createElement("article");el.className="channel";
-  el.innerHTML=`<div class="logo" style="background:${c.color}">${c.short}</div><strong>${c.name}</strong><div class="meta">${c.sport==="Cricket"?"🏏 ক্রিকেট":"⚽ ফুটবল"} · ${c.country}</div><span class="kind">TV CHANNEL</span><a class="visit" href="${c.url}" target="_blank" rel="noopener noreferrer">Official Site ↗</a>`;
-  grid.appendChild(el);
- });
+let active = "All";
+
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+const countryFilter = document.getElementById("countryFilter");
+const categoryFilter = document.getElementById("categoryFilter");
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  const country = countryFilter.value;
+  const category = categoryFilter.value;
+
+  const list = channels.filter(c => {
+    const matchesSearch =
+      c.name.toLowerCase().includes(q) ||
+      c.country.toLowerCase().includes(q);
+
+    const matchesCountry =
+      country === "All" ||
+      (country === "অন্যান্য"
+        ? !["বাংলাদেশ","ভারত","পাকিস্তান","যুক্তরাজ্য","যুক্তরাষ্ট্র","ফ্রান্স","জার্মানি","জাপান"].includes(c.country)
+        : c.country === country);
+
+    const matchesCategory =
+      category === "All" ||
+      c.sport === category;
+
+    return matchesSearch && matchesCountry && matchesCategory;
+  });
+
+  grid.innerHTML = "";
+
+  if (!list.length) {
+    grid.innerHTML =
+      '<div class="empty">কোনো টিভি চ্যানেল পাওয়া যায়নি।</div>';
+    return;
+  }
+
+  list.forEach(c => {
+    const el = document.createElement("article");
+    el.className = "channel";
+
+    const categoryNames = {
+      Cricket: "🏏 ক্রিকেট",
+      Football: "⚽ ফুটবল",
+      News: "📺 নিউজ টিভি",
+      Entertainment: "🎭 বিনোদন",
+      Movies: "🎬 মুভি",
+      Kids: "🧒 শিশু",
+      Education: "📚 শিক্ষা",
+      Documentary: "🌍 ডকুমেন্টারি",
+      General: "📺 সাধারণ টিভি"
+    };
+
+    el.innerHTML = `
+      <div class="logo" style="background:${c.color}">
+        ${c.short}
+      </div>
+      <strong>${c.name}</strong>
+      <div class="meta">
+        ${categoryNames[c.sport] || "📺 TV"} · ${c.country}
+      </div>
+      <span class="kind">TV CHANNEL</span>
+      <a class="visit"
+         href="${c.url}"
+         target="_blank"
+         rel="noopener noreferrer">
+         Official Site ↗
+      </a>
+    `;
+
+    grid.appendChild(el);
+  });
 }
-document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{active=b.dataset.filter;document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));render();}));
-search.addEventListener("input",render);
-document.getElementById("year").textContent=new Date().getFullYear();
+
+search.addEventListener("input", render);
+countryFilter.addEventListener("change", render);
+categoryFilter.addEventListener("change", render);
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
 render();
 </script>
 </body>
