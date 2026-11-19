@@ -203,25 +203,48 @@ function render() {
       General: "📺 সাধারণ টিভি"
     };
 
-    el.innerHTML = `
-      <div class="logo" style="background:${c.color}">
-        ${c.short}
-      </div>
-      <strong>${c.name}</strong>
-      <div class="meta">
-        ${categoryNames[c.sport] || "📺 TV"} · ${c.country}
-      </div>
-      <span class="kind">TV CHANNEL</span>
-      <a class="visit"
-         href="${c.url}"
-         target="_blank"
-         rel="noopener noreferrer">
-         Official Site ↗
-      </a>
-    `;
+ el.innerHTML = `
+  <div class="logo" style="background:${c.color}">
+    ${c.short}
+  </div>
 
-    grid.appendChild(el);
+  <strong>${c.name}</strong>
+
+  <div class="meta">
+    ${categoryNames[c.sport] || "📺 TV"} · ${c.country}
+  </div>
+
+  <span class="kind">TV CHANNEL</span>
+
+  <button class="visit play-channel" type="button">
+    ▶ Select Channel
+  </button>
+
+  <a class="visit" href="${c.url}"
+     target="_blank" rel="noopener noreferrer">
+    Official Site ↗
+  </a>
+`;
+
+el.querySelector(".play-channel").addEventListener("click", () => {
+  const player = document.getElementById("tvPlayer");
+  const placeholder = document.getElementById("player-placeholder");
+  const title = document.getElementById("player-title");
+  const message = document.getElementById("player-message");
+
+  title.textContent = "Selected Channel: " + c.name;
+  player.src = "";
+  player.style.display = "none";
+  placeholder.style.display = "grid";
+
+  message.textContent =
+    "এই চ্যানেলের অনুমোদিত ফ্রি Live Stream এখনো যাচাই করা হয়নি। Official Site থেকে দেখুন।";
+
+  document.getElementById("live-player").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
   });
+});
 }
 
 search.addEventListener("input", render);
