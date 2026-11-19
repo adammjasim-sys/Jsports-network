@@ -470,14 +470,11 @@ footer {
         autocomplete="off">
 
       <select id="countryFilter">
-        <option value="All">🌍 All Countries</option>
-        <option value="বাংলাদেশ">🇧🇩 বাংলাদেশ</option>
-        <option value="ভারত">🇮🇳 ভারত</option>
-        <option value="পাকিস্তান">🇵🇰 পাকিস্তান</option>
-        <option value="যুক্তরাজ্য">🇬🇧 যুক্তরাজ্য</option>
-        <option value="যুক্তরাষ্ট্র">🇺🇸 যুক্তরাষ্ট্র</option>
-        <option value="জাপান">🇯🇵 জাপান</option>
-        <option value="অন্যান্য">🌐 অন্যান্য</option>
+        <option value="কাতার">🇶🇦 কাতার</option>
+<option value="ফ্রান্স">🇫🇷 ফ্রান্স</option>
+<option value="জার্মানি">🇩🇪 জার্মানি</option>
+<option value="সিঙ্গাপুর">🇸🇬 সিঙ্গাপুর</option>
+<option value="তুরস্ক">🇹🇷 তুরস্ক</option>
       </select>
 
       <select id="categoryFilter">
@@ -687,8 +684,17 @@ const channels = [
     color: "#d4a51c"
   },
 
-  // INTERNATIONAL
+ 
+  // INTERNATIONAL NEWS TV CHANNELS
 
+  {
+    name: "Al Jazeera English",
+    short: "AJ",
+    sport: "News",
+    country: "কাতার",
+    url: "https://www.aljazeera.com/live/",
+    color: "#a98937"
+  },
   {
     name: "BBC News",
     short: "BBC",
@@ -702,43 +708,66 @@ const channels = [
     short: "SKY",
     sport: "News",
     country: "যুক্তরাজ্য",
-    url: "https://news.sky.com/",
+    url: "https://news.sky.com/watch-live",
     color: "#1673b8"
   },
   {
-    name: "Sky Sports Football",
-    short: "SKY SP",
-    sport: "Football",
-    country: "যুক্তরাজ্য",
-    url: "https://www.skysports.com/football",
-    color: "#d51d32"
-  },
-  {
-    name: "Al Jazeera English",
-    short: "AJ",
+    name: "France 24 English",
+    short: "F24",
     sport: "News",
-    country: "অন্যান্য",
-    url: "https://www.aljazeera.com/live/",
-    color: "#a98937"
+    country: "ফ্রান্স",
+    url: "https://www.france24.com/en/live",
+    color: "#1768ad"
   },
   {
-    name: "NASA TV",
-    short: "NASA",
-    sport: "Education",
+    name: "DW News",
+    short: "DW",
+    sport: "News",
+    country: "জার্মানি",
+    url: "https://www.dw.com/en/live-tv/s-100825",
+    color: "#176c9e"
+  },
+  {
+    name: "CNN International",
+    short: "CNN",
+    sport: "News",
     country: "যুক্তরাষ্ট্র",
-    url: "https://www.nasa.gov/nasatv/",
-    color: "#174b91"
+    url: "https://www.cnn.com/",
+    color: "#c51f30"
   },
   {
-    name: "NHK World Japan",
+    name: "NHK World-Japan",
     short: "NHK",
     sport: "News",
     country: "জাপান",
-    url: "https://www3.nhk.or.jp/nhkworld/",
+    url: "https://www3.nhk.or.jp/nhkworld/en/live/",
     color: "#1c6aab"
+  },
+  {
+    name: "CNA",
+    short: "CNA",
+    sport: "News",
+    country: "সিঙ্গাপুর",
+    url: "https://www.channelnewsasia.com/watch",
+    color: "#1674a9"
+  },
+  {
+    name: "TRT World",
+    short: "TRT",
+    sport: "News",
+    country: "তুরস্ক",
+    url: "https://www.trtworld.com/live",
+    color: "#a92332"
+  },
+  {
+    name: "Euronews",
+    short: "EURO",
+    sport: "News",
+    country: "ফ্রান্স",
+    url: "https://www.euronews.com/live",
+    color: "#2365a1"
   }
-
-];
+ 
 
 /* =================================
    FILTER ELEMENTS
@@ -783,14 +812,18 @@ function render() {
       country === "All" ||
       (country === "অন্যান্য"
         ? ![
-            "বাংলাদেশ",
-            "ভারত",
-            "পাকিস্তান",
-            "যুক্তরাজ্য",
-            "যুক্তরাষ্ট্র",
-            "জাপান"
-          ].includes(c.country)
-        : c.country === country);
+  "বাংলাদেশ",
+  "ভারত",
+  "পাকিস্তান",
+  "যুক্তরাজ্য",
+  "যুক্তরাষ্ট্র",
+  "জাপান",
+  "কাতার",
+  "ফ্রান্স",
+  "জার্মানি",
+  "সিঙ্গাপুর",
+  "তুরস্ক"
+].includes(c.country)
 
     const matchesCategory =
       category === "All" ||
