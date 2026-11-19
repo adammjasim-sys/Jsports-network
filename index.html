@@ -448,7 +448,7 @@ const channels = [
   short: "GTV",
   sport: "Cricket",
   country: "বাংলাদেশ",
-  url: "https://www.gazitv.com/",
+  url: "",
   color: "#087d49",
   access: "official"
 },
@@ -880,15 +880,23 @@ function render() {
     play.textContent = "▶ Select Channel";
     play.addEventListener("click", () => selectChannel(channel));
 
-    const site = document.createElement("a");
-    site.className = "site-btn";
-    site.textContent = "Official Site ↗";
-    site.href = channel.url;
-    site.target = "_blank";
-    site.rel = "noopener noreferrer";
+   const site = document.createElement(
+  channel.url ? "a" : "span"
+);
 
-    buttons.appendChild(play);
-    buttons.appendChild(site);
+site.className = "site-btn";
+
+if (channel.url) {
+  site.textContent = "Official Site ↗";
+  site.href = channel.url;
+  site.target = "_blank";
+  site.rel = "noopener noreferrer";
+} else {
+  site.textContent = "Official Website Only";
+}
+
+buttons.appendChild(play);
+buttons.appendChild(site);
 
     card.appendChild(top);
     card.appendChild(badge);
