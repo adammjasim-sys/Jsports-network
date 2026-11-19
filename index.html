@@ -874,34 +874,46 @@ function render() {
       </a>
     `;
 
-    el.querySelector(".play-channel").addEventListener("click", () => {
+   
+el.querySelector(".play-channel").addEventListener("click", () => {
 
-      const player = document.getElementById("tvPlayer");
-      const placeholder = document.getElementById("player-placeholder");
-      const title = document.getElementById("player-title");
-      const message = document.getElementById("player-message");
+  const player = document.getElementById("tvPlayer");
+  const placeholder = document.getElementById("player-placeholder");
+  const title = document.getElementById("player-title");
+  const message = document.getElementById("player-message");
 
-      title.textContent = "Selected Channel: " + c.name;
+  title.textContent = "Selected Channel: " + c.name;
 
-      player.src = "";
-      player.style.display = "none";
-      placeholder.style.display = "grid";
+  if (c.embedUrl) {
+    player.src = c.embedUrl;
+    player.style.display = "block";
+    placeholder.style.display = "none";
 
-      message.textContent =
-        "এই চ্যানেলের অনুমোদিত Free Live Embed Stream এখনো যুক্ত করা হয়নি। Official Site বাটনে ক্লিক করে সম্প্রচারকের ওয়েবসাইট দেখুন।";
+    message.textContent =
+      "Official live stream. Playback availability may depend on the broadcaster.";
 
-      document.getElementById("live-player").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+  } else {
+    player.src = "";
+    player.style.display = "none";
+    placeholder.style.display = "grid";
 
-    });
+    message.textContent =
+      "এই চ্যানেলের অনুমোদিত Free Live Embed এখনো যুক্ত করা হয়নি। Official Site বাটনে ক্লিক করে সম্প্রচার দেখুন।";
+  }
 
-    grid.appendChild(el);
-
+  document.getElementById("live-player").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
   });
 
+});
+
+grid.appendChild(el);
+
+});
+
 }
+
 
 /* =================================
    FILTER EVENTS
