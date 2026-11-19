@@ -42,6 +42,34 @@ footer{margin-top:30px;background:#0d2945;color:#d9e5ef;padding:22px 0;font-size
 <p>Jsports Network-এ ক্রিকেট ও ফুটবলের প্রকৃত টেলিভিশন চ্যানেলগুলো এক জায়গায় সাজানো হয়েছে। চ্যানেলের অফিসিয়াল ওয়েবসাইটে যেতে নিচের বাটনে ক্লিক করুন।</p>
 <div class="pills"><span class="pill">🏏 Cricket TV</span><span class="pill">⚽ Football TV</span></div>
 </section>
+  <section id="live-player">
+  <h2>📺 Live TV Player</h2>
+  <p class="sub" id="player-title">
+    আপনার পছন্দের TV Channel নির্বাচন করুন
+  </p>
+
+  <div style="background:#071b2d;border-radius:14px;
+  overflow:hidden;aspect-ratio:16/9;
+  display:grid;place-items:center;">
+
+    <iframe id="tvPlayer"
+      style="width:100%;height:100%;border:0;display:none"
+      allow="autoplay; encrypted-media; fullscreen"
+      allowfullscreen>
+    </iframe>
+
+    <div id="player-placeholder"
+      style="color:white;text-align:center;padding:20px">
+      <div style="font-size:55px">📺</div>
+      <strong>JSPORTS NETWORK</strong>
+      <p>নিচের তালিকা থেকে একটি চ্যানেল নির্বাচন করুন</p>
+    </div>
+  </div>
+
+  <p id="player-message" class="sub">
+    বৈধ লাইভ স্ট্রিম পাওয়া গেলে এখানে চলবে।
+  </p>
+</section>
 <section id="channels">
 <h2>টিভি চ্যানেল তালিকা</h2>
 <p class="sub">শুধু টেলিভিশন ব্রডকাস্টার। অ্যাপ, নিউজ পোর্টাল বা সাধারণ খেলার খবরের সাইট নয়।</p>
