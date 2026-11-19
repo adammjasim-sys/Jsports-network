@@ -46,11 +46,35 @@ footer{margin-top:30px;background:#0d2945;color:#d9e5ef;padding:22px 0;font-size
 <h2>টিভি চ্যানেল তালিকা</h2>
 <p class="sub">শুধু টেলিভিশন ব্রডকাস্টার। অ্যাপ, নিউজ পোর্টাল বা সাধারণ খেলার খবরের সাইট নয়।</p>
 <div class="toolbar">
-<input id="search" type="search" placeholder="চ্যানেলের নাম লিখে খুঁজুন..." aria-label="চ্যানেল খুঁজুন">
-<div class="filters">
-<button class="filter active" data-filter="All">সব চ্যানেল</button>
-<button class="filter" data-filter="Cricket">🏏 ক্রিকেট</button>
-<button class="filter" data-filter="Football">⚽ ফুটবল</button>
+  <input id="search" type="search"
+    placeholder="চ্যানেলের নাম লিখে খুঁজুন..."
+    aria-label="চ্যানেল খুঁজুন">
+
+  <select id="countryFilter" aria-label="দেশ নির্বাচন">
+    <option value="All">🌍 সব দেশ</option>
+    <option value="বাংলাদেশ">🇧🇩 বাংলাদেশ</option>
+    <option value="ভারত">🇮🇳 ভারত</option>
+    <option value="পাকিস্তান">🇵🇰 পাকিস্তান</option>
+    <option value="যুক্তরাজ্য">🇬🇧 যুক্তরাজ্য</option>
+    <option value="যুক্তরাষ্ট্র">🇺🇸 যুক্তরাষ্ট্র</option>
+    <option value="ফ্রান্স">🇫🇷 ফ্রান্স</option>
+    <option value="জার্মানি">🇩🇪 জার্মানি</option>
+    <option value="জাপান">🇯🇵 জাপান</option>
+    <option value="অন্যান্য">🌐 অন্যান্য দেশ</option>
+  </select>
+
+  <select id="categoryFilter" aria-label="ক্যাটাগরি নির্বাচন">
+    <option value="All">সব ক্যাটাগরি</option>
+    <option value="Cricket">🏏 ক্রিকেট</option>
+    <option value="Football">⚽ ফুটবল</option>
+    <option value="News">📺 নিউজ টিভি</option>
+    <option value="Entertainment">🎬 বিনোদন</option>
+    <option value="Movies">🎥 মুভি</option>
+    <option value="Kids">🧒 শিশু</option>
+    <option value="Education">📚 শিক্ষা</option>
+    <option value="Documentary">🌍 ডকুমেন্টারি</option>
+    <option value="General">📺 সাধারণ টিভি</option>
+  </select>
 </div>
 </div>
 <div class="grid" id="grid"></div>
