@@ -40,6 +40,7 @@ input:focus,select:focus{border-color:#ef5964;box-shadow:0 0 0 3px #ef33441c}
 .secondary-btn:hover{filter:brightness(1.15)}input[type=file]{padding:9px}
 .m3u-message{margin-top:12px;padding:10px 12px;border-radius:8px;background:#17263b;color:#c8d5e5;font-size:12px;line-height:1.6;display:none}
 .m3u-message.error{display:block;background:#3a2029;color:#ffc3c7}.m3u-message.success{display:block;background:#12352f;color:#a8f0d5}
+.saved-playlist-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:12px 14px;border:1px solid #2b3c53;border-radius:10px;background:#0c1727}.saved-playlist-row strong{font-size:12px}.saved-playlist-status{font-size:11px;color:#9aabc0;margin-top:5px;line-height:1.5}
 .toolbar{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:22px 0 16px}
 .search-wrap{position:relative}.search-wrap span{position:absolute;left:14px;top:13px;color:#9aabc0}.search-wrap input{padding-left:42px}
 .category-bar{display:flex;gap:8px;overflow-x:auto;padding:5px 1px 14px;scrollbar-width:thin}
@@ -98,6 +99,10 @@ footer{padding:27px 4%;text-align:center;color:#8495aa;font-size:12px;border-top
     </div>
   </div>
   <div id="m3uMessage" class="m3u-message" role="status" aria-live="polite"></div>
+  <div class="saved-playlist-row">
+    <div><strong>💾 Saved Playlist</strong><div id="savedPlaylistStatus" class="saved-playlist-status">এখনও কোনো Playlist সংরক্ষণ করা হয়নি।</div></div>
+    <button class="secondary-btn" id="clearSavedPlaylistBtn" type="button">Clear Saved Playlist</button>
+  </div>
 </section>
 
 <section class="toolbar">
@@ -157,6 +162,7 @@ const channels = [
 const categories=["সব চ্যানেল","Sports","Cricket","Football","News TV","Entertainment","Movies","Kids","Education","Documentary","General TV"];
 let activeCategory="সব চ্যানেল";
 let playlistChannels=[];
+const PLAYLIST_STORAGE_KEY="jsports_network_saved_playlist_v1";
 let hlsInstance=null;
 const grid=document.getElementById("channelGrid");
 const search=document.getElementById("searchInput");
@@ -168,6 +174,38 @@ const message=document.getElementById("m3uMessage");
 
 function showMessage(text,type="success"){
   message.textContent=text;message.className="m3u-message "+type;
+}
+function updateSavedPlaylistStatus(){
+  const status=document.getElementById("savedPlaylistStatus");
+  if(!status)return;
+  status.textContent=playlistChannels.length
+    ? playlistChannels.length+"টি Playlist channel এই browser-এ সংরক্ষিত আছে। Refresh করলেও থাকবে।"
+    : "এখনও কোনো Playlist সংরক্ষণ করা হয়নি।";
+}
+function savePlaylistChannels(){
+  try{
+    localStorage.setItem(PLAYLIST_STORAGE_KEY,JSON.stringify(playlistChannels));
+    updateSavedPlaylistStatus();
+    return true;
+  }catch(error){
+    updateSavedPlaylistStatus();
+    showMessage("চ্যানেল যোগ হয়েছে, কিন্তু browser storage-এ সংরক্ষণ করা যায়নি। Browser storage space/settings পরীক্ষা করুন।","error");
+    return false;
+  }
+}
+function restoreSavedPlaylist(){
+  try{
+    const saved=localStorage.getItem(PLAYLIST_STORAGE_KEY);
+    if(!saved)return;
+    const data=JSON.parse(saved);
+    if(Array.isArray(data)){
+      playlistChannels=data.filter(c=>c&&typeof c.name==="string"&&/^https?:\/\//i.test(c.streamUrl||"")&&c.isPlaylist===true);
+    }
+  }catch(error){
+    playlistChannels=[];
+    try{localStorage.removeItem(PLAYLIST_STORAGE_KEY);}catch(ignore){}
+  }
+  updateSavedPlaylistStatus();
 }
 function makeCategories(){
   categoryBar.innerHTML="";
@@ -292,8 +330,9 @@ function addPlaylist(text,sourceName){
   const parsed=parseM3U(text);
   if(!parsed.length){showMessage("Playlist পড়া হয়েছে, কিন্তু কোনো বৈধ HTTP/HTTPS channel stream পাওয়া যায়নি। M3U ফাইলের format পরীক্ষা করুন।","error");return;}
   playlistChannels=parsed;
+  const saved=savePlaylistChannels();
   activeCategory="সব চ্যানেল";makeCategories();country.value="Playlist";search.value="";render();
-  showMessage(sourceName+" থেকে "+parsed.length+"টি channel যোগ হয়েছে। কোনো channel চালাতে তার Play Stream বাটনে ক্লিক করুন।","success");
+  if(saved)showMessage(sourceName+" থেকে "+parsed.length+"টি channel যোগ হয়েছে এবং এই browser-এ সংরক্ষিত হয়েছে। Refresh করলেও থাকবে।","success");
   document.getElementById("m3uPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 document.getElementById("loadUrlBtn").addEventListener("click",async()=>{
@@ -317,6 +356,14 @@ document.getElementById("m3uFile").addEventListener("change",event=>{
   reader.readAsText(file);
 });
 search.addEventListener("input",render);country.addEventListener("change",render);
+document.getElementById("clearSavedPlaylistBtn").addEventListener("click",()=>{
+  playlistChannels=[];
+  try{localStorage.removeItem(PLAYLIST_STORAGE_KEY);}catch(error){}
+  country.value="all";search.value="";activeCategory="সব চ্যানেল";
+  updateSavedPlaylistStatus();makeCategories();render();
+  showMessage("এই browser থেকে সংরক্ষিত Playlist মুছে ফেলা হয়েছে।","success");
+});
+restoreSavedPlaylist();
 makeCategories();render();
 </script>
 </body>
