@@ -223,6 +223,21 @@ footer{border-color:#222;color:#777;font-size:10px}
 
 
 /* FIX: clickable channel rows + low-data quality selector */
+
+/* PLAYER UPGRADE: responsive controls, loading state and fullscreen */
+.player-screen{position:relative;overflow:hidden}
+#liveVideo{object-fit:contain}
+.player-loading{position:absolute;inset:0;z-index:3;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:rgba(0,0,0,.58);color:#fff;font-size:12px;pointer-events:none}
+.player-spinner{width:32px;height:32px;border:3px solid #ffffff35;border-top-color:#ed1020;border-radius:50%;animation:playerSpin .8s linear infinite}
+@keyframes playerSpin{to{transform:rotate(360deg)}}
+.player-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 13px;background:#101010;border-top:1px solid #242424}
+.player-control-btn{border:1px solid #333;background:#1b1b1b;color:#f5f5f5;border-radius:5px;padding:9px 13px;font-size:10px;font-weight:800;cursor:pointer;transition:.18s}
+.player-control-btn:hover:not(:disabled){background:#e5091b;border-color:#e5091b}
+.player-control-btn:disabled{opacity:.45;cursor:not-allowed}
+.player-control-hint{margin-left:auto;color:#777;font-size:9px}
+.player-screen:fullscreen{width:100vw;height:100vh;max-height:none;aspect-ratio:auto;background:#000}
+.player-screen:fullscreen #liveVideo{width:100%;height:100%;max-height:none;aspect-ratio:auto}
+@media(max-width:760px){.player-control-hint{width:100%;margin:2px 0 0}.player-control-btn{padding:9px 11px}}
 .player-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.player-tools label{font-size:9px;color:#aaa;letter-spacing:.7px;font-weight:800}.player-tools select{width:auto;min-width:155px;padding:8px 10px;font-size:10px;background:#171717;border-color:#383838}.channel-card{cursor:pointer;user-select:none;position:relative;z-index:2;pointer-events:auto;touch-action:manipulation}.channel-card>*{pointer-events:none}.channel-card:focus-visible{outline:2px solid #ed1020;outline-offset:2px}.channel-card.selected{background:#211012;border-color:#e5091b;box-shadow:inset 3px 0 #e5091b}.channel-card .card-actions{display:none!important}
 @media(max-width:760px){.player-tools{width:100%;justify-content:flex-start}.player-tools select{min-width:135px}.player-head{align-items:flex-start}}
 
@@ -265,9 +280,16 @@ footer{border-color:#222;color:#777;font-size:10px}
 
     <section class="player" id="livePlayer">
       <div class="player-head"><div class="player-title" id="playerTitle">📺 Jsports Network Live Player</div><div class="player-tools"><label for="streamQuality">VIDEO QUALITY</label><select id="streamQuality" aria-label="Video quality" disabled><option value="360" selected>Data Saver · 360p max</option><option value="240">Low Data · 240p max</option><option value="144">Very Low · 144p max</option><option value="480">Standard · 480p max</option><option value="auto">Auto · adaptive</option></select><span class="live-status" id="playerStatus">● READY TO PLAY</span></div></div>
-      <div class="player-screen">
-        <video id="liveVideo" controls playsinline crossorigin="anonymous"></video>
+      <div class="player-screen" id="playerScreen">
+        <video id="liveVideo" controls playsinline crossorigin="anonymous" preload="none"></video>
+        <div class="player-loading" id="playerLoading" aria-live="polite"><span class="player-spinner"></span><strong id="playerLoadingText">স্ট্রিম লোড হচ্ছে...</strong></div>
         <div class="player-content" id="playerPlaceholder"><div class="player-icon">▶</div><h3 id="playerHeading">SELECT YOUR CHANNEL</h3><p id="playerText">বাম পাশের তালিকা থেকে একটি চ্যানেল নির্বাচন করুন। সমর্থিত M3U/HLS stream এখানে চলবে; অফিসিয়াল ওয়েবসাইট নতুন ট্যাবে খুলবে।</p><a id="playerLink" class="player-action" href="#" target="_blank" rel="noopener" style="display:none">▶ OPEN OFFICIAL LIVE</a></div>
+      </div>
+      <div class="player-controls" aria-label="Player controls">
+        <button class="player-control-btn" id="playPauseBtn" type="button" disabled>▶ PLAY</button>
+        <button class="player-control-btn" id="muteBtn" type="button" disabled>🔊 SOUND ON</button>
+        <button class="player-control-btn" id="fullscreenBtn" type="button">⛶ FULL SCREEN</button>
+        <span class="player-control-hint">ভিডিওর নিজস্ব controls থেকেও volume ও playback নিয়ন্ত্রণ করা যাবে।</span>
       </div>
       <div class="player-note">LIVE PLAYER · M3U/HLS playback সমর্থিত stream-এর জন্য। DRM, CORS, অঞ্চলভিত্তিক সীমাবদ্ধতা বা মেয়াদোত্তীর্ণ URL-এর কারণে কিছু stream নাও চলতে পারে।</div>
     </section>
@@ -364,6 +386,12 @@ const search=document.getElementById("searchInput");
 const country=document.getElementById("countryFilter");
 const categoryBar=document.getElementById("categoryBar");
 const video=document.getElementById("liveVideo");
+const playerScreen=document.getElementById("playerScreen");
+const playerLoading=document.getElementById("playerLoading");
+const playerLoadingText=document.getElementById("playerLoadingText");
+const playPauseBtn=document.getElementById("playPauseBtn");
+const muteBtn=document.getElementById("muteBtn");
+const fullscreenBtn=document.getElementById("fullscreenBtn");
 const placeholder=document.getElementById("playerPlaceholder");
 const message=document.getElementById("m3uMessage");
 
@@ -412,35 +440,52 @@ function makeCategories(){
     categoryBar.appendChild(btn);
   });
 }
+function setPlayerLoading(show,text="স্ট্রিম লোড হচ্ছে..."){
+  playerLoadingText.textContent=text;
+  playerLoading.style.display=show?"flex":"none";
+}
+function updatePlayerButtons(){
+  const hasSource=!!(video.currentSrc||video.src||hlsInstance);
+  playPauseBtn.disabled=!hasSource;
+  muteBtn.disabled=!hasSource;
+  playPauseBtn.textContent=video.paused?"▶ PLAY":"❚❚ PAUSE";
+  muteBtn.textContent=video.muted?"🔇 MUTED":"🔊 SOUND ON";
+}
 function stopPlayback(){
   if(hlsInstance){hlsInstance.destroy();hlsInstance=null;}
   availableHlsLevels=[];
   if(qualitySelect)qualitySelect.disabled=true;
+  setPlayerLoading(false);
   video.pause();video.removeAttribute("src");video.load();video.style.display="none";placeholder.style.display="block";
+  updatePlayerButtons();
 }
 function bestLevelAtOrBelow(maxHeight){
   if(!hlsInstance||!availableHlsLevels.length)return -1;
   const eligible=availableHlsLevels.map((level,index)=>({level,index})).filter(x=>x.level.height&&x.level.height<=maxHeight);
-  if(!eligible.length)return availableHlsLevels.map((level,index)=>({level,index})).filter(x=>x.level.height).sort((a,b)=>a.level.height-b.level.height||a.index-b.index)[0]?.index ?? 0;
-  return Math.max(...eligible.map(x=>x.index));
+  if(!eligible.length)return -1;
+  eligible.sort((a,b)=>a.level.height-b.level.height);
+  return eligible[eligible.length-1].index;
 }
 function applyQualitySetting(){
   if(!hlsInstance||!availableHlsLevels.length)return;
   const setting=qualitySelect.value;
   if(setting==="auto"){hlsInstance.autoLevelCapping=-1;hlsInstance.currentLevel=-1;return;}
-  const target=Number(setting);
-  const cap=bestLevelAtOrBelow(target);
-  hlsInstance.autoLevelCapping=cap;
-  hlsInstance.currentLevel=cap;
+  const cap=bestLevelAtOrBelow(Number(setting));
+  if(cap>=0){hlsInstance.autoLevelCapping=cap;hlsInstance.currentLevel=-1;}
 }
 function updateQualityOptions(){
   if(!hlsInstance||!availableHlsLevels.length)return;
+  const heights=availableHlsLevels.map(x=>Number(x.height)||0).filter(Boolean);
+  if(!heights.length){qualitySelect.disabled=true;return;}
   qualitySelect.disabled=false;
-  const maxHeight=Math.max(...availableHlsLevels.map(x=>x.height||0));
-  const options=[...qualitySelect.options];
-  options.forEach(o=>{if(/^\d+$/.test(o.value)){const h=Number(o.value);o.disabled=!availableHlsLevels.some(l=>l.height);}});
+  [...qualitySelect.options].forEach(o=>{
+    if(/^\d+$/.test(o.value))o.disabled=!heights.some(h=>h<=Number(o.value));
+  });
+  if(qualitySelect.selectedOptions[0]?.disabled)qualitySelect.value="auto";
   applyQualitySetting();
-  if(maxHeight&&maxHeight<240){document.getElementById("playerText").textContent="এই stream-এ 240p-এর চেয়েও কম সর্বোচ্চ resolution পাওয়া গেছে; উপলব্ধ মানেই চলবে।";}
+  const maxHeight=Math.max(...heights);
+  const note=document.getElementById("playerText");
+  if(maxHeight<240&&note)note.textContent="এই stream-এ 240p-এর চেয়েও কম সর্বোচ্চ resolution পাওয়া গেছে; উপলব্ধ মানেই চলবে।";
 }
 function playStream(channel){
   stopPlayback();
@@ -451,27 +496,30 @@ function playStream(channel){
   document.getElementById("playerText").textContent="স্ট্রিম লোড হচ্ছে। কাজ না করলে URL, CORS, DRM বা অঞ্চলভিত্তিক সীমাবদ্ধতা পরীক্ষা করুন।";
   document.getElementById("playerLink").style.display="none";
   placeholder.style.display="none";video.style.display="block";
+  setPlayerLoading(true,"স্ট্রিম লোড হচ্ছে...");
   const src=channel.streamUrl;
   if(!src){showPlayerError("এই চ্যানেলের সরাসরি stream URL নেই।");return;}
   const isHls=/\.m3u8($|[?#])/i.test(src)||channel.isPlaylist;
   if(isHls && window.Hls && Hls.isSupported()){
     hlsInstance=new Hls({enableWorker:true,capLevelToPlayerSize:true,startLevel:-1,abrEwmaDefaultEstimate:450000,abrBandWidthFactor:0.8,abrBandWidthUpFactor:0.7});
-    hlsInstance.on(Hls.Events.MANIFEST_PARSED,()=>{availableHlsLevels=hlsInstance.levels||[];updateQualityOptions();document.getElementById("playerStatus").textContent="● STREAM READY";video.play().catch(()=>{});});
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED,()=>{availableHlsLevels=hlsInstance.levels||[];updateQualityOptions();document.getElementById("playerStatus").textContent="● STREAM READY";video.play().catch(()=>{setPlayerLoading(false);});updatePlayerButtons();});
     hlsInstance.on(Hls.Events.LEVELS_UPDATED,()=>{availableHlsLevels=hlsInstance.levels||[];updateQualityOptions();});
-    hlsInstance.loadSource(src);hlsInstance.attachMedia(video);
     hlsInstance.on(Hls.Events.ERROR,(event,data)=>{if(data.fatal){showPlayerError("স্ট্রিম চালানো যায়নি। সার্ভার CORS, DRM, URL বা নেটওয়ার্ক বাধা দিতে পারে।");}});
+    hlsInstance.loadSource(src);hlsInstance.attachMedia(video);
   }else if(video.canPlayType("application/vnd.apple.mpegurl")||!isHls){
     qualitySelect.disabled=true;
-    video.src=src;video.addEventListener("loadedmetadata",()=>{document.getElementById("playerStatus").textContent="● STREAM READY";},{once:true});
-    video.addEventListener("error",()=>showPlayerError("ভিডিও চালানো যায়নি। এই stream format বা server আপনার browser সমর্থন করছে না।"),{once:true});
-    video.play().catch(()=>{});
+    video.src=src;
+    video.play().catch(()=>{setPlayerLoading(false);});
   }else{showPlayerError("এই browser-এ HLS playback সমর্থিত নয়।");}
+  updatePlayerButtons();
 }
 function showPlayerError(text){
   stopPlayback();document.getElementById("playerStatus").textContent="● PLAYBACK ERROR";
   document.getElementById("playerHeading").textContent="Playback unavailable";
   document.getElementById("playerText").textContent=text;
+  placeholder.style.display="block";
   document.getElementById("playerLink").style.display="none";
+  updatePlayerButtons();
 }
 function selectChannel(channel){
   currentChannel=channel;
@@ -482,6 +530,7 @@ function selectChannel(channel){
   document.getElementById("playerHeading").textContent=channel.name;
   const text=document.getElementById("playerText"),link=document.getElementById("playerLink");
   document.getElementById("playerStatus").textContent="● OFFICIAL LINK";
+  updatePlayerButtons();
   if(!channel.url){text.textContent="এই চ্যানেলের জন্য বর্তমানে ব্যবহারযোগ্য অফিসিয়াল ফ্রি Live লিংক নিশ্চিত করা যায়নি।";link.style.display="none";return;}
   if(channel.type==="live"){text.textContent="এই চ্যানেলের অফিসিয়াল Live পেজ বা সম্প্রচার লিংক খুলুন।";link.textContent="▶ Open Official Live";}
   else{text.textContent="এই চ্যানেল/সম্প্রচারকের ওয়েবসাইট বা অনুমোদিত প্ল্যাটফর্ম খুলবে। সেখানে চ্যানেলটি পাওয়া, সাবস্ক্রিপশন ও অঞ্চলভিত্তিক শর্ত প্রযোজ্য হতে পারে।";link.textContent="↗ Open Official Platform";}
@@ -617,6 +666,27 @@ document.getElementById("m3uFile").addEventListener("change",event=>{
   reader.readAsText(file);
 });
 search.addEventListener("input",render);country.addEventListener("change",render);
+// Native media events keep loading, status and custom controls in sync.
+video.addEventListener("loadstart",()=>{if(video.style.display!=="none")setPlayerLoading(true,"স্ট্রিম লোড হচ্ছে...");});
+video.addEventListener("waiting",()=>setPlayerLoading(true,"বাফার হচ্ছে..."));
+video.addEventListener("stalled",()=>setPlayerLoading(true,"নেটওয়ার্ক ধীর—অপেক্ষা করুন..."));
+video.addEventListener("playing",()=>{setPlayerLoading(false);document.getElementById("playerStatus").textContent="● PLAYING";updatePlayerButtons();});
+video.addEventListener("canplay",()=>{setPlayerLoading(false);updatePlayerButtons();});
+video.addEventListener("pause",updatePlayerButtons);
+video.addEventListener("play",updatePlayerButtons);
+video.addEventListener("volumechange",updatePlayerButtons);
+video.addEventListener("ended",()=>{document.getElementById("playerStatus").textContent="● STREAM ENDED";updatePlayerButtons();});
+video.addEventListener("error",()=>{if(video.style.display!=="none"&&currentChannel?.streamUrl)showPlayerError("ভিডিও চালানো যায়নি। Stream URL, browser support, CORS বা server access পরীক্ষা করুন।");});
+playPauseBtn.addEventListener("click",()=>{if(video.paused)video.play().catch(()=>showPlayerError("এই stream চালু করা যায়নি।"));else video.pause();});
+muteBtn.addEventListener("click",()=>{video.muted=!video.muted;updatePlayerButtons();});
+fullscreenBtn.addEventListener("click",async()=>{
+  try{
+    if(document.fullscreenElement){await document.exitFullscreen();}
+    else if(playerScreen.requestFullscreen){await playerScreen.requestFullscreen();}
+    else if(video.webkitEnterFullscreen){video.webkitEnterFullscreen();}
+  }catch(error){document.getElementById("playerStatus").textContent="● FULLSCREEN UNAVAILABLE";}
+});
+document.addEventListener("fullscreenchange",()=>{fullscreenBtn.textContent=document.fullscreenElement?"✕ EXIT FULL SCREEN":"⛶ FULL SCREEN";});
 qualitySelect.addEventListener("change",applyQualitySetting);
 document.getElementById("clearSavedPlaylistBtn").addEventListener("click",()=>{
   playlistChannels=[];
