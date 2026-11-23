@@ -241,6 +241,30 @@ footer{border-color:#222;color:#777;font-size:10px}
 .player-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.player-tools label{font-size:9px;color:#aaa;letter-spacing:.7px;font-weight:800}.player-tools select{width:auto;min-width:155px;padding:8px 10px;font-size:10px;background:#171717;border-color:#383838}.channel-card{cursor:pointer;user-select:none;position:relative;z-index:2;pointer-events:auto;touch-action:manipulation}.channel-card>*{pointer-events:none}.channel-card:focus-visible{outline:2px solid #ed1020;outline-offset:2px}.channel-card.selected{background:#211012;border-color:#e5091b;box-shadow:inset 3px 0 #e5091b}.channel-card .card-actions{display:none!important}
 @media(max-width:760px){.player-tools{width:100%;justify-content:flex-start}.player-tools select{min-width:135px}.player-head{align-items:flex-start}}
 
+
+/* PREMIUM CHANNEL EXPERIENCE — STEP 2 */
+.highlight-section{margin:30px 0 34px}
+.highlight-heading{align-items:center;margin-bottom:16px}
+.highlight-heading h2{font-size:21px;letter-spacing:.2px}
+.highlight-heading p{max-width:680px;font-size:11px;color:#929292}
+.highlight-tag{background:#171010;border-color:#5a2027;color:#ff7b85}
+#liveNowGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#featuredGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.highlight-card{position:relative;min-height:76px;padding:13px;background:linear-gradient(145deg,#151515,#0d0d0d);border:1px solid #292929;border-radius:11px;box-shadow:0 7px 20px #0004}
+.highlight-card:focus-visible{outline:2px solid #ed1020;outline-offset:3px}
+.highlight-card:hover{background:linear-gradient(145deg,#201012,#111);border-color:#8d2630;transform:translateY(-2px);box-shadow:0 12px 24px #0007}
+.highlight-logo{width:46px;height:46px;flex-basis:46px;background:#222;border-radius:10px}
+.highlight-logo img{padding:4px}
+.highlight-copy strong{font-size:12px;line-height:1.35}
+.highlight-copy small{font-size:9px;letter-spacing:.2px;color:#888}
+.highlight-card .highlight-pill{display:inline-block;margin-top:6px;padding:3px 6px;border-radius:3px;background:#202020;color:#aaa;font-size:8px;font-weight:800;letter-spacing:.5px}
+#liveNowGrid .highlight-card{border-left:2px solid #ed1020}
+#featuredGrid .highlight-card{min-height:92px;background:linear-gradient(135deg,#171717,#0c0c0c)}
+#featuredGrid .highlight-logo{width:52px;height:52px;flex-basis:52px;border:1px solid #333}
+.highlight-empty{background:#101010;border-color:#333;color:#888}
+@media(max-width:1050px){#liveNowGrid,#featuredGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.highlight-section{margin:23px 0 27px}.highlight-heading h2{font-size:18px}#liveNowGrid,#featuredGrid{grid-template-columns:1fr;gap:8px}.highlight-card{min-height:68px;padding:10px}.highlight-logo{width:40px;height:40px;flex-basis:40px}#featuredGrid .highlight-logo{width:44px;height:44px;flex-basis:44px}}
+
 </style>
 </head>
 <body>
@@ -294,9 +318,9 @@ footer{border-color:#222;color:#777;font-size:10px}
       <div class="player-note">LIVE PLAYER · M3U/HLS playback সমর্থিত stream-এর জন্য। DRM, CORS, অঞ্চলভিত্তিক সীমাবদ্ধতা বা মেয়াদোত্তীর্ণ URL-এর কারণে কিছু stream নাও চলতে পারে।</div>
     </section>
 
-    <section class="highlight-section" aria-labelledby="liveNowTitle"><div class="highlight-heading"><div><h2 id="liveNowTitle"><span class="live-dot"></span>Live Now</h2><p>লাইভ পেজ ও আপনার M3U stream-এর দ্রুত শর্টকাট। সম্প্রচার চলছে কি না রিয়েল-টাইমে যাচাই করা হয় না।</p></div><span class="highlight-tag">LIVE LINKS</span></div><div class="highlight-grid" id="liveNowGrid"></div></section>
+    <section class="highlight-section" aria-labelledby="liveNowTitle"><div class="highlight-heading"><div><h2 id="liveNowTitle"><span class="live-dot"></span>Live Now</h2><p>অফিসিয়াল Live পেজ এবং আপনার যোগ করা M3U stream-এর দ্রুত শর্টকাট। Live badge মানে লিংকটি Live পেজ/স্ট্রিম—সম্প্রচার চলছে এমন নিশ্চয়তা নয়।</p></div><span class="highlight-tag">LIVE LINKS · M3U</span></div><div class="highlight-grid" id="liveNowGrid"></div></section>
 
-    <section class="highlight-section" aria-labelledby="featuredTitle"><div class="highlight-heading"><div><h2 id="featuredTitle">★ Featured Channels</h2><p>জনপ্রিয় Sports, Cricket ও Entertainment প্ল্যাটফর্ম।</p></div><span class="highlight-tag">EDITOR'S PICKS</span></div><div class="highlight-grid" id="featuredGrid"></div></section>
+    <section class="highlight-section" aria-labelledby="featuredTitle"><div class="highlight-heading"><div><h2 id="featuredTitle">★ Featured Channels</h2><p>Sports, Cricket, Football ও বিনোদন বিভাগের বাছাই করা চ্যানেল ও প্ল্যাটফর্ম।</p></div><span class="highlight-tag">EDITOR'S PICKS</span></div><div class="highlight-grid" id="featuredGrid"></div></section>
 
     <section class="panel" id="m3uPanel">
       <h2>＋ ADD YOUR M3U PLAYLIST</h2>
@@ -536,19 +560,47 @@ function selectChannel(channel){
   else{text.textContent="এই চ্যানেল/সম্প্রচারকের ওয়েবসাইট বা অনুমোদিত প্ল্যাটফর্ম খুলবে। সেখানে চ্যানেলটি পাওয়া, সাবস্ক্রিপশন ও অঞ্চলভিত্তিক শর্ত প্রযোজ্য হতে পারে।";link.textContent="↗ Open Official Platform";}
   link.href=channel.url;link.style.display="inline-block";placeholder.style.display="block";
 }
-function makeHighlightCard(channel){
-  const card=document.createElement("button");card.type="button";card.className="highlight-card";card.setAttribute("aria-label","Open "+channel.name);
-  const logo=document.createElement("span");logo.className="highlight-logo";logo.style.background=channel.color||"#236b91";logo.textContent=channel.short||"TV";
-  const logoSrc=channel.logo||(channel.url?("https://www.google.com/s2/favicons?domain="+encodeURIComponent(new URL(channel.url).hostname)+"&sz=128"):"");
-  if(logoSrc){const img=document.createElement("img");img.src=logoSrc;img.alt="";img.onerror=()=>{img.remove();logo.textContent=channel.short||"TV";};logo.textContent="";logo.appendChild(img);}
-  const copy=document.createElement("span");copy.className="highlight-copy";const strong=document.createElement("strong");strong.textContent=channel.name;const small=document.createElement("small");small.textContent=(channel.category||"TV")+" · "+(channel.isPlaylist?"M3U Playlist":(channel.country||"Official platform"));copy.append(strong,small);card.append(logo,copy);card.addEventListener("click",()=>selectChannel(channel));return card;
+function makeHighlightCard(channel,kind="live"){
+  const card=document.createElement("button");
+  card.type="button";card.className="highlight-card";
+  card.setAttribute("aria-label","Select "+channel.name);
+  const logo=document.createElement("span");logo.className="highlight-logo";
+  logo.style.background=channel.color||"#242424";logo.textContent=channel.short||"TV";
+  const logoSrc=channel.logo||(channel.url?"https://www.google.com/s2/favicons?domain="+encodeURIComponent(new URL(channel.url).hostname)+"&sz=128":"");
+  if(logoSrc){
+    const img=document.createElement("img");img.src=logoSrc;img.alt=channel.name+" logo";img.loading="lazy";
+    img.onerror=()=>{img.remove();logo.textContent=channel.short||"TV";};
+    logo.textContent="";logo.appendChild(img);
+  }
+  const copy=document.createElement("span");copy.className="highlight-copy";
+  const strong=document.createElement("strong");strong.textContent=channel.name;
+  const small=document.createElement("small");small.textContent=(channel.category||"TV")+" · "+(channel.country||"Playlist");
+  const pill=document.createElement("span");pill.className="highlight-pill";
+  pill.textContent=channel.isPlaylist?"YOUR M3U STREAM":channel.type==="live"?"OFFICIAL LIVE PAGE":channel.url?"OFFICIAL PLATFORM":"LINK UNAVAILABLE";
+  copy.append(strong,small,pill);card.append(logo,copy);
+  card.addEventListener("click",()=>selectChannel(channel));
+  return card;
 }
 function renderHighlights(){
-  const liveGrid=document.getElementById("liveNowGrid"),featuredGrid=document.getElementById("featuredGrid");if(!liveGrid||!featuredGrid)return;
-  const all=[...channels,...playlistChannels],q=search.value.toLowerCase().trim(),selectedCountry=country.value;
-  const matches=c=>{const hay=(c.name+" "+(c.country||"")+" "+(c.category||"")).toLowerCase();return hay.includes(q)&&(selectedCountry==="all"||(selectedCountry==="Playlist"?c.isPlaylist:c.country===selectedCountry))&&(activeCategory==="সব চ্যানেল"||c.category===activeCategory);};
-  const live=all.filter(c=>matches(c)&&(c.isPlaylist||c.type==="live")).slice(0,4);liveGrid.innerHTML="";if(live.length)live.forEach(c=>liveGrid.appendChild(makeHighlightCard(c)));else liveGrid.innerHTML='<div class="highlight-empty">এই ফিল্টারে কোনো Live link পাওয়া যায়নি।</div>';
-  const names=["T Sports","DD Sports","Red Bull TV","ICC.tv","FIFA+","Zee Bangla HD","Star Jalsha","Geo Super"];const featured=all.filter(c=>matches(c)&&names.includes(c.name)).slice(0,4);featuredGrid.innerHTML="";if(featured.length)featured.forEach(c=>featuredGrid.appendChild(makeHighlightCard(c)));else featuredGrid.innerHTML='<div class="highlight-empty">এই ফিল্টারে Featured channel পাওয়া যায়নি।</div>';
+  const liveGrid=document.getElementById("liveNowGrid"),featuredGrid=document.getElementById("featuredGrid");
+  if(!liveGrid||!featuredGrid)return;
+  const all=[...channels,...playlistChannels];
+  // Keep discovery sections independent from sidebar search/category filters.
+  // 
+  const liveCandidates=all.filter(c=>c.isPlaylist||c.type==="live");
+  const live=[...playlistChannels.slice(0,3),...liveCandidates.filter(c=>!c.isPlaylist)].slice(0,6);
+  liveGrid.innerHTML="";
+  if(live.length)live.forEach(c=>liveGrid.appendChild(makeHighlightCard(c,"live")));
+  else liveGrid.innerHTML='<div class="highlight-empty">এখনও Live page বা M3U stream যোগ করা হয়নি।</div>';
+
+  const preferred=["T Sports","DD Sports","Red Bull TV","ICC.tv","FIFA+","Geo Super","Zee Bangla HD","Star Jalsha"];
+  const featured=[];
+  preferred.forEach(name=>{const found=all.find(c=>c.name===name);if(found&&!featured.includes(found))featured.push(found);});
+  const fallback=all.filter(c=>["Sports","Cricket","Football","Entertainment"].includes(c.category));
+  fallback.forEach(c=>{if(featured.length<6&&!featured.includes(c))featured.push(c);});
+  featuredGrid.innerHTML="";
+  if(featured.length)featured.slice(0,6).forEach(c=>featuredGrid.appendChild(makeHighlightCard(c,"featured")));
+  else featuredGrid.innerHTML='<div class="highlight-empty">Featured channel এখনো পাওয়া যায়নি।</div>';
 }
 
 function render(){
