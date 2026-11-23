@@ -17,9 +17,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(7,13,25,.92);backdrop-fi
 .brand h1{font-size:20px;margin:0;letter-spacing:.3px}.brand small{color:var(--muted);font-size:11px}
 .nav-status{font-size:11px;font-weight:bold;color:#ff6973;border:1px solid #ef334044;border-radius:30px;padding:8px 12px}
 .container{max-width:1450px;margin:auto;padding:25px 4% 55px}
-.hero{position:relative;overflow:hidden;padding:28px;border-radius:20px;border:1px solid #344660;background:linear-gradient(115deg,#172c48,#111a2b 65%,#351b2a);margin-bottom:23px}
+.hero{position:relative;overflow:hidden;padding:30px;border-radius:20px;border:1px solid #344660;background:linear-gradient(115deg,#172c48,#111a2b 65%,#351b2a);margin-bottom:23px}
 .hero:after{content:"📡";position:absolute;right:7%;top:15%;font-size:95px;opacity:.12}
-.hero h2{font-size:28px;margin:0 0 10px}.hero p{max-width:720px;color:#bdcadd;line-height:1.7;margin:0}
+.hero h2{font-size:29px;margin:0 0 10px;letter-spacing:.2px}.hero p{max-width:720px;color:#bdcadd;line-height:1.7;margin:0}
 .hero-label{display:inline-block;color:#ff8b93;font-size:11px;font-weight:bold;letter-spacing:1.4px;margin-bottom:12px}
 .player{overflow:hidden;border:1px solid #31435a;border-radius:18px;background:#03070d;box-shadow:0 15px 40px #0005;margin-bottom:25px}
 .player-head{padding:14px 18px;background:#111d2e;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -45,16 +45,16 @@ input:focus,select:focus{border-color:#ef5964;box-shadow:0 0 0 3px #ef33441c}
 .search-wrap{position:relative}.search-wrap span{position:absolute;left:14px;top:13px;color:#9aabc0}.search-wrap input{padding-left:42px}
 .category-bar{display:flex;gap:8px;overflow-x:auto;padding:5px 1px 14px;scrollbar-width:thin}
 .cat-btn{white-space:nowrap;cursor:pointer;border:1px solid #2b3c53;color:#c6d2e1;background:#111e30;border-radius:30px;padding:9px 15px;font-size:12px;transition:.2s}
-.cat-btn:hover,.cat-btn.active{color:white;background:var(--red);border-color:var(--red)}
+.cat-btn:hover,.cat-btn.active{color:white;background:linear-gradient(135deg,var(--red),#bd1428);border-color:var(--red);box-shadow:0 5px 16px #ef334433;transform:translateY(-1px)}
 .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0 15px}
 .section-title h2{font-size:20px;margin:0}.total{color:#9aabc0;font-size:12px}
 .channel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
 .channel-card{min-width:0;padding:15px;border:1px solid #263950;border-radius:14px;background:linear-gradient(145deg,#142238,#0e1929);transition:transform .22s,border-color .22s,box-shadow .22s;animation:appear .35s ease both}
-.channel-card:hover{transform:translateY(-4px);border-color:#62758e;box-shadow:0 12px 25px #0004}
+.channel-card:hover{transform:translateY(-5px);border-color:#ef5964;box-shadow:0 14px 28px #0005,0 0 0 1px #ef33441a}
 @keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .card-top{display:flex;align-items:center;gap:11px}.logo{flex:0 0 47px;width:47px;height:47px;display:grid;place-items:center;border-radius:12px;color:white;font-size:12px;font-weight:900;box-shadow:inset 0 0 15px #ffffff18;overflow:hidden}
 .channel-info{min-width:0}.channel-info h3{font-size:14px;margin:0 0 6px;overflow-wrap:anywhere}.meta{font-size:11px;color:#9eafc3;line-height:1.5}
-.channel-label{display:inline-block;margin:13px 0 12px;padding:5px 8px;border-radius:5px;background:#1c3446;color:#a9d9c7;font-size:10px;font-weight:bold}
+.channel-label{display:inline-block;margin:13px 0 12px;letter-spacing:.35px;padding:5px 8px;border-radius:5px;background:#1c3446;color:#a9d9c7;font-size:10px;font-weight:bold}
 .channel-label.website{background:#263348;color:#bac8d8}.channel-label.playlist{background:#174338;color:#9ce8c8}
 .card-actions{display:flex;gap:8px}.card-actions a,.card-actions button{flex:1;min-width:0;text-align:center;border:0;border-radius:8px;padding:10px 5px;text-decoration:none;font-size:11px;font-weight:bold;cursor:pointer;transition:.2s}
 .watch-btn{color:white;background:linear-gradient(135deg,#f04b57,#c91d31)}.site-btn{color:#dbe7f5;background:#263b55}
@@ -111,6 +111,7 @@ footer{padding:27px 4%;text-align:center;color:#8495aa;font-size:12px;border-top
 </section>
 <div class="category-bar" id="categoryBar"></div>
 <div class="section-title"><h2>📺 All TV Channels</h2><span class="total" id="channelCount"></span></div>
+<p class="panel-intro" style="margin:-7px 0 14px">পছন্দের ক্যাটাগরি বেছে নিন—Sports, Cricket, Football, News, Entertainment এবং আরও অনেক চ্যানেল। Live/Website বাটনে চাপলে সংশ্লিষ্ট অফিসিয়াল প্ল্যাটফর্ম খুলবে।</p>
 <section class="channel-grid" id="channelGrid"></section>
 <section class="info-panel"><h3>ℹ️ About Free TV Links & M3U</h3><p>Jsports Network কোনো টিভি চ্যানেলের নিজস্ব সম্প্রচার হোস্ট করে না। এখানে চ্যানেলগুলোর অফিসিয়াল ওয়েবসাইট এবং ব্যবহারকারীর যোগ করা Playlist দেখানো হয়। কেবল বৈধ ও অনুমোদিত স্ট্রিম ব্যবহার করুন। দেশভিত্তিক সীমাবদ্ধতা, CORS, DRM, ইন্টারনেট ও সম্প্রচারকের নীতির কারণে কোনো কোনো লিংক কাজ নাও করতে পারে। GitHub Pages একটি static website; এখানে কোনো private playlist বা গোপন API key নিরাপদে সংরক্ষণ করা হয় না।</p></section>
 </main>
@@ -122,12 +123,12 @@ const channels = [
 {name:"BTV",short:"BTV",category:"General TV",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",type:"website",color:"#087d49"},
 {name:"BTV Chattogram",short:"BTV CTG",category:"General TV",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",type:"website",color:"#087d49"},
 {name:"Sangsad Bangladesh TV",short:"SANGSAD",category:"General TV",country:"বাংলাদেশ",url:"https://www.parliament.gov.bd/",type:"website",color:"#176b55"},
-{name:"T Sports",short:"TSP",category:"Sports",tags:["Cricket"],country:"বাংলাদেশ",url:"https://toffeelive.com/",type:"website",access:"BANGLADESH · OFFICIAL BROADCASTER",note:"বাংলাদেশের ক্রিকেট সম্প্রচারের জন্য Toffee-তে উপলভ্য ম্যাচ ও চ্যানেল দেখুন। সব ম্যাচ ফ্রি নাও হতে পারে।",color:"#e53935"},
-{name:"GTV",short:"GTV",category:"Sports",tags:["Cricket"],country:"বাংলাদেশ",url:"",type:"none",access:"LIVE LINK NOT VERIFIED",note:"GTV-এর অফিসিয়াল পেজে আপনার পরীক্ষায় Network Error দেখা গেছে। কার্যকর অনুমোদিত লাইভ লিংক নিশ্চিত না হওয়া পর্যন্ত এখানে সরাসরি প্লে করা হবে না।",color:"#1674bd"},
-{name:"Nagorik TV",short:"NTV",category:"Entertainment",tags:["Cricket"],country:"বাংলাদেশ",url:"https://toffeelive.com/",type:"website",access:"BANGLADESH · OFFICIAL BROADCASTER",note:"ICC-এর ২০২৬ সম্প্রচার তালিকায় Nagorik TV বাংলাদেশের linear broadcaster হিসেবে আছে। ম্যাচ চলাকালে Toffee-তে উপলভ্যতা পরীক্ষা করুন।",color:"#9b253d"},
+{name:"T Sports",short:"TSP",category:"Sports",country:"বাংলাদেশ",url:"https://toffeelive.com/live",type:"website",color:"#e53935"},
+{name:"GTV",short:"GTV",category:"Cricket",country:"বাংলাদেশ",url:"https://gazitv.com/",type:"website",color:"#1674bd"},
+{name:"Nagorik TV",short:"NTV",category:"Entertainment",country:"বাংলাদেশ",url:"https://nagorik.com/",type:"website",color:"#9b253d"},
 {name:"DD National",short:"DD N",category:"General TV",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#e87525"},
 {name:"DD News",short:"DD NEWS",category:"News TV",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#b51e29"},
-{name:"DD Sports",short:"DD SPORT",category:"Sports",tags:["Cricket","Football"],country:"ভারত",url:"https://prasarbharati.gov.in/en/dd-sports-homepage/",type:"website",access:"FREE-TO-AIR · MATCH DEPENDENT",note:"DD Sports একটি free-to-air চ্যানেল। তবে সব ক্রিকেট বা ফুটবল ম্যাচ দেখায় না; সম্প্রচারের দিনসূচি পরীক্ষা করুন।",color:"#2673b9"},
+{name:"DD Sports",short:"DD SPORT",category:"Cricket",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#2673b9"},
 {name:"DD Kisan",short:"KISAN",category:"Education",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#39833e"},
 {name:"Sansad TV",short:"SANSAD",category:"News TV",country:"ভারত",url:"https://sansadtv.nic.in/",type:"website",color:"#a17a35"},
 {name:"DD Bharati",short:"BHARATI",category:"Entertainment",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#8d4d9e"},
@@ -135,10 +136,10 @@ const channels = [
 {name:"DD Urdu",short:"URDU",category:"General TV",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#25866b"},
 {name:"PTV Home",short:"PTV",category:"Entertainment",country:"পাকিস্তান",url:"",type:"none",color:"#087d49"},
 {name:"PTV News",short:"PTV NEWS",category:"News TV",country:"পাকিস্তান",url:"https://moib.gov.pk/LiveStream",type:"live",color:"#176b55"},
-{name:"PTV Sports",short:"PTV SPORT",category:"Sports",tags:["Cricket"],country:"পাকিস্তান",url:"",type:"none",access:"LIVE LINK NOT VERIFIED",note:"PTV Sports-এর কার্যকর অফিসিয়াল অনলাইন লাইভ লিংক এই মুহূর্তে নিশ্চিত করা যায়নি।",color:"#2373b9"},
+{name:"PTV Sports",short:"PTV SPORT",category:"Sports",country:"পাকিস্তান",url:"",type:"none",color:"#2373b9"},
 {name:"PTV National",short:"PTV NAT",category:"General TV",country:"পাকিস্তান",url:"",type:"none",color:"#b18a36"},
 {name:"Geo News",short:"GEO",category:"News TV",country:"পাকিস্তান",url:"https://www.geo.tv/",type:"website",color:"#e0a52b"},
-{name:"Geo Super",short:"GEO SUP",category:"Sports",tags:["Cricket"],country:"পাকিস্তান",url:"https://www.geosuper.tv/",type:"website",access:"OFFICIAL WEBSITE · LIVE NOT CONFIRMED",note:"এটি Geo Super-এর অফিসিয়াল ওয়েবসাইট; সরাসরি লাইভ ভিডিও চালু আছে—এমন নিশ্চয়তা নেই।",color:"#268b59"},
+{name:"Geo Super",short:"GEO SUP",category:"Cricket",country:"পাকিস্তান",url:"https://www.geosuper.tv/",type:"website",color:"#268b59"},
 {name:"Al Jazeera English",short:"AJ",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.aljazeera.com/video/live/",type:"live",color:"#a8893d"},
 {name:"BBC News",short:"BBC",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.bbc.com/news",type:"website",color:"#bb1e2d"},
 {name:"Sky News",short:"SKY",category:"News TV",country:"আন্তর্জাতিক",url:"https://news.sky.com/watch-live",type:"live",color:"#2475bd"},
@@ -157,11 +158,23 @@ const channels = [
 {name:"NASA TV",short:"NASA",category:"Documentary",country:"আন্তর্জাতিক",url:"https://www.nasa.gov/nasatv/",type:"live",color:"#24549b"},
 {name:"Red Bull TV",short:"RED BULL",category:"Sports",country:"আন্তর্জাতিক",url:"https://www.redbull.com/int-en/tv",type:"website",color:"#c5252e"},
 {name:"TV5MONDE",short:"TV5",category:"Entertainment",country:"আন্তর্জাতিক",url:"https://www.tv5monde.com/",type:"website",color:"#2454a0"},
-{name:"Star Sports",short:"STAR",category:"Sports",tags:["Cricket"],country:"ভারত",url:"https://www.hotstar.com/",type:"website",access:"PAID · INDIA · RIGHTS VARY",note:"Star Sports-এর সম্প্রচার অধিকার টুর্নামেন্টভেদে বদলায়। অনলাইন দেখার জন্য JioHotstar-এ subscription বা match availability পরীক্ষা করুন।",color:"#df7b20"},
-{name:"Sky Sports Cricket",short:"SKY CR",category:"Sports",tags:["Cricket"],country:"আন্তর্জাতিক",url:"https://www.skysports.com/watch",type:"website",access:"PAID · UK & IRELAND",note:"Sky Sports Cricket সাধারণত subscription-ভিত্তিক। আপনার অঞ্চলে সম্প্রচার অধিকার আছে কি না পরীক্ষা করুন।",color:"#2475bd"},
-{name:"SuperSport Cricket",short:"SUPER",category:"Sports",tags:["Cricket"],country:"আন্তর্জাতিক",url:"https://www.supersport.com/",type:"website",access:"PAID · SUB-SAHARAN AFRICA",note:"SuperSport-এর ক্রিকেট সম্প্রচার অঞ্চল ও subscription-এর ওপর নির্ভরশীল।",color:"#258b68"},
-{name:"Hub Sports 4",short:"HUB 4",category:"Sports",tags:["Cricket"],country:"আন্তর্জাতিক",url:"https://www.hubsports.sg/",type:"website",access:"PAID · SINGAPORE",note:"Singapore-এ নির্দিষ্ট ক্রিকেট সম্প্রচারের জন্য Hub Sports-এর অফিসিয়াল schedule ও subscription পরীক্ষা করুন।",color:"#4b65a8"},
-{name:"ICC.tv",short:"ICC TV",category:"Sports",tags:["Cricket"],country:"আন্তর্জাতিক",url:"https://www.icc-cricket.com/icc-tv",type:"website",access:"FREE SELECT MATCHES · REGION RESTRICTED",note:"ICC.tv-তে নির্বাচিত ম্যাচ কিছু অঞ্চলে বিনামূল্যে দেখা যায়; কিছু কনটেন্টে sign-in বা paid pass লাগতে পারে।",color:"#1e8a9e"}
+{name:"Zee Bangla HD",short:"ZEE B",category:"Entertainment",country:"ভারত",url:"https://www.zee5.com/live-tv/zee-bangla-hd/0-9-zeebangla",type:"live",color:"#a52b8a"},
+{name:"Star Jalsha",short:"STAR J",category:"Entertainment",country:"ভারত",url:"https://toffeelive.com/live",type:"website",color:"#8e3a9b"},
+{name:"Jalsha Movies",short:"J MOV",category:"Movies",country:"ভারত",url:"https://toffeelive.com/live",type:"website",color:"#ad3b54"},
+{name:"ICC.tv",short:"ICC",category:"Cricket",country:"আন্তর্জাতিক",url:"https://www.icc.tv/",type:"website",color:"#1d4d91"},
+{name:"Bangladesh Cricket Board",short:"BCB",category:"Cricket",country:"বাংলাদেশ",url:"https://www.tigercricket.com.bd/",type:"website",color:"#147a48"},
+{name:"Cricket Australia",short:"CA",category:"Cricket",country:"আন্তর্জাতিক",url:"https://www.cricket.com.au/",type:"website",color:"#d9a52b"},
+{name:"England Cricket",short:"ECB",category:"Cricket",country:"আন্তর্জাতিক",url:"https://www.ecb.co.uk/",type:"website",color:"#24569a"},
+{name:"Pakistan Cricket Board",short:"PCB",category:"Cricket",country:"পাকিস্তান",url:"https://www.pcb.com.pk/",type:"website",color:"#176c45"},
+{name:"FIFA+",short:"FIFA+",category:"Football",country:"আন্তর্জাতিক",url:"https://www.plus.fifa.com/",type:"live",color:"#1e3d78"},
+{name:"FIFA YouTube",short:"FIFA",category:"Football",country:"আন্তর্জাতিক",url:"https://www.youtube.com/@FIFA",type:"website",color:"#2465a5"},
+{name:"AFC",short:"AFC",category:"Football",country:"আন্তর্জাতিক",url:"https://www.the-afc.com/",type:"website",color:"#b18a36"},
+{name:"UEFA.tv",short:"UEFA",category:"Football",country:"আন্তর্জাতিক",url:"https://www.uefa.tv/",type:"live",color:"#2455a0"},
+{name:"Premier League",short:"PL",category:"Football",country:"আন্তর্জাতিক",url:"https://www.premierleague.com/",type:"website",color:"#552583"},
+{name:"Olympics Channel",short:"OLY",category:"Sports",country:"আন্তর্জাতিক",url:"https://olympics.com/en/olympic-channel",type:"website",color:"#27618c"},
+{name:"World Athletics",short:"WA",category:"Sports",country:"আন্তর্জাতিক",url:"https://worldathletics.org/",type:"website",color:"#236b9b"},
+{name:"FIBA Basketball",short:"FIBA",category:"Sports",country:"আন্তর্জাতিক",url:"https://www.fiba.basketball/",type:"website",color:"#2462a5"},
+{name:"World Rugby",short:"RUGBY",category:"Sports",country:"আন্তর্জাতিক",url:"https://www.world.rugby/",type:"website",color:"#26734d"}
 ];
 
 const categories=["সব চ্যানেল","Sports","Cricket","Football","News TV","Entertainment","Movies","Kids","Education","Documentary","General TV"];
@@ -261,9 +274,9 @@ function selectChannel(channel){
   document.getElementById("playerHeading").textContent=channel.name;
   const text=document.getElementById("playerText"),link=document.getElementById("playerLink");
   document.getElementById("playerStatus").textContent="● OFFICIAL LINK";
-  if(!channel.url){text.textContent=channel.note||"এই চ্যানেলের জন্য বর্তমানে ব্যবহারযোগ্য অফিসিয়াল Live লিংক নিশ্চিত করা যায়নি।";link.style.display="none";return;}
-  if(channel.type==="live"){text.textContent=channel.note||"এই চ্যানেলের অফিসিয়াল Live পেজ বা সম্প্রচার লিংক খুলুন।";link.textContent="▶ Open Official Live";}
-  else{text.textContent=channel.note||"এটি চ্যানেলের অফিসিয়াল ওয়েবসাইট। সেখানে Live TV বা Watch Live অপশন থাকলে দেখতে পারবেন।";link.textContent="↗ Open Official Website";}
+  if(!channel.url){text.textContent="এই চ্যানেলের জন্য বর্তমানে ব্যবহারযোগ্য অফিসিয়াল ফ্রি Live লিংক নিশ্চিত করা যায়নি।";link.style.display="none";return;}
+  if(channel.type==="live"){text.textContent="এই চ্যানেলের অফিসিয়াল Live পেজ বা সম্প্রচার লিংক খুলুন।";link.textContent="▶ Open Official Live";}
+  else{text.textContent="এই চ্যানেল/সম্প্রচারকের ওয়েবসাইট বা অনুমোদিত প্ল্যাটফর্ম খুলবে। সেখানে চ্যানেলটি পাওয়া, সাবস্ক্রিপশন ও অঞ্চলভিত্তিক শর্ত প্রযোজ্য হতে পারে।";link.textContent="↗ Open Official Platform";}
   link.href=channel.url;link.style.display="inline-block";placeholder.style.display="block";
 }
 function render(){
@@ -273,7 +286,7 @@ function render(){
     const hay=(c.name+" "+c.country+" "+c.category).toLowerCase();
     const matchSearch=hay.includes(q);
     const matchCountry=selectedCountry==="all"||(selectedCountry==="Playlist"?c.isPlaylist:c.country===selectedCountry);
-    const matchCategory=activeCategory==="সব চ্যানেল"||c.category===activeCategory||(Array.isArray(c.tags)&&c.tags.includes(activeCategory));
+    const matchCategory=activeCategory==="সব চ্যানেল"||c.category===activeCategory;
     return matchSearch&&matchCountry&&matchCategory;
   });
   document.getElementById("channelCount").textContent=results.length+" Channels";
@@ -289,7 +302,7 @@ function render(){
     const meta=document.createElement("div");meta.className="meta";meta.textContent=(c.category||"TV")+" · "+(c.country||"Playlist");
     info.append(name,meta);top.append(logo,info);
     const label=document.createElement("span");label.className="channel-label"+(c.isPlaylist?" playlist":(c.type==="live"?"":" website"));
-    label.textContent=c.isPlaylist?"M3U PLAYLIST STREAM":(c.access|| (c.type==="live"?"OFFICIAL LIVE PAGE":c.type==="website"?"OFFICIAL WEBSITE":"SOURCE UNAVAILABLE"));
+    label.textContent=c.isPlaylist?"M3U PLAYLIST STREAM":(c.type==="live"?"OFFICIAL LIVE PAGE":c.type==="website"?"OFFICIAL WEBSITE / PLATFORM":"SOURCE UNAVAILABLE");
     const actions=document.createElement("div");actions.className="card-actions";
     const watch=document.createElement("button");watch.className="watch-btn";watch.type="button";watch.textContent=c.isPlaylist?"▶ Play Stream":c.url?"▶ Live TV":"Unavailable";
     if(!c.url&&!c.streamUrl)watch.classList.add("unavailable");
@@ -322,7 +335,9 @@ function parseM3U(text){
 }
 function normalizeCategory(group){
   const g=group.toLowerCase();
-  if(g.includes("sport")||g.includes("cricket")||g.includes("football"))return "Sports";
+  if(g.includes("cricket"))return "Cricket";
+  if(g.includes("football")||g.includes("soccer"))return "Football";
+  if(g.includes("sport"))return "Sports";
   if(g.includes("news"))return "News TV";
   if(g.includes("movie")||g.includes("film"))return "Movies";
   if(g.includes("kid")||g.includes("child"))return "Kids";
