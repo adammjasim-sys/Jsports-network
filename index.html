@@ -274,6 +274,85 @@ footer{border-color:#222;color:#777;font-size:10px}
 @media(max-width:1050px){.activity-section .highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.activity-section .highlight-grid{grid-template-columns:1fr;gap:8px}}
 
+
+
+/* STEP 4 — MOBILE & DESKTOP RESPONSIVE OPTIMIZATION */
+html{scroll-padding-top:76px;-webkit-text-size-adjust:100%}
+button,a,select,input{touch-action:manipulation}
+.channel-card,.highlight-card{min-width:0}
+.player-screen{width:100%;min-height:0;aspect-ratio:16/9}
+#liveVideo{width:100%;height:100%;object-fit:contain}
+.player-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.player-tools label{font-size:9px;color:#aaa;white-space:nowrap}
+.player-tools select{width:auto;min-width:145px;max-width:100%;padding:9px 10px}
+.player-controls{gap:9px}
+.player-control-btn,.secondary-btn,.cat-btn,.card-actions a,.card-actions button{min-height:40px}
+
+@media(min-width:761px){
+  .app-layout{grid-template-columns:270px minmax(0,1fr)}
+  .sidebar{height:calc(100vh - 72px);max-height:calc(100vh - 72px)}
+  .main-content{min-width:0;padding-left:clamp(16px,2vw,32px);padding-right:clamp(16px,2vw,32px)}
+  .player-screen{max-height: min(68vw,650px)}
+}
+@media(max-width:760px){
+  .topbar{position:sticky;top:0;height:58px;padding:0 12px;z-index:120}
+  .topbar-brand{gap:8px}.brand-text h1{font-size:12px}.brand-text small{font-size:6px;letter-spacing:.7px}
+  .topbar-right{gap:0}.login-link{min-height:36px;display:flex;align-items:center;padding:8px 10px;font-size:8px}
+  .app-layout{display:flex;flex-direction:column;min-height:0}
+  /* Keep channel picker above the player on phones; it scrolls independently. */
+  .sidebar{order:0;position:relative;top:auto;width:100%;height:auto;max-height:43vh;min-height:0;overflow-y:auto;overflow-x:hidden;border-right:0;border-top:0;border-bottom:1px solid #292929;padding:12px 12px 14px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .main-content{order:1;width:100%;padding:12px 11px 24px;overflow:hidden}
+  .sidebar-head{margin-bottom:10px}.side-search input{height:42px;font-size:13px}.side-country{min-height:40px;font-size:12px;margin-bottom:10px}
+  .category-bar{gap:7px;padding-bottom:11px}.cat-btn{min-height:36px;padding:8px 11px;font-size:10px}
+  .side-list-heading{margin:12px 2px 8px}
+  .channel-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .channel-card{position:relative;padding:9px 7px;min-height:62px;gap:4px}
+  .card-top{gap:7px;padding-right:23px}.logo{width:34px;height:34px;flex-basis:34px;font-size:9px}
+  .channel-info h3{font-size:11px;white-space:normal;overflow-wrap:anywhere;line-height:1.25}
+  .meta{font-size:8px}.channel-label{margin-left:41px;font-size:8px}
+  .favorite-toggle{width:28px;height:28px;right:4px;top:4px;font-size:16px}
+  .hero{min-height:190px;padding:22px 17px;margin-bottom:14px}
+  .hero h2{font-size:clamp(23px,7vw,30px);line-height:1.1}.hero p{font-size:11px;max-width:75%;line-height:1.55}
+  .hero-ball{right:3%;top:23%;font-size:clamp(52px,16vw,78px)}
+  .hero-bottom{left:17px;right:17px;bottom:10px;font-size:6px}
+  .player{margin-bottom:17px;border-radius:9px}
+  .player-head{padding:10px 11px;gap:8px}.player-title{font-size:11px}
+  .player-tools{width:100%;gap:7px}.player-tools label{font-size:8px}.player-tools select{flex:1;min-width:0;width:auto;padding:9px;font-size:10px}
+  .live-status{font-size:8px;white-space:nowrap}
+  .player-screen{width:100%;aspect-ratio:16/9;min-height:0;max-height:none;padding:0}
+  #liveVideo{width:100%;height:100%;max-height:none;object-fit:contain}
+  .player-content{padding:15px;max-width:100%}.player-content h3{font-size:15px}.player-content p{font-size:10px;line-height:1.55}
+  .player-controls{padding:9px;gap:7px}.player-control-btn{min-height:40px;padding:9px 10px;font-size:9px}
+  .player-control-hint{width:100%;font-size:9px}.player-note{font-size:9px;padding:9px 11px}
+  .highlight-section{margin:19px 0 22px}.highlight-heading{align-items:flex-start}.highlight-heading h2{font-size:16px}.highlight-heading p{font-size:9px}
+  .highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .highlight-card{min-height:59px;padding:9px;gap:7px}.highlight-logo{width:34px;height:34px;flex-basis:34px}
+  .highlight-copy strong{font-size:10px}.highlight-copy small{font-size:8px}
+  .activity-section .highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panel{padding:12px;margin:17px 0}.panel h2{font-size:14px}.panel-intro{font-size:10px}
+  .m3u-grid{grid-template-columns:1fr;gap:9px}.m3u-box{padding:11px}.field-row{flex-direction:column;gap:8px}
+  .field-row input,.field-row button{min-height:42px;width:100%}
+  input,select{font-size:13px;min-height:40px}.saved-playlist-row{align-items:flex-start;flex-direction:column;gap:9px}
+  .saved-playlist-row button{min-height:40px;width:100%}
+  .info-panel{margin-top:17px;padding:13px}
+}
+@media(max-width:420px){
+  .secure-label{display:none}.hero{min-height:178px}.hero p{max-width:78%;font-size:10px}
+  .channel-grid{gap:5px}.channel-card{padding:8px 6px}.channel-info h3{font-size:10px}
+  .activity-section .highlight-grid{grid-template-columns:1fr}
+  .player-control-btn{flex:1;min-width:0}
+}
+@media(max-width:350px){
+  .brand-text h1{font-size:10px}.login-link{font-size:7px;padding:7px}
+  .channel-grid{grid-template-columns:1fr}.channel-card{min-height:55px}
+  .hero h2{font-size:22px}.hero p{max-width:100%}.hero-ball{opacity:.28}
+  .highlight-grid{grid-template-columns:1fr}
+}
+@media(orientation:landscape) and (max-height:500px) and (max-width:900px){
+  .sidebar{max-height:35vh}.player-screen{max-height:70vh;aspect-ratio:16/9}.hero{min-height:145px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
