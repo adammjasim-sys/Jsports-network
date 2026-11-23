@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>Jsports Network | Free Live TV</title>
+<style>
+:root{--bg:#070d19;--surface:#101b2c;--surface2:#17263b;--red:#ef3340;--red2:#ff5964;--text:#f5f7fb;--muted:#9aabc0;--line:#26364d;--green:#20c58a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 15% 0%,#172a45 0,transparent 35%),var(--bg);color:var(--text);font-family:Arial,"Noto Sans Bengali",sans-serif}
+a{color:inherit}button,input,select{font:inherit}
+header{position:sticky;top:0;z-index:50;background:rgba(7,13,25,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);padding:13px 4%}
+.nav{max-width:1450px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#ff5964,#c51425);box-shadow:0 6px 22px #ef334044;font-weight:900;font-size:17px}
+.brand h1{font-size:20px;margin:0;letter-spacing:.3px}.brand small{color:var(--muted);font-size:11px}
+.nav-status{font-size:11px;font-weight:bold;color:#ff6973;border:1px solid #ef334044;border-radius:30px;padding:8px 12px}
+.container{max-width:1450px;margin:auto;padding:25px 4% 55px}
+.hero{position:relative;overflow:hidden;padding:30px;border-radius:20px;border:1px solid #344660;background:linear-gradient(115deg,#172c48,#111a2b 65%,#351b2a);margin-bottom:23px}
+.hero:after{content:"📡";position:absolute;right:7%;top:15%;font-size:95px;opacity:.12}
+.hero h2{font-size:29px;margin:0 0 10px;letter-spacing:.2px}.hero p{max-width:720px;color:#bdcadd;line-height:1.7;margin:0}
+.hero-label{display:inline-block;color:#ff8b93;font-size:11px;font-weight:bold;letter-spacing:1.4px;margin-bottom:12px}
+.player{overflow:hidden;border:1px solid #31435a;border-radius:18px;background:#03070d;box-shadow:0 15px 40px #0005;margin-bottom:25px}
+.player-head{padding:14px 18px;background:#111d2e;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.player-title{font-weight:bold;font-size:15px}.live-status{font-size:11px;color:#ff626c;font-weight:bold}
+.player-screen{aspect-ratio:16/9;min-height:210px;max-height:590px;display:grid;place-items:center;text-align:center;padding:0;background:#03070d;position:relative}
+#liveVideo{display:none;width:100%;height:100%;max-height:590px;aspect-ratio:16/9;background:#000}
+.player-content{max-width:560px;padding:25px}.player-icon{font-size:58px;margin-bottom:12px}.player-content h3{font-size:23px;margin:8px 0}.player-content p{color:#aebdd0;line-height:1.7;font-size:14px}
+.player-action,.primary-btn{display:inline-block;text-decoration:none;background:linear-gradient(135deg,#ff5964,#d91e32);color:white;padding:12px 22px;border:0;border-radius:9px;font-weight:bold;font-size:13px;box-shadow:0 6px 20px #ef334044;cursor:pointer}
+.player-note{padding:12px 17px;background:#0d1928;border-top:1px solid var(--line);font-size:12px;color:#9eafc3;line-height:1.7}
+.panel{margin:22px 0;padding:19px;border:1px solid #2b3c53;border-radius:15px;background:linear-gradient(145deg,#142238,#0e1929)}
+.panel h2{font-size:19px;margin:0 0 8px}.panel-intro{color:#aebdd0;font-size:12px;line-height:1.7;margin:0 0 15px}
+.m3u-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.m3u-box{background:#0c1727;border:1px solid #2b3c53;border-radius:12px;padding:15px}
+.m3u-box h3{font-size:14px;margin:0 0 10px}.m3u-box p{font-size:11px;color:#9aabc0;line-height:1.6}
+.field-row{display:flex;gap:8px}.field-row input{min-width:0;flex:1}
+input,select{width:100%;padding:13px 14px;background:#111e30;border:1px solid #2b3c53;color:white;border-radius:10px;outline:none;transition:.2s}
+input:focus,select:focus{border-color:#ef5964;box-shadow:0 0 0 3px #ef33441c}
+.secondary-btn{border:1px solid #405570;background:#263b55;color:#eaf1fa;padding:11px 15px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:bold}
+.secondary-btn:hover{filter:brightness(1.15)}input[type=file]{padding:9px}
+.m3u-message{margin-top:12px;padding:10px 12px;border-radius:8px;background:#17263b;color:#c8d5e5;font-size:12px;line-height:1.6;display:none}
+.m3u-message.error{display:block;background:#3a2029;color:#ffc3c7}.m3u-message.success{display:block;background:#12352f;color:#a8f0d5}
+.saved-playlist-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:12px 14px;border:1px solid #2b3c53;border-radius:10px;background:#0c1727}.saved-playlist-row strong{font-size:12px}.saved-playlist-status{font-size:11px;color:#9aabc0;margin-top:5px;line-height:1.5}
+.toolbar{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:22px 0 16px}
+.search-wrap{position:relative}.search-wrap span{position:absolute;left:14px;top:13px;color:#9aabc0}.search-wrap input{padding-left:42px}
+.category-bar{display:flex;gap:8px;overflow-x:auto;padding:5px 1px 14px;scrollbar-width:thin}
+.cat-btn{white-space:nowrap;cursor:pointer;border:1px solid #2b3c53;color:#c6d2e1;background:#111e30;border-radius:30px;padding:9px 15px;font-size:12px;transition:.2s}
+.cat-btn:hover,.cat-btn.active{color:white;background:linear-gradient(135deg,var(--red),#bd1428);border-color:var(--red);box-shadow:0 5px 16px #ef334433;transform:translateY(-1px)}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0 15px}
+.section-title h2{font-size:20px;margin:0}.total{color:#9aabc0;font-size:12px}
+.channel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.channel-card{min-width:0;padding:15px;border:1px solid #263950;border-radius:14px;background:linear-gradient(145deg,#142238,#0e1929);transition:transform .22s,border-color .22s,box-shadow .22s;animation:appear .35s ease both}
+.channel-card:hover{transform:translateY(-5px);border-color:#ef5964;box-shadow:0 14px 28px #0005,0 0 0 1px #ef33441a}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card-top{display:flex;align-items:center;gap:11px}.logo{flex:0 0 47px;width:47px;height:47px;display:grid;place-items:center;border-radius:12px;color:white;font-size:12px;font-weight:900;box-shadow:inset 0 0 15px #ffffff18;overflow:hidden}
+.channel-info{min-width:0}.channel-info h3{font-size:14px;margin:0 0 6px;overflow-wrap:anywhere}.meta{font-size:11px;color:#9eafc3;line-height:1.5}
+.channel-label{display:inline-block;margin:13px 0 12px;letter-spacing:.35px;padding:5px 8px;border-radius:5px;background:#1c3446;color:#a9d9c7;font-size:10px;font-weight:bold}
+.channel-label.website{background:#263348;color:#bac8d8}.channel-label.playlist{background:#174338;color:#9ce8c8}
+.card-actions{display:flex;gap:8px}.card-actions a,.card-actions button{flex:1;min-width:0;text-align:center;border:0;border-radius:8px;padding:10px 5px;text-decoration:none;font-size:11px;font-weight:bold;cursor:pointer;transition:.2s}
+.watch-btn{color:white;background:linear-gradient(135deg,#f04b57,#c91d31)}.site-btn{color:#dbe7f5;background:#263b55}
+.card-actions a:hover,.card-actions button:hover{filter:brightness(1.15)}
+.unavailable{background:#303b49!important;color:#9ba8b8!important;cursor:not-allowed!important}
+.empty{grid-column:1/-1;text-align:center;padding:35px;background:#111e30;border:1px solid var(--line);border-radius:12px;color:#aab8c9}
+.info-panel{margin-top:28px;padding:18px;border:1px solid var(--line);border-radius:13px;background:#101b2b}
+.info-panel h3{margin:0 0 9px;font-size:16px}.info-panel p{margin:0;color:#a8b7c9;font-size:12px;line-height:1.8}
+footer{padding:27px 4%;text-align:center;color:#8495aa;font-size:12px;border-top:1px solid #26364d;line-height:1.9}footer strong{color:#e9eef5}
+@media(max-width:1050px){.channel-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){header{padding:11px 3%}.brand h1{font-size:18px}.container{padding:16px 3% 40px}.hero{padding:21px}.hero h2{font-size:22px}.hero:after{right:4%;font-size:65px}.channel-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.channel-card{padding:11px}.logo{width:40px;height:40px;flex-basis:40px;font-size:10px}.channel-info h3{font-size:12px}.card-actions{flex-direction:column}.toolbar,.m3u-grid{grid-template-columns:1fr}.player-screen{min-height:190px}.player-content h3{font-size:19px}.player-icon{font-size:45px}.field-row{flex-direction:column}}
+@media(max-width:370px){.channel-grid{grid-template-columns:1fr}}
+
+/* PREMIUM UPGRADE — original navy/red identity retained */
+:root{--glow:rgba(239,51,64,.22)}
+body{background:radial-gradient(ellipse at 12% 0%,rgba(35,74,118,.38),transparent 34%),radial-gradient(ellipse at 88% 16%,rgba(135,28,49,.17),transparent 28%),linear-gradient(180deg,#070d19 0%,#081321 48%,#070d19 100%)}
+header{background:rgba(6,12,23,.88);box-shadow:0 8px 30px rgba(0,0,0,.18)}
+.brand-logo{position:relative;border:1px solid rgba(255,255,255,.22)}
+.nav-status{background:rgba(239,51,64,.09)}
+.container{padding-top:28px}
+.hero{min-height:190px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(110deg,rgba(15,34,58,.98),rgba(14,25,42,.92) 60%,rgba(75,23,40,.78));box-shadow:0 18px 45px rgba(0,0,0,.2)}
+.hero h2{font-size:clamp(25px,3vw,36px);line-height:1.18}
+.hero-label{letter-spacing:2px}
+.player{border-color:rgba(116,145,180,.32);box-shadow:0 22px 55px rgba(0,0,0,.34)}
+.player-head{background:linear-gradient(90deg,#14253b,#101a2b)}
+.player-screen{background:radial-gradient(ellipse at center,#101e31 0%,#03070d 68%)}
+.player-action,.primary-btn{transition:transform .2s,filter .2s,box-shadow .2s}
+.player-action:hover,.primary-btn:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 10px 28px var(--glow)}
+.panel{box-shadow:0 14px 34px rgba(0,0,0,.16)}
+.m3u-box{transition:border-color .2s,transform .2s}.m3u-box:hover{border-color:#526b89;transform:translateY(-2px)}
+.saved-playlist-row{background:linear-gradient(100deg,#102a2a,#0c1727)}
+.channel-grid{gap:16px}
+.channel-card{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(23,39,62,.98),rgba(11,23,39,.98));border-color:rgba(93,119,151,.26);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.channel-card:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,89,100,.65),transparent);opacity:0;transition:opacity .2s}.channel-card:hover:before{opacity:1}
+.logo{border:1px solid rgba(255,255,255,.14);box-shadow:0 7px 18px rgba(0,0,0,.2),inset 0 0 15px #ffffff18}
+.channel-label{border:1px solid rgba(255,255,255,.05)}
+.info-panel{background:linear-gradient(145deg,#122036,#0c1727)}
+.highlight-section{margin:25px 0 28px}.highlight-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:13px}.highlight-heading h2{font-size:20px;margin:0}.highlight-heading p{font-size:11px;color:var(--muted);margin:5px 0 0;line-height:1.5}.highlight-tag{font-size:10px;font-weight:800;letter-spacing:.8px;color:#ff9aa1;border:1px solid rgba(239,51,64,.32);background:rgba(239,51,64,.09);padding:6px 9px;border-radius:30px;white-space:nowrap}
+.highlight-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.highlight-card{display:flex;align-items:center;gap:11px;min-width:0;padding:13px;border:1px solid rgba(93,119,151,.28);border-radius:13px;background:linear-gradient(145deg,#14243a,#0d192a);color:var(--text);text-align:left;cursor:pointer;transition:.2s}.highlight-card:hover{transform:translateY(-3px);border-color:#ef5964;box-shadow:0 12px 26px rgba(0,0,0,.22)}.highlight-logo{width:43px;height:43px;flex:0 0 43px;border-radius:11px;display:grid;place-items:center;overflow:hidden;font-size:11px;font-weight:900;color:white;border:1px solid rgba(255,255,255,.12)}.highlight-logo img{width:100%;height:100%;object-fit:contain;background:#fff}.highlight-copy{min-width:0}.highlight-copy strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.highlight-copy small{display:block;color:var(--muted);font-size:10px;margin-top:5px}.highlight-empty{grid-column:1/-1;padding:15px;border:1px dashed #354962;border-radius:12px;color:var(--muted);font-size:12px}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff4655;margin-right:6px;box-shadow:0 0 0 4px rgba(255,70,85,.12)}
+@media(max-width:1050px){.highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.container{padding-top:17px}.hero{min-height:175px}.highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.highlight-card{padding:10px;gap:8px}.highlight-logo{width:37px;height:37px;flex-basis:37px}.highlight-copy strong{font-size:11px}.highlight-heading h2{font-size:17px}.channel-grid{gap:10px}}
+@media(max-width:390px){.highlight-grid{grid-template-columns:1fr}}
+
+
+/* STREAMLY-INSPIRED BLACK IPTV LAYOUT */
+:root{--bg:#050505;--surface:#101010;--surface2:#191919;--red:#ed1020;--red2:#ff2637;--text:#f5f5f5;--muted:#9b9b9b;--line:#292929;--green:#20c58a}
+html{scroll-padding-top:76px}
+body{background:#050505;color:#f5f5f5;font-family:Arial,"Noto Sans Bengali",sans-serif}
+.topbar{height:72px;position:sticky;top:0;z-index:100;background:#080808;border-bottom:1px solid #222;display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:20px}
+.topbar-brand{display:flex;align-items:center;gap:11px;min-width:225px}
+.brand-logo{width:39px;height:39px;border-radius:11px;background:#e5091b;box-shadow:none;font-size:15px}
+.brand-text h1{font-size:16px;letter-spacing:.8px;margin:0;font-weight:900}
+.brand-text small{font-size:9px;letter-spacing:1.1px;color:#888}
+.top-links{display:flex;align-items:center;gap:28px;height:100%}
+.top-links a{height:100%;display:flex;align-items:center;text-decoration:none;color:#aaa;font-size:12px;border-bottom:2px solid transparent;padding:2px 0 0}
+.top-links a:hover,.top-links a.active{color:#fff;border-color:#ed1020}
+.topbar-right{display:flex;align-items:center;gap:13px}
+.secure-label{font-size:9px;color:#aaa;letter-spacing:.5px}
+.login-link{background:#e5091b;color:white;text-decoration:none;font-size:10px;font-weight:800;padding:10px 16px;border-radius:20px}
+.app-layout{display:grid;grid-template-columns:270px minmax(0,1fr);min-height:calc(100vh - 72px);max-width:1800px;margin:auto}
+.sidebar{height:calc(100vh - 72px);position:sticky;top:72px;overflow-y:auto;overflow-x:hidden;background:#080808;border-right:1px solid #252525;padding:18px 14px 20px;scrollbar-width:thin;scrollbar-color:#3b3b3b #080808}
+.sidebar-head{display:flex;justify-content:space-between;align-items:center;margin:0 2px 15px}
+.sidebar-head strong,.side-list-heading strong{font-size:11px;letter-spacing:1px}
+.sidebar-head small{display:block;color:#777;font-size:10px;margin-top:4px}
+.side-count{font-size:8px;color:#ff6873;border:1px solid #64212a;border-radius:20px;padding:5px 7px}
+.side-search{margin-bottom:10px}
+.side-search span{top:11px;left:12px}
+.side-search input{height:37px;padding:8px 10px 8px 34px;background:#171717;border:1px solid #292929;border-radius:20px;font-size:11px}
+.side-country{padding:9px 10px;margin-bottom:17px;background:#171717;border:1px solid #292929;border-radius:18px;font-size:10px}
+.side-category-title{font-size:9px;color:#777;letter-spacing:1px;margin:4px 2px 9px}
+.category-bar{display:flex;flex-wrap:wrap;gap:6px;overflow:visible;padding:0 0 17px;border-bottom:1px solid #242424}
+.cat-btn{background:#1a1a1a;border:1px solid #292929;color:#aaa;padding:7px 10px;font-size:9px;border-radius:18px}
+.cat-btn:hover,.cat-btn.active{background:#e5091b;border-color:#e5091b;color:#fff;box-shadow:none;transform:none}
+.side-list-heading{display:flex;align-items:center;justify-content:space-between;margin:17px 2px 10px}
+.side-list-heading .total{font-size:9px}
+.channel-grid{display:grid;grid-template-columns:1fr;gap:5px}
+.channel-card{padding:9px 8px;border:1px solid transparent;border-radius:9px;background:transparent;box-shadow:none;animation:none;display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+.channel-card:hover{transform:none;background:#171717;border-color:#292929;box-shadow:none}
+.channel-card:before{display:none}
+.card-top{gap:9px}
+.logo{width:31px;height:31px;flex-basis:31px;border-radius:7px;font-size:8px}
+.channel-info h3{font-size:10px;margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{font-size:8px;color:#858585}
+.channel-label{margin:0 0 0 40px;padding:0;background:transparent!important;color:#777!important;border:0;font-size:8px;letter-spacing:.25px}
+.card-actions{display:none}
+.sidebar .empty{font-size:10px;padding:15px;background:#111;border-color:#292929}
+.sidebar-foot{border-top:1px solid #242424;margin-top:18px;padding:14px 3px 0;color:#bbb;font-size:10px;line-height:1.8}
+.sidebar-foot span{color:#666;font-size:9px}
+.main-content{min-width:0;padding:20px 24px 35px;max-width:1500px;width:100%;margin:0 auto}
+.hero{min-height:265px;position:relative;border:0;border-radius:15px;overflow:hidden;margin:0 0 22px;padding:32px 38px;background:
+ linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.46) 53%,rgba(0,0,0,.10) 100%),
+ radial-gradient(ellipse at 75% 35%,rgba(107,150,10,.95),transparent 43%),
+ linear-gradient(135deg,#244b09 0%,#6a9c12 42%,#182e08 100%);box-shadow:none}
+.hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 40px,rgba(255,255,255,.045) 41px 42px);opacity:.35;pointer-events:none}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.28),transparent 42%);z-index:0}
+.hero-copy{position:relative;z-index:2;max-width:620px}
+.hero-label{font-size:9px;color:#ffb1b7;letter-spacing:2px;margin-bottom:13px}
+.hero h2{font-size:clamp(28px,4vw,45px);font-weight:900;line-height:1.05;letter-spacing:-1px;margin:0 0 12px}
+.hero h2 em{font-style:normal;color:#fff}
+.hero p{font-size:12px;color:#e1e1e1;line-height:1.7;max-width:500px}
+.hero-button{display:inline-block;margin-top:9px;padding:10px 17px;background:#ed1020;border-radius:5px;color:white;text-decoration:none;font-size:10px;font-weight:900;letter-spacing:.6px}
+.hero-ball{position:absolute;right:9%;top:18%;font-size:clamp(75px,12vw,145px);filter:drop-shadow(0 14px 15px #0007);transform:rotate(-18deg);opacity:.88}
+.hero-bottom{position:absolute;z-index:2;left:38px;right:38px;bottom:14px;display:flex;justify-content:space-between;color:#e5e5e5a8;font-size:8px;letter-spacing:1px}
+.player{border:1px solid #252525;border-radius:13px;background:#080808;box-shadow:none;margin-bottom:22px}
+.player-head{background:#101010;padding:13px 16px;border-bottom:1px solid #242424}
+.player-title{font-size:12px;letter-spacing:.4px}
+.live-status{font-size:9px;color:#ff4a58}
+.player-screen{min-height:300px;max-height:650px;aspect-ratio:16/9;background:radial-gradient(ellipse at center,#191919,#030303 72%)}
+#liveVideo{max-height:650px}
+.player-content{max-width:560px}
+.player-icon{display:grid;place-items:center;margin:0 auto 12px;width:49px;height:49px;border-radius:50%;background:#e5091b;font-size:19px}
+.player-content h3{font-size:19px;letter-spacing:1px}
+.player-content p{font-size:12px;color:#aaa}
+.player-action,.primary-btn{background:#e5091b;border-radius:5px;box-shadow:none;font-size:10px;letter-spacing:.4px}
+.player-note{background:#0b0b0b;border-top:1px solid #222;font-size:10px;color:#888}
+.highlight-section{margin:25px 0 28px}
+.highlight-heading h2{font-size:17px;letter-spacing:.3px}
+.highlight-heading p{font-size:10px;color:#777}
+.highlight-tag{color:#ff8d96;border-color:#61222a;background:#1b0d0f;font-size:8px}
+.highlight-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.highlight-card{background:#111;border-color:#292929;border-radius:9px;padding:10px}
+.highlight-card:hover{background:#191919;border-color:#e5091b;box-shadow:none;transform:translateY(-2px)}
+.highlight-logo{width:36px;height:36px;flex-basis:36px;border-radius:7px}
+.highlight-copy strong{font-size:10px}.highlight-copy small{font-size:8px;color:#777}
+.highlight-empty{background:#101010;border-color:#333;color:#888}
+.panel{background:#0d0d0d;border:1px solid #292929;border-radius:12px;box-shadow:none;padding:17px}
+.panel h2{font-size:15px;letter-spacing:.5px}
+.panel-intro{font-size:10px;color:#888}
+.m3u-grid{gap:10px}
+.m3u-box{background:#121212;border:1px solid #2a2a2a;border-radius:9px;padding:13px}
+.m3u-box h3{font-size:11px}
+.m3u-box p{font-size:9px;color:#858585}
+input,select{background:#171717;border-color:#303030;border-radius:7px;font-size:11px}
+.secondary-btn{background:#222;border-color:#383838;border-radius:5px;font-size:9px}
+.m3u-message{background:#191919}
+.saved-playlist-row{background:#121212;border-color:#2b2b2b;border-radius:8px}
+.saved-playlist-row strong{font-size:10px}
+.saved-playlist-status{font-size:9px}
+.info-panel{background:#0d0d0d;border-color:#292929}
+.info-panel h3{font-size:13px}
+.info-panel p{font-size:10px;color:#888}
+footer{border-color:#222;color:#777;font-size:10px}
+@media(max-width:1050px){.app-layout{grid-template-columns:235px minmax(0,1fr)}.main-content{padding:17px}.highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ .topbar{height:60px;padding:0 13px;gap:8px}
+ .topbar-brand{min-width:0}.brand-logo{width:34px;height:34px}.brand-text h1{font-size:13px}.brand-text small{font-size:7px}
+ .top-links{display:none}.secure-label{display:none}.login-link{font-size:8px;padding:9px 11px}
+ .app-layout{display:flex;flex-direction:column}
+ .main-content{order:1;padding:13px 12px 25px}
+ .sidebar{order:2;position:relative;top:auto;height:auto;max-height:none;overflow:visible;border-right:0;border-top:1px solid #292929;padding:16px 12px}
+ .hero{min-height:210px;padding:24px 20px;border-radius:10px}
+ .hero h2{font-size:29px}.hero-ball{right:5%;top:18%;font-size:75px;opacity:.55}
+ .hero-bottom{left:20px;right:20px;font-size:7px}
+ .player-screen{min-height:210px}
+ .player-content{padding:18px}
+ .highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .highlight-card{padding:8px;gap:7px}.highlight-logo{width:31px;height:31px;flex-basis:31px}
+ .highlight-copy strong{font-size:9px}.highlight-copy small{font-size:7px}
+ .m3u-grid{grid-template-columns:1fr}.field-row{flex-direction:column}
+ .category-bar{display:flex;flex-wrap:wrap}
+ .channel-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+ .channel-card{padding:8px}
+ .channel-label{margin-left:40px}
+}
+@media(max-width:390px){.channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.highlight-grid{grid-template-columns:1fr}.hero h2{font-size:25px}}
+
+
+/* FIX: clickable channel rows + low-data quality selector */
+
+/* PLAYER UPGRADE: responsive controls, loading state and fullscreen */
+.player-screen{position:relative;overflow:hidden}
+#liveVideo{object-fit:contain}
+.player-loading{position:absolute;inset:0;z-index:3;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:rgba(0,0,0,.58);color:#fff;font-size:12px;pointer-events:none}
+.player-spinner{width:32px;height:32px;border:3px solid #ffffff35;border-top-color:#ed1020;border-radius:50%;animation:playerSpin .8s linear infinite}
+@keyframes playerSpin{to{transform:rotate(360deg)}}
+.player-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 13px;background:#101010;border-top:1px solid #242424}
+.player-control-btn{border:1px solid #333;background:#1b1b1b;color:#f5f5f5;border-radius:5px;padding:9px 13px;font-size:10px;font-weight:800;cursor:pointer;transition:.18s}
+.player-control-btn:hover:not(:disabled){background:#e5091b;border-color:#e5091b}
+.player-control-btn:disabled{opacity:.45;cursor:not-allowed}
+.player-control-hint{margin-left:auto;color:#777;font-size:9px}
+.player-screen:fullscreen{width:100vw;height:100vh;max-height:none;aspect-ratio:auto;background:#000}
+.player-screen:fullscreen #liveVideo{width:100%;height:100%;max-height:none;aspect-ratio:auto}
+@media(max-width:760px){.player-control-hint{width:100%;margin:2px 0 0}.player-control-btn{padding:9px 11px}}
+.player-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.player-tools label{font-size:9px;color:#aaa;letter-spacing:.7px;font-weight:800}.player-tools select{width:auto;min-width:155px;padding:8px 10px;font-size:10px;background:#171717;border-color:#383838}.channel-card{cursor:pointer;user-select:none;position:relative;z-index:2;pointer-events:auto;touch-action:manipulation}.channel-card>*{pointer-events:none}.channel-card:focus-visible{outline:2px solid #ed1020;outline-offset:2px}.channel-card.selected{background:#211012;border-color:#e5091b;box-shadow:inset 3px 0 #e5091b}.channel-card .card-actions{display:none!important}
+@media(max-width:760px){.player-tools{width:100%;justify-content:flex-start}.player-tools select{min-width:135px}.player-head{align-items:flex-start}}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-logo">JS</div>
+    <div class="brand-text"><h1>JSPORTS NETWORK</h1><small>LIVE TV • SPORTS • ENTERTAINMENT</small></div>
+  </div>
+  <nav class="top-links">
+    <a href="#home" class="active">Home</a>
+    <a href="#livePlayer">Live TV</a>
+    <a href="#featuredTitle">Featured</a>
+    <a href="#m3uPanel">My Playlist</a>
+  </nav>
+  <div class="topbar-right"><span class="secure-label">● OFFICIAL LINKS</span><a class="login-link" href="#m3uPanel">MY PLAYLIST</a></div>
+</header>
+
+<div class="app-layout">
+  <aside class="sidebar" aria-label="Channel navigation">
+    <div class="sidebar-head"><div><strong>CHANNELS</strong><small>Browse your TV list</small></div><span class="side-count">LIVE TV</span></div>
+    <div class="search-wrap side-search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search channels..."></div>
+    <select id="countryFilter" class="side-country"><option value="all">🌍 All Countries</option><option value="বাংলাদেশ">🇧🇩 বাংলাদেশ</option><option value="ভারত">🇮🇳 ভারত</option><option value="পাকিস্তান">🇵🇰 পাকিস্তান</option><option value="আন্তর্জাতিক">🌐 আন্তর্জাতিক</option><option value="Playlist">📂 M3U Playlist</option></select>
+    <div class="side-category-title">BROWSE CATEGORIES</div>
+    <div class="category-bar" id="categoryBar"></div>
+    <div class="side-list-heading"><strong>ALL CHANNELS</strong><span class="total" id="channelCount"></span></div>
+    <section class="channel-grid" id="channelGrid"></section>
+    <div class="sidebar-foot">Jsports Network<br><span>Official channel directory</span></div>
+  </aside>
+
+  <main class="main-content" id="home">
+    <section class="hero">
+      <div class="hero-shade"></div>
+      <div class="hero-copy"><span class="hero-label">WELCOME TO JSPORTS NETWORK</span><h2>YOUR WORLD OF<br><em>LIVE SPORTS & TV</em></h2><p>ক্রিকেট, ফুটবল, আন্তর্জাতিক সংবাদ, বিনোদন ও পছন্দের টিভি প্ল্যাটফর্ম—সব এক জায়গায়।</p><a class="hero-button" href="#livePlayer">▶ WATCH LIVE</a></div>
+      <div class="hero-ball" aria-hidden="true">⚽</div>
+      <div class="hero-bottom"><span>SPORTS • NEWS • ENTERTAINMENT</span><span>01 / JSPORTS</span></div>
+    </section>
+
+    <section class="player" id="livePlayer">
+      <div class="player-head"><div class="player-title" id="playerTitle">📺 Jsports Network Live Player</div><div class="player-tools"><label for="streamQuality">VIDEO QUALITY</label><select id="streamQuality" aria-label="Video quality" disabled><option value="360" selected>Data Saver · 360p max</option><option value="240">Low Data · 240p max</option><option value="144">Very Low · 144p max</option><option value="480">Standard · 480p max</option><option value="auto">Auto · adaptive</option></select><span class="live-status" id="playerStatus">● READY TO PLAY</span></div></div>
+      <div class="player-screen" id="playerScreen">
+        <video id="liveVideo" controls playsinline crossorigin="anonymous" preload="none"></video>
+        <div class="player-loading" id="playerLoading" aria-live="polite"><span class="player-spinner"></span><strong id="playerLoadingText">স্ট্রিম লোড হচ্ছে...</strong></div>
+        <div class="player-content" id="playerPlaceholder"><div class="player-icon">▶</div><h3 id="playerHeading">SELECT YOUR CHANNEL</h3><p id="playerText">বাম পাশের তালিকা থেকে একটি চ্যানেল নির্বাচন করুন। সমর্থিত M3U/HLS stream এখানে চলবে; অফিসিয়াল ওয়েবসাইট নতুন ট্যাবে খুলবে।</p><a id="playerLink" class="player-action" href="#" target="_blank" rel="noopener" style="display:none">▶ OPEN OFFICIAL LIVE</a></div>
+      </div>
+      <div class="player-controls" aria-label="Player controls">
+        <button class="player-control-btn" id="playPauseBtn" type="button" disabled>▶ PLAY</button>
+        <button class="player-control-btn" id="muteBtn" type="button" disabled>🔊 SOUND ON</button>
+        <button class="player-control-btn" id="fullscreenBtn" type="button">⛶ FULL SCREEN</button>
+        <span class="player-control-hint">ভিডিওর নিজস্ব controls থেকেও volume ও playback নিয়ন্ত্রণ করা যাবে।</span>
+      </div>
+      <div class="player-note">LIVE PLAYER · M3U/HLS playback সমর্থিত stream-এর জন্য। DRM, CORS, অঞ্চলভিত্তিক সীমাবদ্ধতা বা মেয়াদোত্তীর্ণ URL-এর কারণে কিছু stream নাও চলতে পারে।</div>
+    </section>
+
+    <section class="highlight-section" aria-labelledby="liveNowTitle"><div class="highlight-heading"><div><h2 id="liveNowTitle"><span class="live-dot"></span>Live Now</h2><p>লাইভ পেজ ও আপনার M3U stream-এর দ্রুত শর্টকাট। সম্প্রচার চলছে কি না রিয়েল-টাইমে যাচাই করা হয় না।</p></div><span class="highlight-tag">LIVE LINKS</span></div><div class="highlight-grid" id="liveNowGrid"></div></section>
+
+    <section class="highlight-section" aria-labelledby="featuredTitle"><div class="highlight-heading"><div><h2 id="featuredTitle">★ Featured Channels</h2><p>জনপ্রিয় Sports, Cricket ও Entertainment প্ল্যাটফর্ম।</p></div><span class="highlight-tag">EDITOR'S PICKS</span></div><div class="highlight-grid" id="featuredGrid"></div></section>
+
+    <section class="panel" id="m3uPanel">
+      <h2>＋ ADD YOUR M3U PLAYLIST</h2>
+      <p class="panel-intro">আপনার কাছে থাকা বৈধ/অনুমোদিত M3U Playlist URL অথবা কম্পিউটারের M3U ফাইল দিয়ে চ্যানেল যোগ করুন।</p>
+      <div class="m3u-grid">
+        <div class="m3u-box"><h3>🌐 OPTION 1 — M3U URL</h3><div class="field-row"><input id="m3uUrl" type="url" placeholder="https://example.com/playlist.m3u"><button class="primary-btn" id="loadUrlBtn" type="button">LOAD URL</button></div><p>CORS বন্ধ থাকলে URL লোড নাও হতে পারে। সে ক্ষেত্রে File Upload ব্যবহার করুন।</p></div>
+        <div class="m3u-box"><h3>📁 OPTION 2 — UPLOAD FILE</h3><input id="m3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl"><p>কম্পিউটার থেকে .m3u বা .m3u8 playlist ফাইল নির্বাচন করুন।</p></div>
+      </div>
+      <div id="m3uMessage" class="m3u-message" role="status" aria-live="polite"></div>
+      <div class="saved-playlist-row"><div><strong>💾 SAVED PLAYLIST</strong><div id="savedPlaylistStatus" class="saved-playlist-status">এখনও কোনো Playlist সংরক্ষণ করা হয়নি।</div></div><button class="secondary-btn" id="clearSavedPlaylistBtn" type="button">CLEAR PLAYLIST</button></div>
+    </section>
+
+    <section class="info-panel"><h3>ℹ️ ABOUT JSPORTS NETWORK</h3><p>Jsports Network কোনো টিভি চ্যানেলের নিজস্ব সম্প্রচার হোস্ট করে না। এখানে চ্যানেলগুলোর অফিসিয়াল ওয়েবসাইট এবং ব্যবহারকারীর যোগ করা Playlist দেখানো হয়। কেবল বৈধ ও অনুমোদিত stream ব্যবহার করুন। GitHub Pages static website; Saved Playlist শুধু এই browser/device-এ থাকে।</p></section>
+    <footer><strong>Jsports Network</strong> · Free & Official TV Channel Directory · © 2026</footer>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+const channels = [
+{name:"BTV",short:"BTV",category:"General TV",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",type:"website",color:"#087d49"},
+{name:"BTV Chattogram",short:"BTV CTG",category:"General TV",country:"বাংলাদেশ",url:"https://btvlive.gov.bd/",type:"website",color:"#087d49"},
+{name:"Sangsad Bangladesh TV",short:"SANGSAD",category:"General TV",country:"বাংলাদেশ",url:"https://www.parliament.gov.bd/",type:"website",color:"#176b55"},
+{name:"T Sports",short:"TSP",category:"Sports",country:"বাংলাদেশ",url:"https://toffeelive.com/live",type:"website",color:"#e53935"},
+{name:"GTV",short:"GTV",category:"Cricket",country:"বাংলাদেশ",url:"https://gazitv.com/",type:"website",color:"#1674bd"},
+{name:"Nagorik TV",short:"NTV",category:"Entertainment",country:"বাংলাদেশ",url:"https://nagorik.com/",type:"website",color:"#9b253d"},
+{name:"DD National",short:"DD N",category:"General TV",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#e87525"},
+{name:"DD News",short:"DD NEWS",category:"News TV",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#b51e29"},
+{name:"DD Sports",short:"DD SPORT",category:"Cricket",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#2673b9"},
+{name:"DD Kisan",short:"KISAN",category:"Education",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#39833e"},
+{name:"Sansad TV",short:"SANSAD",category:"News TV",country:"ভারত",url:"https://sansadtv.nic.in/",type:"website",color:"#a17a35"},
+{name:"DD Bharati",short:"BHARATI",category:"Entertainment",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#8d4d9e"},
+{name:"DD Girnar",short:"GIRNAR",category:"General TV",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#bd6b25"},
+{name:"DD Urdu",short:"URDU",category:"General TV",country:"ভারত",url:"https://prasarbharati.gov.in/live-tv/",type:"live",color:"#25866b"},
+{name:"PTV Home",short:"PTV",category:"Entertainment",country:"পাকিস্তান",url:"",type:"none",color:"#087d49"},
+{name:"PTV News",short:"PTV NEWS",category:"News TV",country:"পাকিস্তান",url:"https://moib.gov.pk/LiveStream",type:"live",color:"#176b55"},
+{name:"PTV Sports",short:"PTV SPORT",category:"Sports",country:"পাকিস্তান",url:"",type:"none",color:"#2373b9"},
+{name:"PTV National",short:"PTV NAT",category:"General TV",country:"পাকিস্তান",url:"",type:"none",color:"#b18a36"},
+{name:"Geo News",short:"GEO",category:"News TV",country:"পাকিস্তান",url:"https://www.geo.tv/",type:"website",color:"#e0a52b"},
+{name:"Geo Super",short:"GEO SUP",category:"Cricket",country:"পাকিস্তান",url:"https://www.geosuper.tv/",type:"website",color:"#268b59"},
+{name:"Al Jazeera English",short:"AJ",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.aljazeera.com/video/live/",type:"live",color:"#a8893d"},
+{name:"BBC News",short:"BBC",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.bbc.com/news",type:"website",color:"#bb1e2d"},
+{name:"Sky News",short:"SKY",category:"News TV",country:"আন্তর্জাতিক",url:"https://news.sky.com/watch-live",type:"live",color:"#2475bd"},
+{name:"France 24 English",short:"F24",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.france24.com/en/live",type:"live",color:"#2453a0"},
+{name:"DW News",short:"DW",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.dw.com/en/live-tv/s-100825",type:"live",color:"#276ba5"},
+{name:"CNN International",short:"CNN",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.cnn.com/",type:"website",color:"#c51d2b"},
+{name:"NHK World-Japan",short:"NHK",category:"News TV",country:"আন্তর্জাতিক",url:"https://www3.nhk.or.jp/nhkworld/en/live/",type:"live",color:"#1e75a8"},
+{name:"CNA",short:"CNA",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.channelnewsasia.com/watch",type:"live",color:"#c52a35"},
+{name:"TRT World",short:"TRT",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.trtworld.com/live",type:"live",color:"#258b68"},
+{name:"Euronews",short:"EURO",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.euronews.com/live",type:"live",color:"#315b9b"},
+{name:"ABC News Australia",short:"ABC",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.abc.net.au/news",type:"website",color:"#222f75"},
+{name:"CBS News 24/7",short:"CBS",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.cbsnews.com/live/",type:"live",color:"#2862a4"},
+{name:"GB News",short:"GB NEWS",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.gbnews.com/watch",type:"live",color:"#244f8b"},
+{name:"CGTN",short:"CGTN",category:"News TV",country:"আন্তর্জাতিক",url:"https://www.cgtn.com/tv",type:"website",color:"#176a9b"},
+{name:"Arirang TV",short:"ARIRANG",category:"General TV",country:"আন্তর্জাতিক",url:"https://www.arirang.com/",type:"website",color:"#2785a8"},
+{name:"NASA TV",short:"NASA",category:"Documentary",country:"আন্তর্জাতিক",url:"https://www.nasa.gov/nasatv/",type:"live",color:"#24549b"},
+{name:"Red Bull TV",short:"RED BULL",category:"Sports",country:"আন্তর্জাতিক",url:"https://www.redbull.com/int-en/tv",type:"website",color:"#c5252e"},
+{name:"TV5MONDE",short:"TV5",category:"Entertainment",country:"আন্তর্জাতিক",url:"https://www.tv5monde.com/",type:"website",color:"#2454a0"},
+{name:"Zee Bangla HD",short:"ZEE B",category:"Entertainment",country:"ভারত",url:"https://www.zee5.com/live-tv/zee-bangla-hd/0-9-zeebangla",type:"live",color:"#a52b8a"},
+{name:"Star Jalsha",short:"STAR J",category:"Entertainment",country:"ভারত",url:"https://toffeelive.com/live",type:"website",color:"#8e3a9b"},
+{name:"Jalsha Movies",short:"J MOV",category:"Movies",country:"ভারত",url:"https://toffeelive.com/live",type:"website",color:"#ad3b54"},
+{name:"ICC.tv",short:"ICC",category:"Cricket",country:"আন্তর্জাতিক",url:"https://www.icc.tv/",type:"website",color:"#1d4d91"},
+{name:"Bangladesh Cricket Board",short:"BCB",category:"Cricket",country:"বাংলাদেশ",url:"https://www.tigercricket.com.bd/",type:"website",color:"#147a48"},
+{name:"Cricket Australia",short:"CA",category:"Cricket",country:"আন্তর্জাতিক",url:"https://www.cricket.com.au/",type:"website",color:"#d9a52b"},
+{name:"England Cricket",short:"ECB",category:"Cricket",country:"আন্তর্জাতিক",url:"https://www.ecb.co.uk/",type:"website",color:"#24569a"},
+{name:"Pakistan Cricket Board",short:"PCB",category:"Cricket",country:"পাকিস্তান",url:"https://www.pcb.com.pk/",type:"website",color:"#176c45"},
+{name:"FIFA+",short:"FIFA+",category:"Football",country:"আন্তর্জাতিক",url:"https://www.plus.fifa.com/",type:"live",color:"#1e3d78"},
+{name:"FIFA YouTube",short:"FIFA",category:"Football",country:"আন্তর্জাতিক",url:"https://www.youtube.com/@FIFA",type:"website",color:"#2465a5"},
+{name:"AFC",short:"AFC",category:"Football",country:"আন্তর্জাতিক",url:"https://www.the-afc.com/",type:"website",color:"#b18a36"},
+{name:"UEFA.tv",short:"UEFA",category:"Football",country:"আন্তর্জাতিক",url:"https://www.uefa.tv/",type:"live",color:"#2455a0"},
+{name:"Premier League",short:"PL",category:"Football",country:"আন্তর্জাতিক",url:"https://www.premierleague.com/",type:"website",color:"#552583"},
+{name:"Olympics Channel",short:"OLY",category:"Sports",country:"আন্তর্জাতিক",url:"https://olympics.com/en/olympic-channel",type:"website",color:"#27618c"},
+{name:"World Athletics",short:"WA",category:"Sports",country:"আন্তর্জাতিক",url:"https://worldathletics.org/",type:"website",color:"#236b9b"},
+{name:"FIBA Basketball",short:"FIBA",category:"Sports",country:"আন্তর্জাতিক",url:"https://www.fiba.basketball/",type:"website",color:"#2462a5"},
+{name:"World Rugby",short:"RUGBY",category:"Sports",country:"আন্তর্জাতিক",url:"https://www.world.rugby/",type:"website",color:"#26734d"}
+];
+
+const categories=["সব চ্যানেল","Sports","Cricket","Football","News TV","Entertainment","Movies","Kids","Education","Documentary","General TV"];
+let activeCategory="সব চ্যানেল";
+let playlistChannels=[];
+const PLAYLIST_STORAGE_KEY="jsports_network_saved_playlist_v1";
+let hlsInstance=null;
+let currentChannel=null;
+let availableHlsLevels=[];
+const qualitySelect=document.getElementById("streamQuality");
+const grid=document.getElementById("channelGrid");
+const search=document.getElementById("searchInput");
+const country=document.getElementById("countryFilter");
+const categoryBar=document.getElementById("categoryBar");
+const video=document.getElementById("liveVideo");
+const playerScreen=document.getElementById("playerScreen");
+const playerLoading=document.getElementById("playerLoading");
+const playerLoadingText=document.getElementById("playerLoadingText");
+const playPauseBtn=document.getElementById("playPauseBtn");
+const muteBtn=document.getElementById("muteBtn");
+const fullscreenBtn=document.getElementById("fullscreenBtn");
+const placeholder=document.getElementById("playerPlaceholder");
+const message=document.getElementById("m3uMessage");
+
+function showMessage(text,type="success"){
+  message.textContent=text;message.className="m3u-message "+type;
+}
+function updateSavedPlaylistStatus(){
+  const status=document.getElementById("savedPlaylistStatus");
+  if(!status)return;
+  status.textContent=playlistChannels.length
+    ? playlistChannels.length+"টি Playlist channel এই browser-এ সংরক্ষিত আছে। Refresh করলেও থাকবে।"
+    : "এখনও কোনো Playlist সংরক্ষণ করা হয়নি।";
+}
+function savePlaylistChannels(){
+  try{
+    localStorage.setItem(PLAYLIST_STORAGE_KEY,JSON.stringify(playlistChannels));
+    updateSavedPlaylistStatus();
+    return true;
+  }catch(error){
+    updateSavedPlaylistStatus();
+    showMessage("চ্যানেল যোগ হয়েছে, কিন্তু browser storage-এ সংরক্ষণ করা যায়নি। Browser storage space/settings পরীক্ষা করুন।","error");
+    return false;
+  }
+}
+function restoreSavedPlaylist(){
+  try{
+    const saved=localStorage.getItem(PLAYLIST_STORAGE_KEY);
+    if(!saved)return;
+    const data=JSON.parse(saved);
+    if(Array.isArray(data)){
+      playlistChannels=data.filter(c=>c&&typeof c.name==="string"&&/^https?:\/\//i.test(c.streamUrl||"")&&c.isPlaylist===true);
+    }
+  }catch(error){
+    playlistChannels=[];
+    try{localStorage.removeItem(PLAYLIST_STORAGE_KEY);}catch(ignore){}
+  }
+  updateSavedPlaylistStatus();
+}
+function makeCategories(){
+  categoryBar.innerHTML="";
+  categories.forEach(cat=>{
+    const btn=document.createElement("button");
+    btn.className="cat-btn"+(activeCategory===cat?" active":"");
+    btn.textContent=cat==="সব চ্যানেল"?"📺 সব চ্যানেল":cat;
+    btn.addEventListener("click",()=>{activeCategory=cat;makeCategories();render();});
+    categoryBar.appendChild(btn);
+  });
+}
+function setPlayerLoading(show,text="স্ট্রিম লোড হচ্ছে..."){
+  playerLoadingText.textContent=text;
+  playerLoading.style.display=show?"flex":"none";
+}
+function updatePlayerButtons(){
+  const hasSource=!!(video.currentSrc||video.src||hlsInstance);
+  playPauseBtn.disabled=!hasSource;
+  muteBtn.disabled=!hasSource;
+  playPauseBtn.textContent=video.paused?"▶ PLAY":"❚❚ PAUSE";
+  muteBtn.textContent=video.muted?"🔇 MUTED":"🔊 SOUND ON";
+}
+function stopPlayback(){
+  if(hlsInstance){hlsInstance.destroy();hlsInstance=null;}
+  availableHlsLevels=[];
+  if(qualitySelect)qualitySelect.disabled=true;
+  setPlayerLoading(false);
+  video.pause();video.removeAttribute("src");video.load();video.style.display="none";placeholder.style.display="block";
+  updatePlayerButtons();
+}
+function bestLevelAtOrBelow(maxHeight){
+  if(!hlsInstance||!availableHlsLevels.length)return -1;
+  const eligible=availableHlsLevels.map((level,index)=>({level,index})).filter(x=>x.level.height&&x.level.height<=maxHeight);
+  if(!eligible.length)return -1;
+  eligible.sort((a,b)=>a.level.height-b.level.height);
+  return eligible[eligible.length-1].index;
+}
+function applyQualitySetting(){
+  if(!hlsInstance||!availableHlsLevels.length)return;
+  const setting=qualitySelect.value;
+  if(setting==="auto"){hlsInstance.autoLevelCapping=-1;hlsInstance.currentLevel=-1;return;}
+  const cap=bestLevelAtOrBelow(Number(setting));
+  if(cap>=0){hlsInstance.autoLevelCapping=cap;hlsInstance.currentLevel=-1;}
+}
+function updateQualityOptions(){
+  if(!hlsInstance||!availableHlsLevels.length)return;
+  const heights=availableHlsLevels.map(x=>Number(x.height)||0).filter(Boolean);
+  if(!heights.length){qualitySelect.disabled=true;return;}
+  qualitySelect.disabled=false;
+  [...qualitySelect.options].forEach(o=>{
+    if(/^\d+$/.test(o.value))o.disabled=!heights.some(h=>h<=Number(o.value));
+  });
+  if(qualitySelect.selectedOptions[0]?.disabled)qualitySelect.value="auto";
+  applyQualitySetting();
+  const maxHeight=Math.max(...heights);
+  const note=document.getElementById("playerText");
+  if(maxHeight<240&&note)note.textContent="এই stream-এ 240p-এর চেয়েও কম সর্বোচ্চ resolution পাওয়া গেছে; উপলব্ধ মানেই চলবে।";
+}
+function playStream(channel){
+  stopPlayback();
+  currentChannel=channel;
+  document.getElementById("playerTitle").textContent="📺 "+channel.name;
+  document.getElementById("playerHeading").textContent=channel.name;
+  document.getElementById("playerStatus").textContent="● LOADING STREAM";
+  document.getElementById("playerText").textContent="স্ট্রিম লোড হচ্ছে। কাজ না করলে URL, CORS, DRM বা অঞ্চলভিত্তিক সীমাবদ্ধতা পরীক্ষা করুন।";
+  document.getElementById("playerLink").style.display="none";
+  placeholder.style.display="none";video.style.display="block";
+  setPlayerLoading(true,"স্ট্রিম লোড হচ্ছে...");
+  const src=channel.streamUrl;
+  if(!src){showPlayerError("এই চ্যানেলের সরাসরি stream URL নেই।");return;}
+  const isHls=/\.m3u8($|[?#])/i.test(src)||channel.isPlaylist;
+  if(isHls && window.Hls && Hls.isSupported()){
+    hlsInstance=new Hls({enableWorker:true,capLevelToPlayerSize:true,startLevel:-1,abrEwmaDefaultEstimate:450000,abrBandWidthFactor:0.8,abrBandWidthUpFactor:0.7});
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED,()=>{availableHlsLevels=hlsInstance.levels||[];updateQualityOptions();document.getElementById("playerStatus").textContent="● STREAM READY";video.play().catch(()=>{setPlayerLoading(false);});updatePlayerButtons();});
+    hlsInstance.on(Hls.Events.LEVELS_UPDATED,()=>{availableHlsLevels=hlsInstance.levels||[];updateQualityOptions();});
+    hlsInstance.on(Hls.Events.ERROR,(event,data)=>{if(data.fatal){showPlayerError("স্ট্রিম চালানো যায়নি। সার্ভার CORS, DRM, URL বা নেটওয়ার্ক বাধা দিতে পারে।");}});
+    hlsInstance.loadSource(src);hlsInstance.attachMedia(video);
+  }else if(video.canPlayType("application/vnd.apple.mpegurl")||!isHls){
+    qualitySelect.disabled=true;
+    video.src=src;
+    video.play().catch(()=>{setPlayerLoading(false);});
+  }else{showPlayerError("এই browser-এ HLS playback সমর্থিত নয়।");}
+  updatePlayerButtons();
+}
+function showPlayerError(text){
+  stopPlayback();document.getElementById("playerStatus").textContent="● PLAYBACK ERROR";
+  document.getElementById("playerHeading").textContent="Playback unavailable";
+  document.getElementById("playerText").textContent=text;
+  placeholder.style.display="block";
+  document.getElementById("playerLink").style.display="none";
+  updatePlayerButtons();
+}
+function selectChannel(channel){
+  currentChannel=channel;
+  document.querySelectorAll(".channel-card.selected").forEach(el=>el.classList.remove("selected"));
+  if(channel.streamUrl){playStream(channel);return;}
+  stopPlayback();
+  document.getElementById("playerTitle").textContent="📺 "+channel.name;
+  document.getElementById("playerHeading").textContent=channel.name;
+  const text=document.getElementById("playerText"),link=document.getElementById("playerLink");
+  document.getElementById("playerStatus").textContent="● OFFICIAL LINK";
+  updatePlayerButtons();
+  if(!channel.url){text.textContent="এই চ্যানেলের জন্য বর্তমানে ব্যবহারযোগ্য অফিসিয়াল ফ্রি Live লিংক নিশ্চিত করা যায়নি।";link.style.display="none";return;}
+  if(channel.type==="live"){text.textContent="এই চ্যানেলের অফিসিয়াল Live পেজ বা সম্প্রচার লিংক খুলুন।";link.textContent="▶ Open Official Live";}
+  else{text.textContent="এই চ্যানেল/সম্প্রচারকের ওয়েবসাইট বা অনুমোদিত প্ল্যাটফর্ম খুলবে। সেখানে চ্যানেলটি পাওয়া, সাবস্ক্রিপশন ও অঞ্চলভিত্তিক শর্ত প্রযোজ্য হতে পারে।";link.textContent="↗ Open Official Platform";}
+  link.href=channel.url;link.style.display="inline-block";placeholder.style.display="block";
+}
+function makeHighlightCard(channel){
+  const card=document.createElement("button");card.type="button";card.className="highlight-card";card.setAttribute("aria-label","Open "+channel.name);
+  const logo=document.createElement("span");logo.className="highlight-logo";logo.style.background=channel.color||"#236b91";logo.textContent=channel.short||"TV";
+  const logoSrc=channel.logo||(channel.url?("https://www.google.com/s2/favicons?domain="+encodeURIComponent(new URL(channel.url).hostname)+"&sz=128"):"");
+  if(logoSrc){const img=document.createElement("img");img.src=logoSrc;img.alt="";img.onerror=()=>{img.remove();logo.textContent=channel.short||"TV";};logo.textContent="";logo.appendChild(img);}
+  const copy=document.createElement("span");copy.className="highlight-copy";const strong=document.createElement("strong");strong.textContent=channel.name;const small=document.createElement("small");small.textContent=(channel.category||"TV")+" · "+(channel.isPlaylist?"M3U Playlist":(channel.country||"Official platform"));copy.append(strong,small);card.append(logo,copy);card.addEventListener("click",()=>selectChannel(channel));return card;
+}
+function renderHighlights(){
+  const liveGrid=document.getElementById("liveNowGrid"),featuredGrid=document.getElementById("featuredGrid");if(!liveGrid||!featuredGrid)return;
+  const all=[...channels,...playlistChannels],q=search.value.toLowerCase().trim(),selectedCountry=country.value;
+  const matches=c=>{const hay=(c.name+" "+(c.country||"")+" "+(c.category||"")).toLowerCase();return hay.includes(q)&&(selectedCountry==="all"||(selectedCountry==="Playlist"?c.isPlaylist:c.country===selectedCountry))&&(activeCategory==="সব চ্যানেল"||c.category===activeCategory);};
+  const live=all.filter(c=>matches(c)&&(c.isPlaylist||c.type==="live")).slice(0,4);liveGrid.innerHTML="";if(live.length)live.forEach(c=>liveGrid.appendChild(makeHighlightCard(c)));else liveGrid.innerHTML='<div class="highlight-empty">এই ফিল্টারে কোনো Live link পাওয়া যায়নি।</div>';
+  const names=["T Sports","DD Sports","Red Bull TV","ICC.tv","FIFA+","Zee Bangla HD","Star Jalsha","Geo Super"];const featured=all.filter(c=>matches(c)&&names.includes(c.name)).slice(0,4);featuredGrid.innerHTML="";if(featured.length)featured.forEach(c=>featuredGrid.appendChild(makeHighlightCard(c)));else featuredGrid.innerHTML='<div class="highlight-empty">এই ফিল্টারে Featured channel পাওয়া যায়নি।</div>';
+}
+
+function render(){
+  renderHighlights();
+  const q=search.value.toLowerCase().trim(),selectedCountry=country.value;
+  const all=[...channels,...playlistChannels];
+  const results=all.map((c,index)=>({...c,index})).filter(c=>{
+    const hay=(c.name+" "+c.country+" "+c.category).toLowerCase();
+    const matchSearch=hay.includes(q);
+    const matchCountry=selectedCountry==="all"||(selectedCountry==="Playlist"?c.isPlaylist:c.country===selectedCountry);
+    const matchCategory=activeCategory==="সব চ্যানেল"||c.category===activeCategory;
+    return matchSearch&&matchCountry&&matchCategory;
+  });
+  document.getElementById("channelCount").textContent=results.length+" Channels";
+  grid.innerHTML="";
+  if(!results.length){grid.innerHTML='<div class="empty">কোনো চ্যানেল পাওয়া যায়নি। অন্য নামে খুঁজুন।</div>';return;}
+  results.forEach(c=>{
+    const card=document.createElement("article");card.className="channel-card";card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Select channel "+c.name);card.dataset.channelIndex=String(c.index);
+    if(currentChannel&&currentChannel.name===c.name&&currentChannel.streamUrl===c.streamUrl)card.classList.add("selected");
+    card.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();selectChannel(c);grid.querySelectorAll(".channel-card.selected").forEach(el=>el.classList.remove("selected"));card.classList.add("selected");}});
+    const top=document.createElement("div");top.className="card-top";
+    const logo=document.createElement("div");logo.className="logo";logo.style.background=c.color||"#236b91";logo.textContent=c.short||"TV";
+    const logoSrc=c.logo||(c.url?("https://www.google.com/s2/favicons?domain="+encodeURIComponent(new URL(c.url).hostname)+"&sz=128"):"");
+    if(logoSrc){const img=document.createElement("img");img.src=logoSrc;img.alt="";img.style.cssText="width:100%;height:100%;object-fit:contain;background:#fff";img.onerror=()=>{img.remove();logo.textContent=c.short||"TV";};logo.textContent="";logo.appendChild(img);}
+    const info=document.createElement("div");info.className="channel-info";
+    const name=document.createElement("h3");name.textContent=c.name;
+    const meta=document.createElement("div");meta.className="meta";meta.textContent=(c.category||"TV")+" · "+(c.country||"Playlist");
+    info.append(name,meta);top.append(logo,info);
+    const label=document.createElement("span");label.className="channel-label"+(c.isPlaylist?" playlist":(c.type==="live"?"":" website"));
+    label.textContent=c.isPlaylist?"M3U PLAYLIST STREAM":(c.type==="live"?"OFFICIAL LIVE PAGE":c.type==="website"?"OFFICIAL WEBSITE / PLATFORM":"SOURCE UNAVAILABLE");
+    const actions=document.createElement("div");actions.className="card-actions";
+    const watch=document.createElement("button");watch.className="watch-btn";watch.type="button";watch.textContent=c.isPlaylist?"▶ Play Stream":c.url?"▶ Live TV":"Unavailable";
+    if(!c.url&&!c.streamUrl)watch.classList.add("unavailable");
+    watch.addEventListener("click",()=>selectChannel(c));
+    actions.appendChild(watch);
+    if(c.url){const site=document.createElement("a");site.className="site-btn";site.href=c.url;site.target="_blank";site.rel="noopener";site.textContent="Website ↗";actions.appendChild(site);}
+    card.append(top,label,actions);grid.appendChild(card);
+  });
+}
+// Robust channel selection: handle clicks anywhere inside a sidebar channel row.
+grid.addEventListener("click",event=>{
+  const card=event.target.closest(".channel-card");
+  if(!card||!grid.contains(card))return;
+  const index=Number(card.dataset.channelIndex);
+  const list=[...channels,...playlistChannels];
+  const channel=list[index];
+  if(!channel)return;
+  event.preventDefault();
+  selectChannel(channel);
+  grid.querySelectorAll(".channel-card.selected").forEach(el=>el.classList.remove("selected"));
+  card.classList.add("selected");
+},true);
+
+function parseM3U(text){
+  const lines=text.replace(/^\uFEFF/,"").split(/\r?\n/);
+  const parsed=[];let current=null;
+  for(const raw of lines){
+    const line=raw.trim();if(!line)continue;
+    if(line.startsWith("#EXTINF")){
+      const comma=line.indexOf(",");
+      const attrs=comma>=0?line.slice(0,comma):line;
+      const name=comma>=0?line.slice(comma+1).trim():"Unnamed channel";
+      const getAttr=(key)=>{const match=attrs.match(new RegExp(key+'="([^"]*)"',"i"));return match?match[1]:"";};
+      current={name:name||"Unnamed channel",logo:getAttr("tvg-logo"),group:getAttr("group-title"),country:getAttr("tvg-country"),short:(name||"TV").slice(0,8).toUpperCase()};
+    }else if(!line.startsWith("#")&&current){
+      if(/^https?:\/\//i.test(line)){
+        const group=current.group||"Playlist";
+        parsed.push({name:current.name,short:current.short,category:normalizeCategory(group),country:"Playlist",url:"",type:"stream",streamUrl:line,logo:current.logo,color:"#247b72",isPlaylist:true});
+      }
+      current=null;
+    }
+  }
+  return parsed;
+}
+function normalizeCategory(group){
+  const g=group.toLowerCase();
+  if(g.includes("cricket"))return "Cricket";
+  if(g.includes("football")||g.includes("soccer"))return "Football";
+  if(g.includes("sport"))return "Sports";
+  if(g.includes("news"))return "News TV";
+  if(g.includes("movie")||g.includes("film"))return "Movies";
+  if(g.includes("kid")||g.includes("child"))return "Kids";
+  if(g.includes("doc"))return "Documentary";
+  if(g.includes("educ"))return "Education";
+  if(g.includes("entertain"))return "Entertainment";
+  return "General TV";
+}
+function addPlaylist(text,sourceName){
+  const parsed=parseM3U(text);
+  if(!parsed.length){showMessage("Playlist পড়া হয়েছে, কিন্তু কোনো বৈধ HTTP/HTTPS channel stream পাওয়া যায়নি। M3U ফাইলের format পরীক্ষা করুন।","error");return;}
+  playlistChannels=parsed;
+  const saved=savePlaylistChannels();
+  activeCategory="সব চ্যানেল";makeCategories();country.value="Playlist";search.value="";render();
+  if(saved)showMessage(sourceName+" থেকে "+parsed.length+"টি channel যোগ হয়েছে এবং এই browser-এ সংরক্ষিত হয়েছে। Refresh করলেও থাকবে।","success");
+  document.getElementById("m3uPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+document.getElementById("loadUrlBtn").addEventListener("click",async()=>{
+  const url=document.getElementById("m3uUrl").value.trim();
+  if(!url){showMessage("প্রথমে M3U Playlist URL দিন।","error");return;}
+  if(!/^https?:\/\//i.test(url)){showMessage("সঠিক http:// অথবা https:// URL দিন।","error");return;}
+  const btn=document.getElementById("loadUrlBtn");btn.disabled=true;btn.textContent="Loading...";
+  try{
+    const response=await fetch(url);
+    if(!response.ok)throw new Error("HTTP "+response.status);
+    const text=await response.text();addPlaylist(text,"M3U URL");
+  }catch(error){
+    showMessage("URL থেকে Playlist আনা যায়নি। সম্ভাব্য কারণ: CORS বন্ধ, URL ভুল/মেয়াদোত্তীর্ণ, login দরকার অথবা server access block করেছে। একই Playlist ফাইল থাকলে File Upload ব্যবহার করুন।","error");
+  }finally{btn.disabled=false;btn.textContent="Load URL";}
+});
+document.getElementById("m3uFile").addEventListener("change",event=>{
+  const file=event.target.files&&event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>addPlaylist(String(reader.result||""),file.name);
+  reader.onerror=()=>showMessage("ফাইলটি পড়া যায়নি। অন্য M3U ফাইল চেষ্টা করুন।","error");
+  reader.readAsText(file);
+});
+search.addEventListener("input",render);country.addEventListener("change",render);
+// Native media events keep loading, status and custom controls in sync.
+video.addEventListener("loadstart",()=>{if(video.style.display!=="none")setPlayerLoading(true,"স্ট্রিম লোড হচ্ছে...");});
+video.addEventListener("waiting",()=>setPlayerLoading(true,"বাফার হচ্ছে..."));
+video.addEventListener("stalled",()=>setPlayerLoading(true,"নেটওয়ার্ক ধীর—অপেক্ষা করুন..."));
+video.addEventListener("playing",()=>{setPlayerLoading(false);document.getElementById("playerStatus").textContent="● PLAYING";updatePlayerButtons();});
+video.addEventListener("canplay",()=>{setPlayerLoading(false);updatePlayerButtons();});
+video.addEventListener("pause",updatePlayerButtons);
+video.addEventListener("play",updatePlayerButtons);
+video.addEventListener("volumechange",updatePlayerButtons);
+video.addEventListener("ended",()=>{document.getElementById("playerStatus").textContent="● STREAM ENDED";updatePlayerButtons();});
+video.addEventListener("error",()=>{if(video.style.display!=="none"&&currentChannel?.streamUrl)showPlayerError("ভিডিও চালানো যায়নি। Stream URL, browser support, CORS বা server access পরীক্ষা করুন।");});
+playPauseBtn.addEventListener("click",()=>{if(video.paused)video.play().catch(()=>showPlayerError("এই stream চালু করা যায়নি।"));else video.pause();});
+muteBtn.addEventListener("click",()=>{video.muted=!video.muted;updatePlayerButtons();});
+fullscreenBtn.addEventListener("click",async()=>{
+  try{
+    if(document.fullscreenElement){await document.exitFullscreen();}
+    else if(playerScreen.requestFullscreen){await playerScreen.requestFullscreen();}
+    else if(video.webkitEnterFullscreen){video.webkitEnterFullscreen();}
+  }catch(error){document.getElementById("playerStatus").textContent="● FULLSCREEN UNAVAILABLE";}
+});
+document.addEventListener("fullscreenchange",()=>{fullscreenBtn.textContent=document.fullscreenElement?"✕ EXIT FULL SCREEN":"⛶ FULL SCREEN";});
+qualitySelect.addEventListener("change",applyQualitySetting);
+document.getElementById("clearSavedPlaylistBtn").addEventListener("click",()=>{
+  playlistChannels=[];
+  try{localStorage.removeItem(PLAYLIST_STORAGE_KEY);}catch(error){}
+  country.value="all";search.value="";activeCategory="সব চ্যানেল";
+  updateSavedPlaylistStatus();makeCategories();render();
+  showMessage("এই browser থেকে সংরক্ষিত Playlist মুছে ফেলা হয়েছে।","success");
+});
+restoreSavedPlaylist();
+makeCategories();render();
+</script>
+</body>
+</html>
