@@ -889,7 +889,8 @@ function parseM3U(text,sourceName="M3U Playlist",sourceCountry="Playlist",forceS
     }else if(!line.startsWith("#")&&current){
       if(/^https?:\/\//i.test(line)){
         const group=current.group||sourceName;
-        parsed.push({name:current.name,short:current.short,category:forceSports?"Sports":normalizeCategory(group),country:sourceCountry,url:"",type:"stream",streamUrl:line,logo:current.logo,color:"#247b72",isPlaylist:true,playlistSource:sourceName,groupTitle:group});
+        const category=forceSports?classifySportsCategory(group,current.name):normalizeCategory(group,current.name);
+        parsed.push({name:current.name,short:current.short,category,country:sourceCountry,url:"",type:"stream",streamUrl:line,logo:current.logo,color:"#247b72",isPlaylist:true,playlistSource:sourceName,groupTitle:group});
       }
       current=null;
     }
@@ -964,8 +965,14 @@ document.getElementById("downloadCombinedBtn").addEventListener("click",()=>{
   link.href=url;link.download="Jsports_BD_India_Sports.m3u";
   document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
 });
-function normalizeCategory(group){
-  const g=group.toLowerCase();
+function classifySportsCategory(group,name=""){
+  const text=(String(group||"")+" "+String(name||"")).toLowerCase();
+  if(/\bcricket\b|\bipl\b|\btest match\b|\bt20\b|\bodi\b/.test(text))return "Cricket";
+  if(/\bfootball\b|\bsoccer\b|\bfifa\b|\bufa\b|\buefa\b|\bpremier league\b|\blaliga\b|\bserie a\b/.test(text))return "Football";
+  return "Sports";
+}
+function normalizeCategory(group,name=""){
+  const g=(String(group||"")+" "+String(name||"")).toLowerCase();
   if(g.includes("cricket"))return "Cricket";
   if(g.includes("football")||g.includes("soccer"))return "Football";
   if(g.includes("sport"))return "Sports";
