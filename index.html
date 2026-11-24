@@ -472,7 +472,7 @@ button,a,select,input{touch-action:manipulation}
     </section>
 
     <section class="player" id="livePlayer">
-      <div class="player-head"><div class="player-title" id="playerTitle">📺 Jsports Network Live Player</div><div class="player-tools"><label for="streamQuality">VIDEO QUALITY</label><select id="streamQuality" aria-label="Video quality" disabled><option value="360" selected>Data Saver · 360p max</option><option value="240">Low Data · 240p max</option><option value="144">Very Low · 144p max</option><option value="480">Standard · 480p max</option><option value="auto">Auto · adaptive</option></select><span class="live-status" id="playerStatus">● READY TO PLAY</span></div></div>
+      <div class="player-head"><div class="player-title" id="playerTitle">📺 Jsports Network Live Player</div><div class="player-tools"><label for="streamQuality">VIDEO QUALITY</label><select id="streamQuality" aria-label="Video quality" disabled><option value="auto" selected>AUTO · Adaptive</option><option value="144">144p max</option><option value="240">240p max</option><option value="360">360p max</option><option value="480">480p max</option><option value="720">720p max</option><option value="1080">1080p max</option></select><span class="live-status" id="playerStatus">● READY TO PLAY</span></div></div>
       <div class="player-screen" id="playerScreen">
         <video id="liveVideo" controls playsinline crossorigin="anonymous" preload="none"></video>
         <div class="player-loading" id="playerLoading" aria-live="polite"><span class="player-spinner"></span><strong id="playerLoadingText">স্ট্রিম লোড হচ্ছে...</strong></div>
@@ -592,6 +592,9 @@ let recentChannels=[];
 let hlsInstance=null;
 let currentChannel=null;
 let availableHlsLevels=[];
+let hlsNetworkRetries=0;
+let hlsMediaRetries=0;
+let activeStreamUrl="";
 const qualitySelect=document.getElementById("streamQuality");
 const grid=document.getElementById("channelGrid");
 const mobileChannelToggle=document.getElementById("mobileChannelToggle");
@@ -718,6 +721,7 @@ function updatePlayerButtons(){
 function stopPlayback(){
   if(hlsInstance){hlsInstance.destroy();hlsInstance=null;}
   availableHlsLevels=[];
+  hlsNetworkRetries=0;hlsMediaRetries=0;activeStreamUrl="";
   if(qualitySelect)qualitySelect.disabled=true;
   setPlayerLoading(false);
   video.pause();video.removeAttribute("src");video.load();video.style.display="none";placeholder.style.display="block";
@@ -746,6 +750,7 @@ function updateQualityOptions(){
     if(/^\d+$/.test(o.value))o.disabled=!heights.some(h=>h<=Number(o.value));
   });
   if(qualitySelect.selectedOptions[0]?.disabled)qualitySelect.value="auto";
+  if(!qualitySelect.dataset.userSelected)qualitySelect.value="auto";
   applyQualitySetting();
   const maxHeight=Math.max(...heights);
   const note=document.getElementById("playerText");
@@ -762,13 +767,31 @@ function playStream(channel){
   placeholder.style.display="none";video.style.display="block";
   setPlayerLoading(true,"স্ট্রিম লোড হচ্ছে...");
   const src=channel.streamUrl;
+  activeStreamUrl=src||"";
   if(!src){showPlayerError("এই চ্যানেলের সরাসরি stream URL নেই।");return;}
   const isHls=/\.m3u8($|[?#])/i.test(src)||channel.isPlaylist;
   if(isHls && window.Hls && Hls.isSupported()){
-    hlsInstance=new Hls({enableWorker:true,capLevelToPlayerSize:true,startLevel:-1,abrEwmaDefaultEstimate:450000,abrBandWidthFactor:0.8,abrBandWidthUpFactor:0.7});
+    hlsInstance=new Hls({enableWorker:true,capLevelToPlayerSize:true,startLevel:-1,abrEwmaDefaultEstimate:450000,abrBandWidthFactor:0.8,abrBandWidthUpFactor:0.7,manifestLoadingMaxRetry:3,levelLoadingMaxRetry:3});
     hlsInstance.on(Hls.Events.MANIFEST_PARSED,()=>{availableHlsLevels=hlsInstance.levels||[];updateQualityOptions();document.getElementById("playerStatus").textContent="● STREAM READY";video.play().catch(()=>{setPlayerLoading(false);});updatePlayerButtons();});
     hlsInstance.on(Hls.Events.LEVELS_UPDATED,()=>{availableHlsLevels=hlsInstance.levels||[];updateQualityOptions();});
-    hlsInstance.on(Hls.Events.ERROR,(event,data)=>{if(data.fatal){showPlayerError("স্ট্রিম চালানো যায়নি। সার্ভার CORS, DRM, URL বা নেটওয়ার্ক বাধা দিতে পারে।");}});
+    hlsInstance.on(Hls.Events.ERROR,(event,data)=>{
+      if(!data.fatal)return;
+      if(data.type===Hls.ErrorTypes.NETWORK_ERROR&&hlsNetworkRetries<3){
+        hlsNetworkRetries++;document.getElementById("playerStatus").textContent="● AUTO RECONNECT "+hlsNetworkRetries+"/3";
+        setPlayerLoading(true,"নেটওয়ার্ক বিচ্ছিন্ন—স্বয়ংক্রিয়ভাবে আবার সংযোগ করা হচ্ছে...");
+        setTimeout(()=>{if(hlsInstance)hlsInstance.startLoad();},1200*hlsNetworkRetries);return;
+      }
+      if(data.type===Hls.ErrorTypes.MEDIA_ERROR&&hlsMediaRetries<2){
+        hlsMediaRetries++;document.getElementById("playerStatus").textContent="● RECOVERING MEDIA";
+        try{hlsInstance.recoverMediaError();return;}catch(ignore){}
+      }
+      if(channel.backupStreamUrl&&channel.backupStreamUrl!==activeStreamUrl){
+        const backup={...channel,streamUrl:channel.backupStreamUrl,backupStreamUrl:null};
+        document.getElementById("playerStatus").textContent="● SWITCHING BACKUP";
+        playStream(backup);return;
+      }
+      showPlayerError("স্বয়ংক্রিয় পুনঃসংযোগ ব্যর্থ হয়েছে। Stream বন্ধ, CORS/DRM বাধা বা সার্ভার সমস্যা থাকতে পারে।");
+    });
     hlsInstance.loadSource(src);hlsInstance.attachMedia(video);
   }else if(video.canPlayType("application/vnd.apple.mpegurl")||!isHls){
     qualitySelect.disabled=true;
@@ -992,6 +1015,15 @@ async function loadCombinedPlaylists(){
   }
 }
 document.getElementById("loadCombinedBtn").addEventListener("click",loadCombinedPlaylists);
+// Static GitHub Pages cannot host a private streaming server. This refreshes the public playlist sources from the browser.
+function startAutomaticPlaylistRefresh(){
+  const status=document.getElementById("combinedStatus");
+  if(status)status.textContent="AUTO SERVER: চালু — Playlist নিজে থেকে লোড হবে এবং প্রতি ৩০ মিনিটে আপডেটের চেষ্টা করবে।";
+  setTimeout(()=>{if(navigator.onLine)loadCombinedPlaylists();},3500);
+  setInterval(()=>{if(navigator.onLine)loadCombinedPlaylists();},30*60*1000);
+  window.addEventListener("online",()=>{if(status)status.textContent="ইন্টারনেট ফিরে এসেছে—Auto Playlist Refresh শুরু হচ্ছে...";loadCombinedPlaylists();});
+}
+
 document.getElementById("downloadCombinedBtn").addEventListener("click",()=>{
   const list=combinedPlaylistChannels.length?combinedPlaylistChannels:playlistChannels;
   if(!list.length){showMessage("আগে Combined Playlist লোড করুন।","error");return;}
@@ -1070,7 +1102,7 @@ fullscreenBtn.addEventListener("click",async()=>{
   }catch(error){document.getElementById("playerStatus").textContent="● FULLSCREEN UNAVAILABLE";}
 });
 document.addEventListener("fullscreenchange",()=>{fullscreenBtn.textContent=document.fullscreenElement?"✕ EXIT FULL SCREEN":"⛶ FULL SCREEN";});
-qualitySelect.addEventListener("change",applyQualitySetting);
+qualitySelect.addEventListener("change",()=>{qualitySelect.dataset.userSelected="true";applyQualitySetting();});
 document.getElementById("clearSavedPlaylistBtn").addEventListener("click",()=>{
   playlistChannels=[];
   try{localStorage.removeItem(PLAYLIST_STORAGE_KEY);}catch(error){}
@@ -1080,6 +1112,7 @@ document.getElementById("clearSavedPlaylistBtn").addEventListener("click",()=>{
 });
 restoreSavedPlaylist();
 restoreActivity();
+startAutomaticPlaylistRefresh();
 makeCategories();render();
 renderActivity();
 </script>
