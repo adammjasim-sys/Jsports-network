@@ -465,6 +465,11 @@ body.tv-mode .channel-card{min-height:88px!important}
 body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;outline-offset:4px!important}
 @media (prefers-reduced-motion:no-preference) and (min-width:1200px){.channel-card:focus-visible{transform:scale(1.035);transition:transform .12s ease}}
 
+
+.volume-control{display:inline-flex;align-items:center;gap:8px;color:#e8e8e8;font-size:13px;font-weight:700;min-width:180px}
+.volume-control input{width:105px;accent-color:#ef3340;cursor:pointer}
+.volume-control output{min-width:38px;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.volume-control{width:100%;justify-content:flex-start}.volume-control input{flex:1;max-width:220px}}
 </style>
 </head>
 <body>
@@ -512,8 +517,9 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
       <div class="player-controls" aria-label="Player controls">
         <button class="player-control-btn" id="playPauseBtn" type="button" disabled>▶ PLAY</button>
         <button class="player-control-btn" id="muteBtn" type="button" disabled>🔊 SOUND ON</button>
+        <label class="volume-control" for="volumeSlider"><span aria-hidden="true">🔉</span><input id="volumeSlider" type="range" min="0" max="100" step="1" value="80" aria-label="Volume"/><output id="volumeValue" for="volumeSlider">80%</output></label>
         <button class="player-control-btn" id="fullscreenBtn" type="button">⛶ FULL SCREEN</button>
-        <span class="player-control-hint">ভিডিওর নিজস্ব controls থেকেও volume ও playback নিয়ন্ত্রণ করা যাবে।</span>
+        <span class="player-control-hint">Volume সেটিং চ্যানেল বদলালেও সংরক্ষিত থাকবে।</span>
       </div>
       <div class="player-note">LIVE PLAYER · M3U/HLS playback সমর্থিত stream-এর জন্য। DRM, CORS, অঞ্চলভিত্তিক সীমাবদ্ধতা বা মেয়াদোত্তীর্ণ URL-এর কারণে কিছু stream নাও চলতে পারে।</div>
     </section>
@@ -642,6 +648,12 @@ const country=document.getElementById("countryFilter");
 const categoryBar=document.getElementById("categoryBar");
 const video=document.getElementById("liveVideo");
 const playerScreen=document.getElementById("playerScreen");
+const volumeSlider=document.getElementById("volumeSlider");
+const volumeValue=document.getElementById("volumeValue");
+const savedVolume=Number(localStorage.getItem("jsports_network_volume_v1"));
+video.volume=Number.isFinite(savedVolume)&&savedVolume>=0&&savedVolume<=1?savedVolume:0.8;
+volumeSlider.value=Math.round(video.volume*100);
+volumeValue.textContent=volumeSlider.value+"%";
 const playerLoading=document.getElementById("playerLoading");
 const playerLoadingText=document.getElementById("playerLoadingText");
 const playPauseBtn=document.getElementById("playPauseBtn");
@@ -1120,11 +1132,23 @@ video.addEventListener("playing",()=>{setPlayerLoading(false);document.getElemen
 video.addEventListener("canplay",()=>{setPlayerLoading(false);updatePlayerButtons();});
 video.addEventListener("pause",updatePlayerButtons);
 video.addEventListener("play",updatePlayerButtons);
-video.addEventListener("volumechange",updatePlayerButtons);
+video.addEventListener("volumechange",()=>{
+  volumeSlider.value=Math.round(video.volume*100);
+  volumeValue.textContent=volumeSlider.value+"%";
+  try{localStorage.setItem("jsports_network_volume_v1",String(video.volume));}catch(e){}
+  updatePlayerButtons();
+});
 video.addEventListener("ended",()=>{document.getElementById("playerStatus").textContent="● STREAM ENDED";updatePlayerButtons();});
 video.addEventListener("error",()=>{if(video.style.display!=="none"&&currentChannel?.streamUrl)showPlayerError("ভিডিও চালানো যায়নি। Stream URL, browser support, CORS বা server access পরীক্ষা করুন।");});
 playPauseBtn.addEventListener("click",()=>{if(video.paused)video.play().catch(()=>showPlayerError("এই stream চালু করা যায়নি।"));else video.pause();});
 muteBtn.addEventListener("click",()=>{video.muted=!video.muted;updatePlayerButtons();});
+volumeSlider.addEventListener("input",()=>{
+  video.volume=Number(volumeSlider.value)/100;
+  if(video.volume>0)video.muted=false;
+  volumeValue.textContent=volumeSlider.value+"%";
+  try{localStorage.setItem("jsports_network_volume_v1",String(video.volume));}catch(e){}
+  updatePlayerButtons();
+});
 fullscreenBtn.addEventListener("click",async()=>{
   try{
     if(document.fullscreenElement){await document.exitFullscreen();}
