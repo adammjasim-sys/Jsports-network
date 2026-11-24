@@ -468,6 +468,15 @@ button,a,select,input{touch-action:manipulation}
     <section class="panel" id="m3uPanel">
       <h2>＋ ADD YOUR M3U PLAYLIST</h2>
       <p class="panel-intro">আপনার কাছে থাকা বৈধ/অনুমোদিত M3U Playlist URL অথবা কম্পিউটারের M3U ফাইল দিয়ে চ্যানেল যোগ করুন।</p>
+      <div class="m3u-box" style="margin-bottom:12px">
+        <h3>🇧🇩 🇮🇳 ⚽ BD + INDIA + SPORTS — COMBINED PLAYLIST</h3>
+        <p>তিনটি public playlist একসঙ্গে লোড করুন। একই stream URL একাধিকবার থাকলে duplicate বাদ যাবে। লোড সফল হলে combined M3U ফাইল ডাউনলোড করতে পারবেন।</p>
+        <div class="field-row">
+          <button class="primary-btn" id="loadCombinedBtn" type="button">LOAD BD + INDIA + SPORTS</button>
+          <button class="secondary-btn" id="downloadCombinedBtn" type="button" disabled>DOWNLOAD COMBINED M3U</button>
+        </div>
+        <p id="combinedStatus" aria-live="polite">লোড করতে বাটনে চাপ দিন। Source server-এর CORS/access policy অনুযায়ী কোনো playlist নাও আসতে পারে।</p>
+      </div>
       <div class="m3u-grid">
         <div class="m3u-box"><h3>🌐 OPTION 1 — M3U URL</h3><div class="field-row"><input id="m3uUrl" type="url" placeholder="https://example.com/playlist.m3u"><button class="primary-btn" id="loadUrlBtn" type="button">LOAD URL</button></div><p>CORS বন্ধ থাকলে URL লোড নাও হতে পারে। সে ক্ষেত্রে File Upload ব্যবহার করুন।</p></div>
         <div class="m3u-box"><h3>📁 OPTION 2 — UPLOAD FILE</h3><input id="m3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl"><p>কম্পিউটার থেকে .m3u বা .m3u8 playlist ফাইল নির্বাচন করুন।</p></div>
@@ -609,6 +618,11 @@ function restoreSavedPlaylist(){
     try{localStorage.removeItem(PLAYLIST_STORAGE_KEY);}catch(ignore){}
   }
   updateSavedPlaylistStatus();
+  if(playlistChannels.length){
+    combinedPlaylistChannels=playlistChannels.slice();
+    const download=document.getElementById("downloadCombinedBtn");
+    if(download)download.disabled=false;
+  }
 }
 function channelKey(channel){
   return [channel.name||"",channel.streamUrl||channel.url||""].join("|");
@@ -861,7 +875,7 @@ grid.addEventListener("click",event=>{
   card.classList.add("selected");
 },true);
 
-function parseM3U(text){
+function parseM3U(text,sourceName="M3U Playlist",sourceCountry="Playlist",forceSports=false){
   const lines=text.replace(/^\uFEFF/,"").split(/\r?\n/);
   const parsed=[];let current=null;
   for(const raw of lines){
@@ -874,14 +888,82 @@ function parseM3U(text){
       current={name:name||"Unnamed channel",logo:getAttr("tvg-logo"),group:getAttr("group-title"),country:getAttr("tvg-country"),short:(name||"TV").slice(0,8).toUpperCase()};
     }else if(!line.startsWith("#")&&current){
       if(/^https?:\/\//i.test(line)){
-        const group=current.group||"Playlist";
-        parsed.push({name:current.name,short:current.short,category:normalizeCategory(group),country:"Playlist",url:"",type:"stream",streamUrl:line,logo:current.logo,color:"#247b72",isPlaylist:true});
+        const group=current.group||sourceName;
+        parsed.push({name:current.name,short:current.short,category:forceSports?"Sports":normalizeCategory(group),country:sourceCountry,url:"",type:"stream",streamUrl:line,logo:current.logo,color:"#247b72",isPlaylist:true,playlistSource:sourceName,groupTitle:group});
       }
       current=null;
     }
   }
   return parsed;
 }
+const COMBINED_PLAYLIST_SOURCES=[
+  {name:"Bangladesh",url:"https://iptv-org.github.io/iptv/countries/bd.m3u",country:"বাংলাদেশ",sports:false},
+  {name:"India",url:"https://iptv-org.github.io/iptv/countries/in.m3u",country:"ভারত",sports:false},
+  {name:"Sports",url:"https://iptv-org.github.io/iptv/categories/sports.m3u",country:"আন্তর্জাতিক",sports:true}
+];
+let combinedPlaylistChannels=[];
+function escapeM3UAttribute(value){
+  return String(value||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/\\r?\\n/g," ").trim();
+}
+function buildCombinedM3U(list){
+  const rows=["#EXTM3U"];
+  list.forEach(c=>{
+    const attrs=[];
+    if(c.logo)attrs.push('tvg-logo="'+escapeM3UAttribute(c.logo)+'"');
+    if(c.groupTitle||c.category)attrs.push('group-title="'+escapeM3UAttribute(c.groupTitle||c.category)+'"');
+    attrs.push('tvg-country="'+escapeM3UAttribute(c.country||"")+'"');
+    rows.push("#EXTINF:-1 "+attrs.join(" ")+","+String(c.name||"Unnamed channel").replace(/[\\r\\n]/g," ").trim());
+    rows.push(c.streamUrl);
+  });
+  return rows.join("\\n")+"\\n";
+}
+async function loadCombinedPlaylists(){
+  const button=document.getElementById("loadCombinedBtn");
+  const download=document.getElementById("downloadCombinedBtn");
+  const status=document.getElementById("combinedStatus");
+  button.disabled=true;button.textContent="LOADING 3 PLAYLISTS...";
+  download.disabled=true;
+  status.textContent="বাংলাদেশ, ভারত ও Sports playlist আনা হচ্ছে—একটু অপেক্ষা করুন।";
+  try{
+    const results=await Promise.all(COMBINED_PLAYLIST_SOURCES.map(async source=>{
+      const response=await fetch(source.url,{cache:"no-store"});
+      if(!response.ok)throw new Error(source.name+" playlist: HTTP "+response.status);
+      const text=await response.text();
+      const parsed=parseM3U(text,source.name,source.country,source.sports);
+      if(!parsed.length)throw new Error(source.name+" playlist-এ কোনো HTTP/HTTPS stream পাওয়া যায়নি।");
+      return parsed;
+    }));
+    const merged=[],seen=new Set();
+    results.flat().forEach(channel=>{
+      const key=(channel.streamUrl||"").trim().replace(/#.*$/,"");
+      if(!key||seen.has(key))return;
+      seen.add(key);merged.push(channel);
+    });
+    if(!merged.length)throw new Error("কোনো stream পাওয়া যায়নি।");
+    combinedPlaylistChannels=merged;
+    playlistChannels=merged;
+    savePlaylistChannels();
+    activeCategory="সব চ্যানেল";country.value="all";search.value="";
+    makeCategories();render();updateSavedPlaylistStatus();
+    download.disabled=false;
+    status.textContent="সফল! "+results[0].length+"টি Bangladesh + "+results[1].length+"টি India + "+results[2].length+"টি Sports channel পাওয়া গেছে। Duplicate বাদ দিয়ে মোট "+merged.length+"টি channel যুক্ত হয়েছে।";
+    showMessage("Combined playlist থেকে মোট "+merged.length+"টি channel যুক্ত ও browser-এ সংরক্ষণ করা হয়েছে।","success");
+  }catch(error){
+    status.textContent="Playlist লোড হয়নি: "+error.message+"। সম্ভবত source server CORS/access বন্ধ রেখেছে। সে ক্ষেত্রে তিনটি M3U ফাইল আলাদাভাবে ডাউনলোড করে File Upload ব্যবহার করতে হবে।";
+    showMessage("Combined playlist লোড করা যায়নি। "+error.message,"error");
+  }finally{
+    button.disabled=false;button.textContent="LOAD BD + INDIA + SPORTS";
+  }
+}
+document.getElementById("loadCombinedBtn").addEventListener("click",loadCombinedPlaylists);
+document.getElementById("downloadCombinedBtn").addEventListener("click",()=>{
+  const list=combinedPlaylistChannels.length?combinedPlaylistChannels:playlistChannels;
+  if(!list.length){showMessage("আগে Combined Playlist লোড করুন।","error");return;}
+  const blob=new Blob([buildCombinedM3U(list)],{type:"audio/x-mpegurl;charset=utf-8"});
+  const url=URL.createObjectURL(blob),link=document.createElement("a");
+  link.href=url;link.download="Jsports_BD_India_Sports.m3u";
+  document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
+});
 function normalizeCategory(group){
   const g=group.toLowerCase();
   if(g.includes("cricket"))return "Cricket";
