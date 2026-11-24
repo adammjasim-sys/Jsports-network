@@ -434,6 +434,37 @@ button,a,select,input{touch-action:manipulation}
   .sidebar .channel-info h3{font-size:9px}
 }
 
+
+
+/* SMART TV / ANDROID TV EXPERIENCE */
+@media (min-width:1200px){
+  .app-layout{grid-template-columns:340px minmax(0,1fr)!important;min-height:calc(100vh - 72px)}
+  .sidebar{height:calc(100vh - 72px);max-height:calc(100vh - 72px);padding:22px 18px;overflow-y:auto}
+  .main-content{max-width:1900px;padding:26px clamp(24px,3vw,54px) 48px}
+  .hero{min-height:300px;padding:42px 48px}
+  .hero h2{font-size:clamp(38px,3.2vw,58px)}
+  .player-screen{max-height: min(66vh,900px);min-height:360px}
+  .sidebar .channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .sidebar .channel-card{min-height:88px;padding:12px 10px!important;border-radius:12px!important}
+  .sidebar .channel-info h3{font-size:14px;line-height:1.3}
+  .sidebar .meta{font-size:10px}
+  .sidebar .logo{width:42px;height:42px;flex-basis:42px}
+  .side-search input,.side-country{min-height:48px;font-size:14px}
+  .cat-btn{min-height:42px;font-size:12px;padding:10px 14px}
+  .player-title{font-size:16px}
+  .player-tools label{font-size:11px}
+  .player-tools select{font-size:13px;min-height:44px;min-width:180px}
+  .player-control-btn{font-size:12px;min-height:48px;padding:12px 17px}
+  .channel-card:focus,.channel-card:focus-visible,.highlight-card:focus-visible,
+  button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{
+    outline:4px solid #ff3548!important;outline-offset:4px!important;box-shadow:0 0 0 7px rgba(229,9,27,.22)!important;z-index:10
+  }
+}
+body.tv-mode .sidebar .channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+body.tv-mode .channel-card{min-height:88px!important}
+body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;outline-offset:4px!important}
+@media (prefers-reduced-motion:no-preference) and (min-width:1200px){.channel-card:focus-visible{transform:scale(1.035);transition:transform .12s ease}}
+
 </style>
 </head>
 <body>
@@ -1115,6 +1146,51 @@ restoreActivity();
 startAutomaticPlaylistRefresh();
 makeCategories();render();
 renderActivity();
+
+
+// Android / Smart TV remote navigation: arrows move between channel cards; OK/Enter opens.
+(function enableTVRemoteNavigation(){
+  const isTVParam=new URLSearchParams(location.search).get('tv')==='1';
+  if(isTVParam)document.body.classList.add('tv-mode');
+  const channelGrid=document.getElementById('channelGrid');
+  function visibleCards(){return [...document.querySelectorAll('.sidebar .channel-card')].filter(el=>el.offsetParent!==null);}
+  function focusFirst(){const first=visibleCards()[0];if(first){first.focus();first.scrollIntoView({block:'nearest',inline:'nearest'});}}
+  document.addEventListener('keydown',event=>{
+    const key=event.key;
+    const active=document.activeElement;
+    const inTextField=active&&(active.tagName==='INPUT'||active.tagName==='TEXTAREA'||active.isContentEditable);
+    if(inTextField)return;
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key)){
+      const cards=visibleCards();if(!cards.length)return;
+      if(!active||!active.classList||!active.classList.contains('channel-card')){
+        if(key==='ArrowDown'||key==='ArrowRight'){event.preventDefault();focusFirst();}
+        return;
+      }
+      const current=active.getBoundingClientRect();
+      const cx=current.left+current.width/2,cy=current.top+current.height/2;
+      const candidates=cards.filter(el=>el!==active).map(el=>{
+        const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+        const dx=x-cx,dy=y-cy;
+        const valid=key==='ArrowRight'?dx>4:key==='ArrowLeft'?dx< -4:key==='ArrowDown'?dy>4:dy< -4;
+        const primary=key==='ArrowLeft'||key==='ArrowRight'?Math.abs(dx):Math.abs(dy);
+        const secondary=key==='ArrowLeft'||key==='ArrowRight'?Math.abs(dy):Math.abs(dx);
+        return {el,score:primary+secondary*2.4,valid};
+      }).filter(x=>x.valid).sort((a,b)=>a.score-b.score);
+      if(candidates.length){event.preventDefault();candidates[0].el.focus();candidates[0].el.scrollIntoView({block:'nearest',inline:'nearest'});}
+      return;
+    }
+    if(key==='Escape'||key==='Backspace'||key==='BrowserBack'){
+      if(document.fullscreenElement)return;
+      if(active&&active.classList&&active.classList.contains('channel-card')){
+        event.preventDefault();
+        const search=document.getElementById('searchInput');
+        if(search)search.focus();
+      }
+    }
+  });
+  // A query switch is available for TV browsers that report unusual screen sizes: append ?tv=1.
+})();
+
 </script>
 </body>
 </html>
