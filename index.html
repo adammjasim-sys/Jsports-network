@@ -470,6 +470,46 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
 .volume-control input{width:105px;accent-color:#ef3340;cursor:pointer}
 .volume-control output{min-width:38px;font-variant-numeric:tabular-nums}
 @media(max-width:600px){.volume-control{width:100%;justify-content:flex-start}.volume-control input{flex:1;max-width:220px}}
+
+/* FINAL UI REFRESH — compact premium sports dashboard, inspired by user reference */
+@media(min-width:761px){
+  .topbar{height:64px;padding:0 20px;background:#080a10;border-bottom:1px solid #222832}
+  .topbar-brand{min-width:190px;gap:9px}.brand-logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(140deg,#ff3444,#a90012);font-size:13px}
+  .brand-text h1{font-size:15px;letter-spacing:.45px}.brand-text small{font-size:8px;letter-spacing:.65px}
+  .top-links{gap:20px}.top-links a{font-size:11px}.topbar-right{gap:8px}.secure-label{font-size:8px}.login-link{font-size:9px;padding:8px 12px}
+  .app-layout{grid-template-columns:248px minmax(0,1fr)!important;min-height:calc(100vh - 64px);max-width:none}
+  .sidebar{top:64px;height:calc(100vh - 64px);max-height:calc(100vh - 64px);padding:13px 10px;background:#080a0d;border-right:1px solid #252a32}
+  .sidebar-head{margin:0 3px 12px}.sidebar-head strong{font-size:10px;letter-spacing:.65px}.sidebar-head small{font-size:8px;line-height:1.4}.side-count{font-size:7px;padding:4px 6px}
+  .side-search input{height:34px;padding:7px 9px 7px 32px;font-size:10px;background:#12151b;border-color:#252a32}
+  .side-country{font-size:9px;padding:8px 9px;margin-bottom:12px;background:#12151b;border-color:#252a32}
+  .side-category-title{font-size:8px;margin-bottom:7px}.category-bar{gap:5px;padding-bottom:12px;border-bottom-color:#242830}
+  .cat-btn{font-size:8px;padding:6px 8px;min-height:30px;background:#15181f;border-color:#282d36}
+  .side-list-heading{margin:12px 2px 8px}.side-list-heading strong{font-size:9px}.side-list-heading .total{font-size:8px}
+  .sidebar .channel-grid{grid-template-columns:1fr!important;gap:4px!important}
+  .sidebar .channel-card{display:flex!important;flex-direction:row!important;align-items:center!important;min-height:43px!important;padding:6px 7px!important;gap:5px!important;border:1px solid transparent!important;border-radius:7px!important;background:transparent!important}
+  .sidebar .channel-card:hover,.sidebar .channel-card.selected{background:#15171c!important;border-color:#30343b!important}
+  .sidebar .card-top{gap:7px;padding-right:20px}.sidebar .logo{width:27px;height:27px;flex:0 0 27px;border-radius:6px}
+  .sidebar .channel-info h3{font-size:10px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sidebar .meta{font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sidebar .favorite-toggle{width:20px;height:20px;right:3px;top:2px;font-size:12px}
+  .main-content{padding:14px 16px 28px;max-width:none;background:#090b10}
+  .hero{display:none!important}
+  .player{margin:0 0 15px;border:1px solid #292e36;border-radius:10px;box-shadow:0 12px 32px #0005;background:#050609}
+  .player-head{padding:10px 13px;background:#10131a}.player-title{font-size:11px}.player-tools{gap:7px}.player-tools label{font-size:8px}.player-tools select{min-width:125px;padding:7px 8px;font-size:9px;background:#151820;border-color:#292e36}.live-status{font-size:9px}
+  .player-screen{aspect-ratio:16/9;max-height:calc(100vh - 235px);min-height:260px;background:#020305}.player-content{padding:18px}.player-icon{font-size:44px}.player-content h3{font-size:18px}.player-content p{font-size:11px}
+  .player-controls{padding:8px 10px;gap:7px;background:#0e1117}.player-control-btn{min-height:32px;padding:7px 10px;font-size:9px;background:#1b2029;border:1px solid #2b313b;border-radius:6px}.player-control-btn:hover{border-color:#e5091b;background:#211217}.volume-control{font-size:10px;min-width:130px}.volume-control input{width:75px}.player-control-hint{font-size:8px}.player-note{padding:8px 11px;font-size:9px;background:#0a0d12;border-top-color:#252a32}
+  .highlight-section{margin:14px 0 18px}.highlight-heading{align-items:center;margin-bottom:9px}.highlight-heading h2{font-size:14px}.highlight-heading p{font-size:8px;margin-top:3px}.highlight-tag{font-size:7px;padding:5px 7px}
+  .highlight-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.highlight-card{padding:8px;min-height:55px;gap:7px;border-radius:8px;background:#11141a;border-color:#252a32}.highlight-card:hover{border-color:#e5091b;transform:translateY(-2px)}.highlight-logo{width:32px;height:32px;flex-basis:32px;border-radius:7px;font-size:8px}.highlight-copy strong{font-size:9px}.highlight-copy small{font-size:7px;margin-top:3px}
+  .activity-section .highlight-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .panel{margin:18px 0;padding:14px;border-radius:10px;background:#11141a;border-color:#252a32}.panel h2{font-size:15px}.panel-intro{font-size:10px}
+  footer{padding:17px 3%;background:#07090d;border-color:#20242b;font-size:9px}
+}
+@media(max-width:760px){
+  .topbar{background:#080a10;border-bottom-color:#242831}.top-links{gap:10px}.top-links a{font-size:9px}.topbar-brand{min-width:0}.topbar-right .secure-label{display:none}
+  .main-content{background:#090b10}.hero{display:none!important}
+  .player{border-color:#292e36;background:#050609}.player-head{background:#10131a}.player-controls{background:#0e1117}.player-control-btn{background:#1b2029;border:1px solid #2b313b;border-radius:6px}
+  .highlight-card{background:#11141a;border-color:#252a32}.highlight-heading h2{color:#f3f5f8}.highlight-tag{background:#170c10;border-color:#48212a}
+  .sidebar{background:#080a0d}.side-search input,.side-country{background:#12151b;border-color:#252a32}.cat-btn{background:#15181f;border-color:#282d36}
+}
 </style>
 </head>
 <body>
