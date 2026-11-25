@@ -585,7 +585,7 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
         <p id="combinedStatus" aria-live="polite">লোড করতে বাটনে চাপ দিন। Source server-এর CORS/access policy অনুযায়ী কোনো playlist নাও আসতে পারে।</p>
       </div>
       <div class="m3u-grid">
-        <div class="m3u-box"><h3>🌐 OPTION 1 — M3U URL</h3><div class="field-row"><input id="m3uUrl" type="url" placeholder="https://example.com/playlist.m3u"><button class="primary-btn" id="loadUrlBtn" type="button">LOAD URL</button></div><p>CORS বন্ধ থাকলে URL লোড নাও হতে পারে। সে ক্ষেত্রে File Upload ব্যবহার করুন।</p></div>
+        <div class="m3u-box"><h3>🌐 OPTION 1 — SMART M3U URL</h3><div class="field-row"><input id="m3uUrl" type="url" placeholder="https://example.com/playlist.m3u"><button class="primary-btn" id="loadUrlBtn" type="button">LOAD URL</button></div><label for="m3uProxyUrl" style="display:block;margin-top:9px;font-size:11px;color:#aaa">Optional: your trusted proxy endpoint (use {url} placeholder)</label><input id="m3uProxyUrl" type="url" placeholder="https://your-proxy.example/fetch?url={url}" style="width:100%;margin-top:6px"><p>Direct fetch first; optional trusted proxy retry if CORS blocks it. Public proxy services may be unsafe or unreliable—avoid sending private playlist URLs.</p></div>
         <div class="m3u-box"><h3>📁 OPTION 2 — UPLOAD FILE</h3><input id="m3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl"><p>কম্পিউটার থেকে .m3u বা .m3u8 playlist ফাইল নির্বাচন করুন।</p></div>
       </div>
       <div id="m3uMessage" class="m3u-message" role="status" aria-live="polite"></div>
@@ -1143,18 +1143,42 @@ function addPlaylist(text,sourceName){
   if(saved)showMessage(sourceName+" থেকে "+parsed.length+"টি channel যোগ হয়েছে এবং এই browser-এ সংরক্ষিত হয়েছে। Refresh করলেও থাকবে।","success");
   document.getElementById("m3uPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
+async function fetchPlaylistText(url,proxyTemplate=""){
+  const attempts=[{label:"Direct",url}];
+  if(proxyTemplate.trim()){
+    if(!proxyTemplate.includes("{url}"))throw new Error("Proxy endpoint-এ {url} placeholder দিন।");
+    attempts.push({label:"Trusted proxy",url:proxyTemplate.replace("{url}",encodeURIComponent(url))});
+  }
+  let lastError=null;
+  for(const attempt of attempts){
+    try{
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),15000);
+      let response;
+      try{response=await fetch(attempt.url,{cache:"no-store",signal:controller.signal});}
+      finally{clearTimeout(timeout);}
+      if(!response.ok)throw new Error(attempt.label+" fetch: HTTP "+response.status);
+      const text=await response.text();
+      if(!text.trim()||(!text.includes("#EXTM3U")&&!text.includes("#EXTINF")))throw new Error(attempt.label+" response M3U format নয় (সম্ভবত HTML/error page)।");
+      return {text,method:attempt.label};
+    }catch(error){lastError=error;}
+  }
+  throw lastError||new Error("Playlist fetch ব্যর্থ।");
+}
 document.getElementById("loadUrlBtn").addEventListener("click",async()=>{
   const url=document.getElementById("m3uUrl").value.trim();
+  const proxyTemplate=document.getElementById("m3uProxyUrl").value.trim();
   if(!url){showMessage("প্রথমে M3U Playlist URL দিন।","error");return;}
   if(!/^https?:\/\//i.test(url)){showMessage("সঠিক http:// অথবা https:// URL দিন।","error");return;}
-  const btn=document.getElementById("loadUrlBtn");btn.disabled=true;btn.textContent="Loading...";
+  const btn=document.getElementById("loadUrlBtn");btn.disabled=true;btn.textContent="Checking URL...";
   try{
-    const response=await fetch(url);
-    if(!response.ok)throw new Error("HTTP "+response.status);
-    const text=await response.text();addPlaylist(text,"M3U URL");
+    const result=await fetchPlaylistText(url,proxyTemplate);
+    const before=playlistChannels.length;
+    addPlaylist(result.text,"M3U URL · "+result.method);
+    if(playlistChannels.length>before)showMessage("Playlist Import সফল ("+result.method+")। "+playlistChannels.length+"টি channel যোগ হয়েছে।","success");
   }catch(error){
-    showMessage("URL থেকে Playlist আনা যায়নি। সম্ভাব্য কারণ: CORS বন্ধ, URL ভুল/মেয়াদোত্তীর্ণ, login দরকার অথবা server access block করেছে। একই Playlist ফাইল থাকলে File Upload ব্যবহার করুন।","error");
-  }finally{btn.disabled=false;btn.textContent="Load URL";}
+    showMessage("Import ব্যর্থ: "+error.message+"। URL dead/expired (410/404), server access restriction বা CORS হতে পারে। File Upload দিয়ে চেষ্টা করুন; Proxy retry করতে trusted endpoint সেট করুন।","error");
+  }finally{btn.disabled=false;btn.textContent="LOAD URL";}
 });
 document.getElementById("m3uFile").addEventListener("change",event=>{
   const file=event.target.files&&event.target.files[0];if(!file)return;
