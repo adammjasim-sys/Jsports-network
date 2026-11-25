@@ -286,6 +286,7 @@ button,a,select,input{touch-action:manipulation}
 .player-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .player-tools label{font-size:9px;color:#aaa;white-space:nowrap}
 .player-tools select{width:auto;min-width:145px;max-width:100%;padding:9px 10px}
+.low-bandwidth-btn{border:1px solid #444;background:#181818;color:#aaa;border-radius:5px;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}.low-bandwidth-btn.active{background:#163323;color:#79e7a5;border-color:#318a56;box-shadow:0 0 0 1px #318a5633 inset}
 .player-controls{gap:9px}
 .player-control-btn,.secondary-btn,.cat-btn,.card-actions a,.card-actions button{min-height:40px}
 
@@ -548,7 +549,7 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
     </section>
 
     <section class="player" id="livePlayer">
-      <div class="player-head"><div class="player-title" id="playerTitle">📺 Jsports Network Live Player</div><div class="player-tools"><label for="streamQuality">VIDEO QUALITY</label><select id="streamQuality" aria-label="Video quality" disabled><option value="auto" selected>AUTO · Adaptive</option><option value="144">144p · Low</option><option value="240">240p</option><option value="360">360p</option><option value="480">480p</option><option value="720">720p · HD</option><option value="1080">1080p · Full HD</option></select><span class="live-status" id="playerStatus">● READY TO PLAY</span></div></div>
+      <div class="player-head"><div class="player-title" id="playerTitle">📺 Jsports Network Live Player</div><div class="player-tools"><label for="streamQuality">VIDEO QUALITY</label><select id="streamQuality" aria-label="Video quality" disabled><option value="auto" selected>AUTO · Adaptive</option><option value="144">144p · Low</option><option value="240">240p</option><option value="360">360p</option><option value="480">480p</option><option value="720">720p · HD</option><option value="1080">1080p · Full HD</option></select><button id="lowBandwidthBtn" class="low-bandwidth-btn" type="button" aria-pressed="false" title="Low bandwidth mode: adaptive quality capped around 360p">⚡ LOW DATA: OFF</button><span class="live-status" id="playerStatus">● READY TO PLAY</span></div></div>
       <div class="player-screen" id="playerScreen">
         <video id="liveVideo" controls playsinline crossorigin="anonymous" preload="none"></video>
         <div class="player-loading" id="playerLoading" aria-live="polite"><span class="player-spinner"></span><strong id="playerLoadingText">স্ট্রিম লোড হচ্ছে...</strong></div>
@@ -673,6 +674,11 @@ let hlsNetworkRetries=0;
 let hlsMediaRetries=0;
 let activeStreamUrl="";
 const qualitySelect=document.getElementById("streamQuality");
+const lowBandwidthBtn=document.getElementById("lowBandwidthBtn");
+let lowBandwidthMode=false;
+try{lowBandwidthMode=localStorage.getItem("jsports_network_low_bandwidth_v1")==="1";}catch(e){}
+function updateLowBandwidthUI(){if(!lowBandwidthBtn)return;lowBandwidthBtn.classList.toggle("active",lowBandwidthMode);lowBandwidthBtn.setAttribute("aria-pressed",String(lowBandwidthMode));lowBandwidthBtn.textContent=lowBandwidthMode?"⚡ LOW DATA: ON":"⚡ LOW DATA: OFF";lowBandwidthBtn.title=lowBandwidthMode?"Low data mode ON: adaptive stream capped at up to 360p when available":"Turn on low data mode to limit adaptive HLS quality to around 360p";if(qualitySelect&&lowBandwidthMode)qualitySelect.disabled=true;}
+updateLowBandwidthUI();
 const grid=document.getElementById("channelGrid");
 const mobileChannelToggle=document.getElementById("mobileChannelToggle");
 const sidebar=document.querySelector(".sidebar");
@@ -819,6 +825,18 @@ function bestLevelAtOrBelow(maxHeight){
 }
 function applyQualitySetting(){
   if(!hlsInstance||!availableHlsLevels.length)return;
+  if(lowBandwidthMode){
+    const cap=bestLevelAtOrBelow(360);
+    // If no rendition <=360p exists, cap to the lowest rendition available.
+    const lowIndex=cap>=0?cap:availableHlsLevels.map((l,i)=>({l,i})).filter(x=>Number(x.l.height)>0).sort((a,b)=>Number(a.l.height)-Number(b.l.height))[0]?.i??-1;
+    hlsInstance.autoLevelCapping=lowIndex;
+    hlsInstance.currentLevel=-1;
+    hlsInstance.nextLevel=-1;
+    qualitySelect.disabled=true;
+    document.getElementById("playerText").textContent=lowIndex>=0?`Low Bandwidth Mode চালু: adaptive quality সর্বোচ্চ ${availableHlsLevels[lowIndex].height}p-এ সীমিত করা হয়েছে। কম ডাটা ব্যবহারের জন্য এটি চালু রাখুন।`:"Low Bandwidth Mode চালু, তবে এই stream-এর quality স্তর নিয়ন্ত্রণ করা সম্ভব নয়।";
+    return;
+  }
+  qualitySelect.disabled=availableHlsLevels.map(x=>Number(x.height)||0).filter(Boolean).length<2;
   const setting=qualitySelect.value;
   if(setting==="auto"){
     hlsInstance.autoLevelCapping=-1;
@@ -834,7 +852,6 @@ function applyQualitySetting(){
     document.getElementById("playerText").textContent="এই stream-এ নির্বাচিত resolution বা তার নিচের মান পাওয়া যায়নি; AUTO quality চালু করা হয়েছে।";
     return;
   }
-  // currentLevel forces Hls.js to use this rendition instead of adaptive switching.
   hlsInstance.autoLevelCapping=-1;
   hlsInstance.currentLevel=levelIndex;
   hlsInstance.nextLevel=levelIndex;
@@ -850,7 +867,7 @@ function updateQualityOptions(){
   const distinct=[...new Set(heights)].sort((a,b)=>a-b);
   if(!distinct.length){qualitySelect.disabled=true;qualitySelect.value="auto";return;}
   // Native HLS and streams without multiple renditions cannot provide a manual selector.
-  qualitySelect.disabled=distinct.length<2;
+  qualitySelect.disabled=distinct.length<2||lowBandwidthMode;
   [...qualitySelect.options].forEach(o=>{
     if(/^\d+$/.test(o.value))o.disabled=!distinct.some(h=>h<=Number(o.value));
   });
@@ -902,7 +919,7 @@ function playStream(channel){
   }else if(video.canPlayType("application/vnd.apple.mpegurl")||!isHls){
     qualitySelect.disabled=true;
     qualitySelect.value="auto";
-    document.getElementById("playerText").textContent="এই browser native HLS playback ব্যবহার করছে। এখানে quality selector সমর্থিত নয়—quality stream/browser নিজে নিয়ন্ত্রণ করে।";
+    document.getElementById("playerText").textContent=lowBandwidthMode?"Low Bandwidth Mode চালু, তবে native HLS stream-এ এই player থেকে quality cap করা যায় না—browser/stream নিজে নিয়ন্ত্রণ করে।":"এই browser native HLS playback ব্যবহার করছে। এখানে quality selector সমর্থিত নয়—quality stream/browser নিজে নিয়ন্ত্রণ করে।";
     video.src=src;
     video.play().catch(()=>{setPlayerLoading(false);});
   }else{showPlayerError("এই browser-এ HLS playback সমর্থিত নয়।");}
@@ -1223,6 +1240,7 @@ fullscreenBtn.addEventListener("click",async()=>{
 });
 document.addEventListener("fullscreenchange",()=>{fullscreenBtn.textContent=document.fullscreenElement?"✕ EXIT FULL SCREEN":"⛶ FULL SCREEN";});
 qualitySelect.addEventListener("change",()=>{qualitySelect.dataset.userSelected="true";applyQualitySetting();});
+lowBandwidthBtn.addEventListener("click",()=>{lowBandwidthMode=!lowBandwidthMode;try{localStorage.setItem("jsports_network_low_bandwidth_v1",lowBandwidthMode?"1":"0");}catch(e){}updateLowBandwidthUI();if(hlsInstance&&availableHlsLevels.length){if(lowBandwidthMode){qualitySelect.value="auto";delete qualitySelect.dataset.userSelected;qualitySelect.disabled=true;}else{delete qualitySelect.dataset.userSelected;}applyQualitySetting();}else if(lowBandwidthMode){document.getElementById("playerText").textContent="Low Bandwidth Mode চালু। HLS stream হলে quality সর্বোচ্চ প্রায় 360p-এ সীমিত হবে; native বা fixed-quality stream-এ এই control প্রভাব ফেলতে পারে না।";}else{document.getElementById("playerText").textContent="Low Bandwidth Mode বন্ধ। Stream-এর quality স্বাভাবিক AUTO/Manual control-এ থাকবে।";}});
 document.getElementById("clearSavedPlaylistBtn").addEventListener("click",()=>{
   playlistChannels=[];
   try{localStorage.removeItem(PLAYLIST_STORAGE_KEY);}catch(error){}
