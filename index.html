@@ -532,6 +532,24 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
 @media(max-width:760px){.ott-hub{width:calc(100% - 22px);margin:14px 11px;padding:12px}.ott-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.ott-card{padding:9px;gap:7px}.ott-card .ott-brand{height:46px;font-size:15px}.ott-card p{font-size:8px;min-height:30px}.ott-open,.ott-schedule,.ott-live{padding:9px 5px;min-height:36px;font-size:8px}.ott-hub-head h2{font-size:14px}}
 @media(max-width:350px){.ott-grid{grid-template-columns:1fr}}
 
+
+/* INDIA FREE OTT + LIVE TV HUB */
+.india-ott{margin:18px 0;padding:15px;border:1px solid #2c3038;border-radius:11px;background:linear-gradient(145deg,#11151b,#0b0d11)}
+.india-ott-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.india-ott-head h2{margin:0;font-size:15px}.india-ott-head p{margin:5px 0 0;color:#888;font-size:9px;line-height:1.55}
+.india-ott-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.india-ott-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:11px;border:1px solid #2a2e35;border-radius:9px;background:#0b0d11;transition:.2s}
+.india-ott-card:hover{border-color:#e5091b;transform:translateY(-2px)}
+.india-ott-logo{display:grid;place-items:center;height:52px;border-radius:7px;background:linear-gradient(135deg,#191f2a,#101217);font-size:16px;font-weight:900;text-align:center;letter-spacing:.3px}
+.india-ott-card h3{margin:0;font-size:11px}.india-ott-card p{margin:0;color:#888;font-size:9px;line-height:1.5;min-height:29px}
+.india-ott-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:auto}
+.india-ott-actions a{display:block;text-decoration:none;text-align:center;padding:8px 5px;border-radius:5px;font-size:8px;font-weight:900;min-height:34px;display:grid;place-items:center}
+.india-ott-movies{background:#232a33;border:1px solid #343b46;color:#fff}.india-ott-live{background:#d91f32;border:1px solid #d91f32;color:white}
+.india-ott-actions a:hover{filter:brightness(1.15)}.india-ott-note{margin:10px 0 0;color:#777;font-size:9px;line-height:1.6}
+@media(max-width:1050px){.india-ott-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.india-ott{width:calc(100% - 22px);margin:14px 11px;padding:12px}.india-ott-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.india-ott-card{padding:9px;gap:7px}.india-ott-logo{height:45px;font-size:14px}.india-ott-card p{font-size:8px;min-height:31px}.india-ott-actions a{font-size:8px;padding:8px 4px;min-height:36px}.india-ott-head h2{font-size:14px}}
+@media(max-width:350px){.india-ott-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -544,6 +562,7 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
     <a href="#home" class="active">Home</a>
     <a href="#livePlayer">Live TV</a>
     <a href="#featuredTitle">Featured</a>
+    <a href="#indiaOtt">🇮🇳 India OTT</a>
     <a href="#ottHub">OTT Apps</a>
     <a href="#m3uPanel">My Playlist</a>
   </nav>
@@ -613,6 +632,21 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
       </div>
       <div id="m3uMessage" class="m3u-message" role="status" aria-live="polite"></div>
       <div class="saved-playlist-row"><div><strong>💾 SAVED PLAYLIST</strong><div id="savedPlaylistStatus" class="saved-playlist-status">এখনও কোনো Playlist সংরক্ষণ করা হয়নি।</div></div><button class="secondary-btn" id="clearSavedPlaylistBtn" type="button">CLEAR PLAYLIST</button></div>
+    </section>
+
+    <section class="india-ott" id="indiaOtt" aria-labelledby="indiaOttTitle">
+      <div class="india-ott-head"><div><h2 id="indiaOttTitle">🇮🇳 INDIA FREE OTT + LIVE TV</h2><p>Indian movies, web series and official live television links</p></div><span class="highlight-tag">FREE / FREEMIUM</span></div>
+      <div class="india-ott-grid">
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#20c997">WAVES</div><h3>WAVES · Prasar Bharati</h3><p>Free movies, classic shows, regional content and Doordarshan / Live TV channels.</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://wavespb.com/" target="_blank" rel="noopener noreferrer">🎬 MOVIES & SERIES</a><a class="india-ott-live" href="https://wavespb.com/" target="_blank" rel="noopener noreferrer">🔴 LIVE TV</a></div></article>
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#ffb21e">MX PLAYER</div><h3>Amazon MX Player</h3><p>Free ad-supported Indian originals, Hindi series, movies and dubbed content (catalogue may change).</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer">🎬 FREE CONTENT</a><a class="india-ott-live" href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer">▶ WATCH</a></div></article>
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#78c8ff">AIRTEL XSTREAM</div><h3>Airtel Xstream Play</h3><p>Free catalogue for eligible accounts: movies, web series and channel-based entertainment.</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://www.airtelxstream.in/free" target="_blank" rel="noopener noreferrer">🎬 FREE MOVIES</a><a class="india-ott-live" href="https://www.airtelxstream.in/free" target="_blank" rel="noopener noreferrer">📺 TV / CHANNELS</a></div></article>
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#fff">TVF</div><h3>TVF Play</h3><p>Popular Indian comedy, drama and original web-series selections.</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://tvfplay.com/" target="_blank" rel="noopener noreferrer">🎞️ WEB SERIES</a><a class="india-ott-live" href="https://tvfplay.com/" target="_blank" rel="noopener noreferrer">▶ WATCH</a></div></article>
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#f6b93b">SHEMAROO</div><h3>ShemarooMe</h3><p>Classic Indian movies, regional cinema, devotional and entertainment titles; free selection varies.</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://www.shemaroome.com/" target="_blank" rel="noopener noreferrer">🎬 MOVIES</a><a class="india-ott-live" href="https://www.shemaroome.com/" target="_blank" rel="noopener noreferrer">▶ WATCH</a></div></article>
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#f45b67">DANGAL PLAY</div><h3>Dangal Play</h3><p>Indian TV serials, Bhojpuri and regional entertainment. Free availability varies by title.</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://www.dangalplay.com/" target="_blank" rel="noopener noreferrer">🎞️ SHOWS</a><a class="india-ott-live" href="https://www.dangalplay.com/" target="_blank" rel="noopener noreferrer">▶ WATCH</a></div></article>
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#ff4b4b">YOUTUBE</div><h3>YouTube · Official Movies</h3><p>Movies and web series posted by official Indian studios and channels, plus live news.</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://www.youtube.com/movies" target="_blank" rel="noopener noreferrer">🎬 MOVIES</a><a class="india-ott-live" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">🔴 LIVE</a></div></article>
+        <article class="india-ott-card"><div class="india-ott-logo" style="color:#ff6b6b">VI MOVIES & TV</div><h3>Vi Movies & TV</h3><p>Free and bundled content, including live TV; access depends on user eligibility and account.</p><div class="india-ott-actions"><a class="india-ott-movies" href="https://www.myvi.in/" target="_blank" rel="noopener noreferrer">🎬 ENTERTAINMENT</a><a class="india-ott-live" href="https://www.myvi.in/" target="_blank" rel="noopener noreferrer">📺 LIVE TV</a></div></article>
+      </div>
+      <p class="india-ott-note">Free catalogues, sign-in requirements and region eligibility may change. These buttons open official platforms; Jsports Network does not host OTT films, series or TV streams. Live TV links may open the provider’s web/app page rather than an embedded player.</p>
     </section>
 
     <section class="ott-hub" id="ottHub" aria-labelledby="ottHubTitle">
