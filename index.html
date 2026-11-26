@@ -511,6 +511,22 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
   .highlight-card{background:#11141a;border-color:#252a32}.highlight-heading h2{color:#f3f5f8}.highlight-tag{background:#170c10;border-color:#48212a}
   .sidebar{background:#080a0d}.side-search input,.side-country{background:#12151b;border-color:#252a32}.cat-btn{background:#15181f;border-color:#282d36}
 }
+
+/* OTT HUB — official platforms, opens in a new tab */
+.ott-hub{margin:18px 0;padding:15px;border:1px solid #292e36;border-radius:10px;background:#11141a}
+.ott-hub-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.ott-hub-head h2{font-size:15px;margin:0}.ott-hub-head p{font-size:9px;color:#888;margin:4px 0 0;line-height:1.5}
+.ott-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.ott-card{display:flex;flex-direction:column;min-width:0;border:1px solid #292e36;border-radius:9px;background:#0b0d12;padding:12px;gap:9px;transition:.2s}
+.ott-card:hover{border-color:#e5091b;transform:translateY(-2px)}
+.ott-card .ott-brand{height:54px;display:grid;place-items:center;border-radius:7px;background:linear-gradient(135deg,#171d29,#101217);font-weight:900;font-size:18px;letter-spacing:.4px;text-align:center}
+.ott-card h3{font-size:11px;margin:0}.ott-card p{font-size:9px;color:#888;line-height:1.5;margin:0;min-height:27px}
+.ott-open{display:block;text-align:center;text-decoration:none;background:#e5091b;color:#fff;border-radius:5px;padding:9px 8px;font-size:9px;font-weight:900;letter-spacing:.3px}
+.ott-open:hover{filter:brightness(1.12)}.ott-disclaimer{font-size:9px;color:#777;line-height:1.6;margin:11px 0 0}
+@media(max-width:1050px){.ott-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.ott-hub{width:calc(100% - 22px);margin:14px 11px;padding:12px}.ott-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.ott-card{padding:9px;gap:7px}.ott-card .ott-brand{height:46px;font-size:15px}.ott-card p{font-size:8px;min-height:30px}.ott-open{padding:10px 7px;min-height:38px}.ott-hub-head h2{font-size:14px}}
+@media(max-width:350px){.ott-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -523,6 +539,7 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
     <a href="#home" class="active">Home</a>
     <a href="#livePlayer">Live TV</a>
     <a href="#featuredTitle">Featured</a>
+    <a href="#ottHub">OTT Apps</a>
     <a href="#m3uPanel">My Playlist</a>
   </nav>
   <div class="topbar-right"><span class="secure-label">● OFFICIAL LINKS</span><a class="login-link" href="#m3uPanel">MY PLAYLIST</a></div>
@@ -591,6 +608,21 @@ body.tv-mode .channel-card:focus-visible{outline:4px solid #ff3548!important;out
       </div>
       <div id="m3uMessage" class="m3u-message" role="status" aria-live="polite"></div>
       <div class="saved-playlist-row"><div><strong>💾 SAVED PLAYLIST</strong><div id="savedPlaylistStatus" class="saved-playlist-status">এখনও কোনো Playlist সংরক্ষণ করা হয়নি।</div></div><button class="secondary-btn" id="clearSavedPlaylistBtn" type="button">CLEAR PLAYLIST</button></div>
+    </section>
+
+    <section class="ott-hub" id="ottHub" aria-labelledby="ottHubTitle">
+      <div class="ott-hub-head"><div><h2 id="ottHubTitle">🎬 OTT APPS HUB</h2><p>Official streaming platforms · Open in a new tab</p></div><span class="highlight-tag">OFFICIAL LINKS</span></div>
+      <div class="ott-grid">
+        <article class="ott-card"><div class="ott-brand" style="color:#21d0a0">TOFFEE</div><h3>Toffee</h3><p>Bangladesh TV, entertainment & selected live content.</p><a class="ott-open" href="https://toffeelive.com/" target="_blank" rel="noopener noreferrer">OPEN TOFFEE ↗</a></article>
+        <article class="ott-card"><div class="ott-brand" style="color:#ffcc43">TAPMAD</div><h3>Tapmad</h3><p>Sports and entertainment streaming platform.</p><a class="ott-open" href="https://tapmad.com/" target="_blank" rel="noopener noreferrer">OPEN TAPMAD ↗</a></article>
+        <article class="ott-card"><div class="ott-brand" style="color:#65d7ff">myco</div><h3>Myco</h3><p>Digital video and sports content; availability varies.</p><a class="ott-open" href="https://myco.io/" target="_blank" rel="noopener noreferrer">OPEN MYCO ↗</a></article>
+        <article class="ott-card"><div class="ott-brand" style="color:#42a5ff">JioHotstar</div><h3>JioHotstar</h3><p>India-region entertainment and sports service.</p><a class="ott-open" href="https://www.hotstar.com/" target="_blank" rel="noopener noreferrer">OPEN HOTSTAR ↗</a></article>
+        <article class="ott-card"><div class="ott-brand" style="color:#a7ff4b">FANCode</div><h3>FanCode</h3><p>Sports streaming, events and match coverage.</p><a class="ott-open" href="https://www.fancode.com/" target="_blank" rel="noopener noreferrer">OPEN FANCODE ↗</a></article>
+        <article class="ott-card"><div class="ott-brand" style="color:#ff6b6b">Sony LIV</div><h3>Sony LIV</h3><p>Sports and entertainment; region restrictions may apply.</p><a class="ott-open" href="https://www.sonyliv.com/" target="_blank" rel="noopener noreferrer">OPEN SONYLIV ↗</a></article>
+        <article class="ott-card"><div class="ott-brand" style="color:#ff3b54">ZEE5</div><h3>ZEE5</h3><p>Movies, series and regional entertainment.</p><a class="ott-open" href="https://www.zee5.com/" target="_blank" rel="noopener noreferrer">OPEN ZEE5 ↗</a></article>
+        <article class="ott-card"><div class="ott-brand" style="color:#e50914">NETFLIX</div><h3>Netflix</h3><p>Movies and series with subscription access.</p><a class="ott-open" href="https://www.netflix.com/" target="_blank" rel="noopener noreferrer">OPEN NETFLIX ↗</a></article>
+      </div>
+      <p class="ott-disclaimer">OTT access, content and live sports depend on subscription, country and rights. Jsports Network links to official services only and does not host OTT video streams.</p>
     </section>
 
     <section class="info-panel"><h3>ℹ️ ABOUT JSPORTS NETWORK</h3><p>Jsports Network কোনো টিভি চ্যানেলের নিজস্ব সম্প্রচার হোস্ট করে না। এখানে চ্যানেলগুলোর অফিসিয়াল ওয়েবসাইট এবং ব্যবহারকারীর যোগ করা Playlist দেখানো হয়। কেবল বৈধ ও অনুমোদিত stream ব্যবহার করুন। GitHub Pages static website; Saved Playlist শুধু এই browser/device-এ থাকে।</p></section>
